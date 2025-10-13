@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandesh Bhandari - Portfolio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        /* Everforest Dark Color Palette */
+        :root {
+            --bg0: #2d353b;
+            --bg1: #343f44;
+            --bg2: #3d484d;
+            --bg3: #475258;
+            --bg4: #4f585e;
+            --fg: #d3c6aa;
+            --red: #e67e80;
+            --orange: #e69875;
+            --yellow: #dbbc7f;
+            --green: #a7c080;
+            --aqua: #83c092;
+            --blue: #7fbbb3;
+            --purple: #d699b6;
+            --grey0: #7a8478;
+            --grey1: #859289;
+            --grey2: #9da9a0;
+        }
+
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--grey1);
+            background: var(--bg0);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .js .loading::before,
+        .js .loading::after {
+            content: '';
+            position: fixed;
+            z-index: 1000;
+        }
+
+        .loading::before {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg0);
+        }
+
+        .loading::after {
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            margin: -20px 0 0 -20px;
+            border: 8px solid var(--bg2);
+            border-bottom-color: var(--bg3);
+            border-radius: 50%;
+            animation: animLoader 0.8s linear infinite forwards;
+        }
+
+        @keyframes animLoader {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            position: absolute;
+            overflow: hidden;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--fg);
+            outline: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover,
+        a:focus {
+            color: var(--green);
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* Header */
+        .my-header {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 3em 1em 2em;
+            order: 1;
+        }
+
+        .page-about:not(.grid--hidden) ~ header .my-header__title,
+        body:has(.page-about:not(.grid--hidden)) .my-header__title {
+            display: none;
+        }
+
+        .my-header__title {
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: 0;
+            text-align: center;
+            color: var(--fg);
+            letter-spacing: 0.5px;
+        }
+
+        /* Social Icons */
+        .social-links {
+            position: absolute;
+            top: 3em;
+            right: 2em;
+            display: flex;
+            gap: 2em;
+            z-index: 101;
+            opacity: 1;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+
+        .social-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--grey1);
+            transition: fill 0.3s ease;
+        }
+
+        .social-icon:hover svg {
+            fill: var(--green);
+        }
+
+        /* GitHub octocat arm animation */
+        .octo-arm {
+            transform-origin: 130px 106px;
+        }
+
+        .social-icon:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+
+        @keyframes octocat-wave {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(-25deg); }
+            40%, 80% { transform: rotate(10deg); }
+        }
+
+        /* Side Content */
+        .content--side {
+            position: relative;
+            z-index: 100;
+            width: 15vw;
+            min-width: 130px;
+            max-height: 100vh;
+            padding: 0 1em;
+            order: 2;
+        }
+
+        .content--center {
+            flex: 1;
+            max-width: calc(100vw - 130px);
+            order: 3;
+            padding: 0 2em;
+        }
+
+        /* Controls */
+        .control--grids {
+            margin: 0 0 2.5em;
+            text-align: right;
+        }
+
+        .control__title {
+            font-size: 0.85em;
+            display: block;
+            width: 100%;
+            margin: 0 0 1em;
+            color: var(--green);
+        }
+
+        .control__item {
+            position: relative;
+            display: block;
+            margin: 0 0 0.5em;
+        }
+
+        .control__radio {
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            opacity: 0;
+        }
+
+        .control__label {
+            white-space: nowrap;
+            display: block;
+            padding: 0.5em;
+            color: var(--grey1);
+            transition: color 0.3s ease, background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .control__radio:checked + .control__label {
+            color: var(--bg0);
+            background: var(--green);
+        }
+
+        .control__radio:not(:checked):hover + .control__label {
+            color: var(--fg);
+        }
+
+        /* Grid */
+        .grid {
+            position: relative;
+            z-index: 2;
+            display: block;
+            margin: 0 auto;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .grid--hidden {
+            position: fixed !important;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .grid__sizer {
+            margin-bottom: 0 !important;
+        }
+
+        .grid__item {
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .grid__link {
+            display: block;
+            position: relative;
+        }
+
+        .grid__img {
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            /* Everforest filter effect */
+            filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(0.8);
+        }
+
+        .grid__img.loaded {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .grid__item:hover .grid__img {
+            transform: scale(1.05);
+            filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
+        }
+/* Overlay */
+.grid__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 53, 59, 0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    padding: 25px;
+}
+
+.grid__item:hover .grid__overlay {
+    opacity: 1;
+}
+
+.grid__title {
+    font-size: 1.3em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--fg);
+    text-align: center;
+    line-height: 1.3;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.grid__description {
+    font-size: 0.9em;
+    color: var(--grey2);
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 15px;
+    max-width: 100%;
+}
+
+.grid__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.grid__tag {
+    background: var(--bg2);
+    color: var(--aqua);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 500;
+    border: 1px solid var(--bg3);
+}
+        /* CV Page */
+        .cv-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3em 2em;
+            color: var(--fg);
+        }
+
+        .cv-section {
+            margin-bottom: 3em;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .cv-section h2 {
+            font-size: 1.5em;
+            color: var(--green);
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid var(--bg3);
+        }
+
+        .cv-item {
+            margin-bottom: 2em;
+        }
+
+        .cv-item h3 {
+            font-size: 1.2em;
+            color: var(--fg);
+            margin-bottom: 0.3em;
+        }
+
+        .cv-item .position {
+            font-size: 1em;
+            color: var(--aqua);
+            margin-bottom: 0.3em;
+            font-weight: 500;
+        }
+
+        .cv-item .date {
+            color: var(--grey1);
+            font-size: 0.9em;
+            margin-bottom: 0.8em;
+            display: block;
+        }
+
+        .cv-item p, .cv-item ul {
+            color: var(--grey2);
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .cv-item ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cv-item ul li {
+            margin-bottom: 0.8em;
+            padding-left: 1.5em;
+            position: relative;
+        }
+
+        .cv-item ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+        }
+
+        .cv-item .skill-category {
+            margin-bottom: 1em;
+        }
+
+        .cv-item .skill-category strong {
+            color: var(--fg);
+            display: block;
+            margin-bottom: 0.3em;
+        }
+
+        /* Academics Visualization */
+        .academics-viz {
+            margin-top: 2em;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .academics-viz svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .academics-viz text {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* About Page */
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2em;
+        }
+
+        .page-about ~ .my-header,
+        body:has(.page-about:not(.grid--hidden)) .my-header {
+            justify-content: center;
+        }
+
+        .about-profile-image {
+            display: block;
+            margin: 0 auto 2em;
+            width: 400px;
+            height: auto;
+            /* Apply Everforest filter to profile image too */
+            filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(1.1);
+        }
+
+        .about-intro {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: var(--fg);
+            margin-bottom: 3em;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .favorites-section {
+            margin-bottom: 4em;
+        }
+
+        .favorites-section h2 {
+            font-size: 1.5em;
+            color: var(--green);
+            margin-bottom: 1.5em;
+            text-align: center;
+        }
+
+        /* Credits Section */
+        .credits-section {
+            margin-top: 3em;
+            padding: 2em 0;
+            border-top: 1px solid var(--bg3);
+            text-align: center;
+        }
+
+        .credits-section h2 {
+            font-size: 0.9em;
+            color: var(--green);
+            margin-bottom: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .credits-list {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+
+        .credits-list p {
+            color: var(--grey1);
+            margin: 0.3em 0;
+        }
+
+        .credits-list a {
+            color: var(--aqua);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .credits-list a:hover {
+            color: var(--green);
+        }
+
+        .copyright {
+            color: var(--grey0);
+            margin-top: 1em;
+        }
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .favorite-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            aspect-ratio: 2/3;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .favorite-item:hover {
+            box-shadow: 0 0 20px rgba(167, 192, 128, 0.4);
+        }
+
+        .favorite-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            /* Apply Everforest filter to book images */
+            filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(1.1);
+        }
+
+        .favorite-item:hover img {
+            transform: scale(1.1);
+            filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
+        }
+
+        /* Book Preview Modal */
+        .book-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 53, 59, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .book-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .book-modal__content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+        }
+
+        .book-modal.active .book-modal__content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .book-modal__image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 10px 30px -10px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-modal__title {
+            margin-top: 20px;
+            font-size: 1.4em;
+            color: var(--fg);
+            text-align: center;
+            font-weight: 500;
+            padding: 10px 20px;
+            background: rgba(45, 53, 59, 0.8);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-modal__close {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 40px;
+            height: 40px;
+            background: var(--bg2);
+            border: none;
+            border-radius: 50%;
+            color: var(--fg);
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-modal__close:hover {
+            background: var(--red);
+            transform: rotate(90deg);
+        }
+
+        /* Grid sizing */
+        .grid .grid__item,
+        .grid .grid__sizer {
+            width: calc(50% - 20px);
+            margin: 0 10px 20px;
+        }
+
+        @media screen and (min-width: 60em) {
+            .grid .grid__item,
+            .grid .grid__sizer {
+                width: calc((100% / 3) - 20px);
+                margin: 0 10px 20px;
+            }
+        }
+
+        @media screen and (min-width: 70em) {
+            .grid .grid__item,
+            .grid .grid__sizer {
+                width: calc(25% - 30px);
+                margin: 0 15px 30px;
+            }
+        }
+
+        @media screen and (max-width: 50em) {
+            main {
+                display: block;
+            }
+            .my-header {
+                padding: 1em;
+                flex-wrap: wrap;
+            }
+            .social-links {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 1em;
+                justify-content: center;
+            }
+            .content--side {
+                width: 100%;
+            }
+            .content--center {
+                max-width: 100vw;
+                padding: 0 1em;
+            }
+            .control--grids {
+                margin: 0 0 1em;
+                text-align: left;
+            }
+            .favorites-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+            .about-profile-image {
+                width: 100%;
+                max-width: 300px;
+            }
+            .book-modal__content {
+                max-width: 95%;
+            }
+            .book-modal__close {
+                top: -30px;
+                right: 0;
+            }
+        }
+
+        /* Restructure for better mobile experience */
+        @media screen and (max-width: 768px) {
+            .content--side {
+                position: sticky;
+                top: 0;
+                background: var(--bg0);
+                z-index: 1000;
+                padding: 1em;
+            }
+            
+            .social-links {
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                margin: 1em 0;
+            }
+        }
+    </style>
+
+</head>
+<body class="js loading">
+    <svg class="hidden">
+        <symbol id="icon-github" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </symbol>
+        <symbol id="icon-email" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </symbol>
+    </svg>
+    <main>
+        <header class="my-header">
+            <h1 class="my-header__title">Sandesh Bhandari</h1>
+            <div class="social-links">
+                <a href="mailto:snes.bhandari@mail.utoronto.ca" class="social-icon" title="Email">
+                    <svg><use xlink:href="#icon-email"></use></svg>
+                </a>
+                <a href="https://github.com/snes19xx" target="_blank" class="social-icon" title="GitHub">
+                    <svg><use xlink:href="#icon-github"></use></svg>
+                </a>
+            </div>
+        </header>
+
+        <div class="content content--side">
+            <div class="control control--grids">
+                <span class="control__title">navigation</span>
+                <div class="control__item">
+                    <input class="control__radio" type="radio" name="grid-type" value="page-projects" id="control-projects" checked>
+                    <label class="control__label" for="control-projects">projects</label>
+                </div>
+                <div class="control__item">
+                    <input class="control__radio" type="radio" name="grid-type" value="page-cv" id="control-cv">
+                    <label class="control__label" for="control-cv">cv</label>
+                </div>
+                <div class="control__item">
+                    <input class="control__radio" type="radio" name="grid-type" value="page-about" id="control-about">
+                    <label class="control__label" for="control-about">about</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="content content--center">
+            <!-- Projects Page -->
+            <div class="grid page-projects">
+                <div class="grid__sizer"></div>
+            </div>
+
+            <!-- CV Page -->
+            <div class="grid page-cv grid--hidden">
+                <div class="cv-container">
+                    <div class="cv-section">
+                        <h2>Education</h2>
+                        <div class="cv-item">
+                            <h3>University of Toronto</h3>
+                            <p class="date">2026 • Honours Bachelor of Science with High Distinctions</p>
+                            <div class="academics-viz" id="grade-viz"></div>
+                        </div>
+                    </div>
+
+                    <div class="cv-section">
+                        <h2>Skills</h2>
+                        <div class="cv-item">
+                            <div class="skill-category">
+                                <strong>GIS:</strong>
+                                <p>ArcGIS, GeoPandas, osmnx, shapely, folium</p>
+                            </div>
+                            <div class="skill-category">
+                                <strong>Data Analysis & Programming:</strong>
+                                <p>Python, JavaScript, Excel (Pivot Tables, VLOOKUP), Git, Linux</p>
+                            </div>
+                            <div class="skill-category">
+                                <strong>Design & Visualization:</strong>
+                                <p>D3.js, Three.js, Adobe Photoshop, Illustrator, InDesign</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cv-section">
+                        <h2>Experience</h2>
+                        <div class="cv-item">
+                            <h3>Downtown Brampton Business Improvement Area</h3>
+                            <p class="position">Multidisciplinary Urban Capstone Project (MUCP)</p>
+                            <span class="date">September 2025 - April 2026 • UofT School of Cities</span>
+                            <ul>
+                                <li>Collaborating with a multidisciplinary team to develop an integrated strategy for supporting 350+ small businesses impacted by the Hazel McCallion LRT tunnel construction through downtown Brampton.</li>
+                                <li>Conducting case study research on major GTA infrastructure projects (Eglinton Crosstown, Finch West LRT, Scarborough Subway, Yonge Extension) to identify best practices for construction mitigation.</li>
+                                <li>Designing physical, economic, and digital interventions, including pop-up markets, modular parklets, branded wayfinding, and business support programs, to sustain foot traffic and economic activities during construction.</li>
+                                <li>Engaging with businesses, municipal stakeholders, the BIA team, and community members to inform needs assessment and solution design.</li>
+                            </ul>
+                        </div>
+                        <div class="cv-item">
+                            <h3>Penguin Pickup</h3>
+                            <p class="position">Shipping Associate</p>
+                            <span class="date">June 2021 – August 2023 • Toronto, ON</span>
+                            <ul>
+                                <li>Streamlined data-driven workflows by creating and managing shipping labels, customs invoices, and cost breakdowns through partnered courier services such as FedEx, DHL, CanPar, and Canada Post.</li>
+                                <li>Maintained and updated sales and customer databases using Excel, employing advanced functions such as pivot tables, VLOOKUP, and data validation to ensure accurate tracking, analysis, and reporting of key metrics.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div class="grid page-about grid--hidden">
+                <div class="about-container">
+                    <img src="imagex.jpeg" 
+                         alt="Sandesh Bhandari" 
+                         class="about-profile-image">
+                    <p class="about-intro">
+                        Hi! I'm Sandesh Bhandari — I love playing with data, studying the Earth, its cities, and everything that connects them. I'm happiest when I'm reading by the ocean or geeking out over Pokémon
+                    </p>
+
+                    <div class="favorites-section">
+                        <h2>Favorite Books</h2>
+                        <div class="favorites-grid" id="books-grid"></div>
+                    </div>
+
+                     <div class="credits-section">
+                        <h2>Credits</h2>
+                        <div class="credits-list">
+                            <p>This Portfolio was Inspired by <a href="https://github.com/codrops/GridLoadingAnimations/" target="_blank" rel="noopener noreferrer">Codrops Grid Loading Animations</a></p>
+                            <p><a href="https://masonry.desandro.com/" target="_blank" rel="noopener noreferrer">Masonry</a> • <a href="https://animejs.com/" target="_blank" rel="noopener noreferrer">anime.js</a> • <a href="https://github.com/sainnhe/everforest" target="_blank" rel="noopener noreferrer">Everforest</a></p>
+                            <p class="copyright">2025 Sandesh Bhandari</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Book Preview Modal -->
+    <div class="book-modal" id="book-modal">
+        <div class="book-modal__content">
+            <button class="book-modal__close" id="book-modal-close">&times;</button>
+            <img class="book-modal__image" id="book-modal-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Book preview">
+            <h3 class="book-modal__title" id="book-modal-title" aria-hidden="true">Book Preview</h3>
+        </div>
+    </div>
+
+    <script>
+        document.documentElement.className = 'js';
+
+        // Projects data
+         const portfolioItems = [
+            { title: "Toronto Urban Heat Explorer", desc: "Land surface temperature analysis showing the cooling effect of urban vegetation.", tags: ["Python", "D3.js"], image: "images/111.png", link: "Toronto_UH/toronto-heat-map.html" },
+            { title: "Re-Zoning the Yard", desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto", tags: ["ArcGIS"], image: "images/11.jpg", link: "https://arcg.is/zOG1P" },
+            { title: "Playful Percentograph", desc: "Percentograph visualization created using plot.js, with animations because Looking at data doesn't have to be boring", tags: ["d3.js"], image: "images/2.gif", link: "https://observablehq.com/@snes19xx/playful-percentograph" },
+            { title: "MAPS", desc: "Maps I made on my spare time and as part of my courses at the University of Toronto", tags: ["ArcGIS", "Python"], image: "images/3.gif", link: "maps/index.html" },
+            { title: "Better Geophysics", desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations", tags: ["plot", "javascript"], image: "images/5.gif", link: "https://observablehq.com/d/ec14d0aa25e9f007" },
+            { title: "Visualizing Magnetometer Survey Data with Plot", desc: "In this project I use observable's plots to visualize data my team obtained from Deep River, ON in August 2025 as part of our Geophysics field course", tags: ["plot", "javascript"], image: "images/6.png", link: "https://observablehq.com/d/af7c80cf0774f406" },
+            { title: "toronto-farmers-markets", desc: "Digitizing Toronto's public and farmers markets with GIS", tags: ["ArcGIS", "GeoJSON"], image: "images/7.jpeg", link: "https://github.com/snes19xx/toronto-farmers-markets" },
+            { title: "Starshower", desc: "Javascript demo for custom new tab pages, presentations, screensaver", tags: ["javascript", "html"], image: "images/8.gif", link: "https://github.com/snes19xx/Starshower" },
+        ];
+
+        // Favorites data for About page
+        const favoriteBooks = [
+            { image: "images/books/1.jpg", title: "Too Much of Life" },
+            { image: "images/books/2.jpg", title: "White Nights" },
+            { image: "images/books/3.jpg", title: "Letters to Milena" },
+            { image: "images/books/4.jpg", title: "Vertigo" },
+            { image: "images/books/5.jpg", title: "Norwegian Wood" }
+        ];
+
+        let masonryInstance;
+        let currentPage = 'page-projects';
+        let gradeVizGenerated = false; // Cache flag for grade visualization
+
+        // Book Modal Functions
+        function openBookModal(imageSrc, title) {
+            const modal = document.getElementById('book-modal');
+            const modalImage = document.getElementById('book-modal-image');
+            const modalTitle = document.getElementById('book-modal-title');
+            
+            modalImage.src = imageSrc;
+            modalTitle.textContent = title;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeBookModal() {
+            const modal = document.getElementById('book-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }
+
+        function generateProjectsGrid() {
+            const grid = document.querySelector('.page-projects');
+            if (!grid) return;
+
+            const existingItems = grid.querySelectorAll('.grid__item');
+            if (existingItems.length > 0) return;
+
+            portfolioItems.forEach((item) => {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid__item';
+                gridItem.innerHTML = `
+                    <a href="${item.link}" class="grid__link">
+                        <img src="${item.image}" 
+                             alt="${item.title}" 
+                             class="grid__img"
+                             loading="lazy"
+                             onload="this.classList.add('loaded')">
+                        <div class="grid__overlay">
+                            <h3 class="grid__title">${item.title}</h3>
+                            <p class="grid__description">${item.desc}</p>
+                            <div class="grid__tags">
+                                ${item.tags.map(tag => `<span class="grid__tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </a>
+                `;
+                grid.appendChild(gridItem);
+            });
+
+            // Initialize Masonry after images are loaded
+            imagesLoaded(grid, function() {
+                if (!masonryInstance) {
+                    masonryInstance = new Masonry('.page-projects', {
+                        itemSelector: '.grid__item',
+                        columnWidth: '.grid__sizer',
+                        percentPosition: true,
+                        transitionDuration: 0
+                    });
+                } else {
+                    masonryInstance.layout();
+                }
+                
+                // Animate the grid items after masonry layout
+                setTimeout(() => animateProjectsGrid(), 100);
+            });
+        }
+
+        function generateFavoritesGrids() {
+            // Books only
+            const booksGrid = document.getElementById('books-grid');
+            favoriteBooks.forEach(book => {
+                const item = document.createElement('div');
+                item.className = 'favorite-item';
+                item.innerHTML = `<img src="${book.image}" 
+                                       alt="${book.title}"
+                                       loading="lazy"
+                                       onload="this.style.opacity='1'">`;
+                item.addEventListener('click', () => openBookModal(book.image, book.title));
+                booksGrid.appendChild(item);
+            });
+        }
+
+        function animateProjectsGrid() {
+            const items = document.querySelectorAll('.page-projects .grid__item');
+            anime.set(items, { opacity: 0, scale: 0.8 });
+            anime({
+                targets: items,
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 800,
+                delay: anime.stagger(80, {grid: [4, 3], from: 'center'}),
+                easing: 'easeOutElastic(1, .8)'
+            });
+        }
+
+        function animateCVSections() {
+            const sections = document.querySelectorAll('.cv-section');
+            anime.set(sections, { opacity: 0, translateY: 20 });
+            anime({
+                targets: sections,
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad',
+                complete: () => {
+                    // Only generate grade visualization once
+                    if (!gradeVizGenerated) {
+                        generateGradeViz();
+                        gradeVizGenerated = true;
+                    }
+                }
+            });
+        }
+
+        function generateGradeViz() {
+            const grades = [
+                94, 90, 77, 95, 88, 93, 83, 96, 92, 76,
+                87, 85, 90, 86, 92, 95, 87, 86, 87, 90,
+                94, 82, 88, 82, 86
+            ];
+
+            // Process data like Observable notebook
+            const numBins = 100;
+            const sortedGrades = grades.slice().sort(d3.ascending);
+            const n = sortedGrades.length;
+            const binnedData = [];
+            
+            for (let i = 0; i < numBins; i++) {
+                const p1 = d3.quantile(sortedGrades, i / numBins);
+                const p2 = d3.quantile(sortedGrades, (i + 1) / numBins);
+                const rangeWidth = p2 - p1;
+                const count = n / numBins;
+                const density = rangeWidth > 0 ? count / rangeWidth : 0;
+                
+                binnedData.push({
+                    grade_start: p1,
+                    grade_end: p2,
+                    density: density,
+                    percentile: i
+                });
+            }
+
+            const width = 600;
+            const height = 500;
+            
+            // Create SVG
+            const svg = d3.select("#grade-viz")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("viewBox", [0, 0, width, height])
+                .style("max-width", "100%")
+                .style("height", "auto");
+            
+            // Scales
+            const x = d3.scaleLinear()
+                .domain([76, 96])
+                .range([60, width - 100]);
+            
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(binnedData, d => d.density)])
+                .range([height - 60, 60]);
+            
+            // Everforest color scale
+            const color = d3.scaleLinear()
+                .domain([0, 50, 100])
+                .range(['#e67e80', '#dbbc7f', '#a7c080']);
+            
+            // Title
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", 30)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "18px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#d3c6aa")
+                .text("Grade Distribution by Percentile");
+            
+            // Axes
+            const xAxis = d3.axisBottom(x).tickFormat(d3.format(".0f"));
+            const yAxis = d3.axisLeft(y);
+            
+            svg.append("g")
+                .attr("transform", `translate(0,${height - 60})`)
+                .call(xAxis)
+                .attr("color", "#859289")
+                .append("text")
+                .attr("x", width / 2)
+                .attr("y", 40)
+                .attr("fill", "#d3c6aa")
+                .attr("text-anchor", "middle")
+                .text("Grade Score →");
+            
+            svg.append("g")
+                .attr("transform", "translate(60,0)")
+                .call(yAxis)
+                .attr("color", "#859289")
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -40)
+                .attr("fill", "#d3c6aa")
+                .attr("text-anchor", "middle")
+                .text("↑ Density");
+            
+            // Bars
+            const bars = svg.append("g")
+                .selectAll("rect")
+                .data(binnedData)
+                .enter()
+                .append("rect")
+                .attr("x", d => x(d.grade_start))
+                .attr("width", d => Math.max(1, x(d.grade_end) - x(d.grade_start)))
+                .attr("y", height - 60)
+                .attr("height", 0)
+                .attr("fill", d => color(d.percentile))
+                .attr("stroke", "none");
+            
+            // Animation
+            bars.transition()
+                .duration(2000)
+                .delay((d, i) => i * 15)
+                .ease(d3.easeElasticOut)
+                .attr("y", d => y(d.density))
+                .attr("height", d => Math.max(0, (height - 60) - y(d.density)))
+                .on("end", function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(400)
+                        .ease(d3.easeBounceOut)
+                        .attr("y", d => y(d.density) - 2)
+                        .transition()
+                        .duration(300)
+                        .ease(d3.easeBounceOut)
+                        .attr("y", d => y(d.density));
+                });
+            
+            // Legend
+            const legendWidth = 20;
+            const legendHeight = 150;
+            const legendX = width - 70;
+            const legendY = height - 250;
+            
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${legendX}, ${legendY})`);
+            
+            const gradient = svg.append("defs")
+                .append("linearGradient")
+                .attr("id", "legend-gradient")
+                .attr("x1", "0%")
+                .attr("x2", "0%")
+                .attr("y1", "100%")
+                .attr("y2", "0%");
+            
+            gradient.selectAll("stop")
+                .data(d3.range(0, 1.1, 0.1))
+                .enter()
+                .append("stop")
+                .attr("offset", d => `${d * 100}%`)
+                .attr("stop-color", d => color(d * 100));
+            
+            legend.append("rect")
+                .attr("width", legendWidth)
+                .attr("height", 0)
+                .attr("fill", "url(#legend-gradient)")
+                .transition()
+                .delay(1000)
+                .duration(1000)
+                .ease(d3.easeElasticOut)
+                .attr("height", legendHeight);
+            
+            const legendScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([legendHeight, 0]);
+            
+            const legendAxis = d3.axisRight(legendScale)
+                .ticks(5)
+                .tickFormat(d => d + "%");
+            
+            legend.append("g")
+                .attr("transform", `translate(${legendWidth}, 0)`)
+                .call(legendAxis)
+                .attr("color", "#859289")
+                .attr("opacity", 0)
+                .style("font-size", "10px")
+                .transition()
+                .delay(1500)
+                .duration(500)
+                .attr("opacity", 1);
+            
+            legend.append("text")
+                .attr("x", legendWidth / 2)
+                .attr("y", -10)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#d3c6aa")
+                .text("Percentile")
+                .attr("opacity", 0)
+                .transition()
+                .delay(1000)
+                .duration(500)
+                .attr("opacity", 1);
+        }
+
+        function animateAboutPage() {
+            const profileImg = document.querySelector('.about-profile-image');
+            const intro = document.querySelector('.about-intro');
+            const favoriteItems = document.querySelectorAll('.favorite-item');
+            
+            anime.set(profileImg, { opacity: 0, scale: 0.8 });
+            anime.set(intro, { opacity: 0, translateY: 20 });
+            anime.set(favoriteItems, { opacity: 0, scale: 0.8 });
+
+            anime({
+                targets: profileImg,
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 800,
+                easing: 'easeOutQuad'
+            });
+
+            anime({
+                targets: intro,
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 800,
+                delay: 200,
+                easing: 'easeOutQuad'
+            });
+
+            anime({
+                targets: favoriteItems,
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 600,
+                delay: anime.stagger(50, {start: 600}),
+                easing: 'easeOutQuad'
+            });
+        }
+
+        // Radio button controls for page switching
+        document.querySelectorAll('.control__radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    const newPage = this.value;
+                    const oldPageEl = document.querySelector(`.${currentPage}`);
+                    const newPageEl = document.querySelector(`.${newPage}`);
+                    const headerTitle = document.querySelector('.my-header__title');
+
+                    // Hide/show header title based on page
+                    if (newPage === 'page-about') {
+                        headerTitle.style.display = 'none';
+                    } else {
+                        headerTitle.style.display = 'block';
+                    }
+
+                    // Immediate switch with scale and rotation
+                    anime({
+                        targets: oldPageEl,
+                        scale: [1, 0.95],
+                        opacity: [1, 0],
+                        rotateX: [0, -10],
+                        duration: 260,
+                        easing: 'easeInCubic',
+                        complete: () => {
+                            if (oldPageEl) oldPageEl.classList.add('grid--hidden');
+                            if (newPageEl) newPageEl.classList.remove('grid--hidden');
+                            
+                            // Animate in new page with spring
+                            anime({
+                                targets: newPageEl,
+                                scale: [1.05, 1],
+                                opacity: [0, 1],
+                                rotateX: [10, 0],
+                                duration: 375,
+                                easing: 'easeOutExpo',
+                                complete: () => {
+                                    currentPage = newPage;
+                                    
+                                    setTimeout(() => {
+                                        if (newPage === 'page-projects') {
+                                            animateProjectsGrid();
+                                        } else if (newPage === 'page-cv') {
+                                            animateCVSections();
+                                        } else if (newPage === 'page-about') {
+                                            animateAboutPage();
+                                        }
+                                    }, 50);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        // Animate social icons on load
+        function animateSocialIcons() {
+            const icons = document.querySelectorAll('.social-icon');
+            anime({
+                targets: icons,
+                opacity: [0, 1],
+                translateX: [20, 0],
+                duration: 800,
+                delay: anime.stagger(150, {start: 600}),
+                easing: 'easeOutCubic'
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            document.body.classList.remove('loading');
+            
+            generateProjectsGrid();
+            generateFavoritesGrids();
+            animateSocialIcons();
+            
+            // Set up modal event listeners
+            document.getElementById('book-modal-close').addEventListener('click', closeBookModal);
+            document.getElementById('book-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeBookModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeBookModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
