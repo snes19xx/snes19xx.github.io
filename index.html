@@ -253,6 +253,7 @@
             display: block;
             margin: 0 auto;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
         }
 
         .grid--hidden {
@@ -268,6 +269,7 @@
 
         .grid__sizer {
             margin-bottom: 0 !important;
+            height: 0 !important;
         }
 
         .grid__item {
@@ -275,6 +277,11 @@
             overflow: hidden;
             opacity: 0;
             transform: scale(0.8);
+            min-height: 200px;
+        }
+
+        .grid__item.has-video {
+            aspect-ratio: 1/1;
         }
 
         .grid__link {
@@ -306,9 +313,11 @@
         .grid__img video {
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease;
             opacity: 0;
+            background: var(--bg1);
             /* Apply the same Everforest filter effect to videos */
             filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(0.8);
         }
@@ -890,11 +899,11 @@
                          alt="Sandesh Bhandari" 
                          class="about-profile-image">
                     <p class="about-intro">
-                        Hi! I'm Sandesh Bhandari — I love playing with data, studying the Earth, its cities, and everything that connects them. I'm happiest when I'm reading by the ocean or geeking out over Pokémon
+                        Hi! I'm Sandesh Bhandari – I love playing with data, studying the Earth, its cities, and everything that connects them. I'm happiest when I'm reading by the ocean or geeking out over Pokémon
                     </p>
 
                     <div class="favorites-section">
-                        <h2>Favorite Books</h2>
+                        <h2>My Favorite Books</h2>
                         <div class="favorites-grid" id="books-grid"></div>
                     </div>
 
@@ -927,9 +936,9 @@
         const portfolioItems = [
             { title: "Toronto Urban Heat Explorer", desc: "Land surface temperature analysis showing the cooling effect of urban vegetation.", tags: ["Python", "D3.js"], image: "images/111.png", link: "Toronto_UH/toronto-heat-map.html" },
             { title: "Re-Zoning the Yard", desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto", tags: ["ArcGIS"], image: "images/11.jpg", link: "https://arcg.is/zOG1P" },
-            { title: "Better Geophysics", desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations", tags: ["plot", "javascript"], video: "images/5.mp4", link: "https://observablehq.com/d/ec14d0aa25e9f007" },
             { title: "Playful Percentograph", desc: "Percentograph visualization created using plot.js, with animations because Looking at data doesn't have to be boring", tags: ["d3.js"], image: "images/2.gif", link: "https://observablehq.com/@snes19xx/playful-percentograph" },
             { title: "MAPS", desc: "Maps I made on my spare time and as part of my courses at the University of Toronto", tags: ["ArcGIS", "Python"], video: "images/3.mp4", link: "maps/index.html" },
+            { title: "Better Geophysics", desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations", tags: ["plot", "javascript"], video: "images/5.mp4", link: "https://observablehq.com/d/ec14d0aa25e9f007" },
             { title: "Visualizing Magnetometer Survey Data with Plot", desc: "In this project I use observable's plots to visualize data my team obtained from Deep River, ON in August 2025 as part of our Geophysics field course", tags: ["plot", "javascript"], image: "images/6.png", link: "https://observablehq.com/d/af7c80cf0774f406" },
             { title: "toronto-farmers-markets", desc: "Digitizing Toronto's public and farmers markets with GIS", tags: ["ArcGIS", "GeoJSON"], image: "images/7.jpeg", link: "https://github.com/snes19xx/toronto-farmers-markets" },
             { title: "Starshower", desc: "Javascript demo for custom new tab pages, presentations, screensaver", tags: ["javascript", "html"], video: "images/8.mp4", link: "https://github.com/snes19xx/Starshower" },
@@ -978,11 +987,17 @@
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid__item';
                 
+                // Add class for video items
+                if (item.video) {
+                    gridItem.classList.add('has-video');
+                }
+                
                 let mediaElement;
                 if (item.video) {
                     // Use video element for MP4 files
                     mediaElement = `
-                        <video class="grid__img" autoplay loop muted playsinline oncanplay="this.classList.add('loaded')">
+                        <video class="grid__img" autoplay loop muted playsinline 
+                               onloadedmetadata="this.classList.add('loaded'); if(window.masonryInstance) window.masonryInstance.layout();">
                             <source src="${item.video}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -1013,23 +1028,33 @@
                 grid.appendChild(gridItem);
             });
 
-            // Initialize Masonry after media is loaded
-            imagesLoaded(grid, function() {
-                if (!masonryInstance) {
-                    masonryInstance = new Masonry('.page-projects', {
-                        itemSelector: '.grid__item',
-                        columnWidth: '.grid__sizer',
-                        percentPosition: true,
-                        transitionDuration: 0
-                    });
-                } else {
-                    masonryInstance.layout();
-                }
-                
-                // Animate the grid items after masonry layout
-                setTimeout(() => animateProjectsGrid(), 100);
-            });
+            // Initialize Masonry after all items are added
+            initializeMasonryGrid();
         }
+
+        function initializeMasonryGrid() {
+    const grid = document.querySelector('.page-projects');
+    
+    // Wait for both images and videos
+    imagesLoaded(grid, { background: true }, function() {
+        if (!masonryInstance) {
+            masonryInstance = new Masonry('.page-projects', {
+                itemSelector: '.grid__item',
+                columnWidth: '.grid__sizer',
+                percentPosition: true,
+                transitionDuration: '0.3s',
+                initLayout: true
+            });
+            window.masonryInstance = masonryInstance; // Make globally accessible
+        } else {
+            masonryInstance.reloadItems();
+            masonryInstance.layout();
+        }
+        
+        // Animate the grid items
+        setTimeout(() => animateProjectsGrid(), 200);
+    });
+}
 
         function generateFavoritesGrids() {
             // Books only
@@ -1168,7 +1193,7 @@
                 .attr("y", -40)
                 .attr("fill", "#d3c6aa")
                 .attr("text-anchor", "middle")
-                .text("↑ Density");
+                .text("→ Density");
             
             // Bars
             const bars = svg.append("g")
