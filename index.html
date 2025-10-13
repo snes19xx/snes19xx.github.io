@@ -301,87 +301,65 @@
             transform: scale(1.05);
             filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
         }
+/* Overlay */
+.grid__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 53, 59, 0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    padding: 25px;
+}
 
-        /* Video element styles */
-        .grid__img video {
-            display: block;
-            width: 100%;
-            height: auto;
-            transition: transform 0.3s ease;
-            opacity: 0;
-            /* Apply the same Everforest filter effect to videos */
-            filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(0.8);
-        }
+.grid__item:hover .grid__overlay {
+    opacity: 1;
+}
 
-        .grid__img video.loaded {
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
+.grid__title {
+    font-size: 1.3em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--fg);
+    text-align: center;
+    line-height: 1.3;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
 
-        .grid__item:hover .grid__img video {
-            transform: scale(1.05);
-            filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
-        }
+.grid__description {
+    font-size: 0.9em;
+    color: var(--grey2);
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 15px;
+    max-width: 100%;
+}
 
-        /* Overlay */
-        .grid__overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(45, 53, 59, 0.92);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            padding: 25px;
-        }
+.grid__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: auto;
+}
 
-        .grid__item:hover .grid__overlay {
-            opacity: 1;
-        }
-
-        .grid__title {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--fg);
-            text-align: center;
-            line-height: 1.3;
-            max-width: 100%;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .grid__description {
-            font-size: 0.9em;
-            color: var(--grey2);
-            line-height: 1.5;
-            text-align: center;
-            margin-bottom: 15px;
-            max-width: 100%;
-        }
-
-        .grid__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-            margin-top: auto;
-        }
-
-        .grid__tag {
-            background: var(--bg2);
-            color: var(--aqua);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 500;
-            border: 1px solid var(--bg3);
-        }
+.grid__tag {
+    background: var(--bg2);
+    color: var(--aqua);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 500;
+    border: 1px solid var(--bg3);
+}
         /* CV Page */
         .cv-container {
             max-width: 900px;
@@ -894,7 +872,7 @@
                     </p>
 
                     <div class="favorites-section">
-                        <h2>Favorite Books</h2>
+                        <h2>My Favorite Books</h2>
                         <div class="favorites-grid" id="books-grid"></div>
                     </div>
 
@@ -924,15 +902,15 @@
         document.documentElement.className = 'js';
 
         // Projects data
-        const portfolioItems = [
+         const portfolioItems = [
             { title: "Toronto Urban Heat Explorer", desc: "Land surface temperature analysis showing the cooling effect of urban vegetation.", tags: ["Python", "D3.js"], image: "images/111.png", link: "Toronto_UH/toronto-heat-map.html" },
             { title: "Re-Zoning the Yard", desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto", tags: ["ArcGIS"], image: "images/11.jpg", link: "https://arcg.is/zOG1P" },
             { title: "Playful Percentograph", desc: "Percentograph visualization created using plot.js, with animations because Looking at data doesn't have to be boring", tags: ["d3.js"], image: "images/2.gif", link: "https://observablehq.com/@snes19xx/playful-percentograph" },
-            { title: "MAPS", desc: "Maps I made on my spare time and as part of my courses at the University of Toronto", tags: ["ArcGIS", "Python"], video: "images/3.mp4", link: "maps/index.html" },
-            { title: "Better Geophysics", desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations", tags: ["plot", "javascript"], video: "images/5.mp4", link: "https://observablehq.com/d/ec14d0aa25e9f007" },
+            { title: "MAPS", desc: "Maps I made on my spare time and as part of my courses at the University of Toronto", tags: ["ArcGIS", "Python"], image: "images/3.gif", link: "maps/index.html" },
+            { title: "Better Geophysics", desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations", tags: ["plot", "javascript"], image: "images/5.gif", link: "https://observablehq.com/d/ec14d0aa25e9f007" },
             { title: "Visualizing Magnetometer Survey Data with Plot", desc: "In this project I use observable's plots to visualize data my team obtained from Deep River, ON in August 2025 as part of our Geophysics field course", tags: ["plot", "javascript"], image: "images/6.png", link: "https://observablehq.com/d/af7c80cf0774f406" },
             { title: "toronto-farmers-markets", desc: "Digitizing Toronto's public and farmers markets with GIS", tags: ["ArcGIS", "GeoJSON"], image: "images/7.jpeg", link: "https://github.com/snes19xx/toronto-farmers-markets" },
-            { title: "Starshower", desc: "Javascript demo for custom new tab pages, presentations, screensaver", tags: ["javascript", "html"], video: "images/8.mp4", link: "https://github.com/snes19xx/Starshower" },
+            { title: "Starshower", desc: "Javascript demo for custom new tab pages, presentations, screensaver", tags: ["javascript", "html"], image: "images/8.gif", link: "https://github.com/snes19xx/Starshower" },
         ];
 
         // Favorites data for About page
@@ -977,30 +955,13 @@
             portfolioItems.forEach((item) => {
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid__item';
-                
-                let mediaElement;
-                if (item.video) {
-                    // Use video element for MP4 files
-                    mediaElement = `
-                        <video class="grid__img" autoplay loop muted playsinline oncanplay="this.classList.add('loaded')">
-                            <source src="${item.video}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    `;
-                } else {
-                    // Use image element for other files
-                    mediaElement = `
+                gridItem.innerHTML = `
+                    <a href="${item.link}" class="grid__link">
                         <img src="${item.image}" 
                              alt="${item.title}" 
                              class="grid__img"
                              loading="lazy"
                              onload="this.classList.add('loaded')">
-                    `;
-                }
-
-                gridItem.innerHTML = `
-                    <a href="${item.link}" class="grid__link">
-                        ${mediaElement}
                         <div class="grid__overlay">
                             <h3 class="grid__title">${item.title}</h3>
                             <p class="grid__description">${item.desc}</p>
@@ -1013,7 +974,7 @@
                 grid.appendChild(gridItem);
             });
 
-            // Initialize Masonry after media is loaded
+            // Initialize Masonry after images are loaded
             imagesLoaded(grid, function() {
                 if (!masonryInstance) {
                     masonryInstance = new Masonry('.page-projects', {
