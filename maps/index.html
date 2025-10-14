@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAPS by Sandesh Bhandari</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -54,18 +52,16 @@
         }
 
         .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
             position: relative;
         }
 
-        .grid-sizer,
         .grid-item {
-            width: calc(25% - 30px);
-        }
-
-        .grid-item {
-            margin-bottom: 40px;
             opacity: 0;
             transform: scale(0.9) translateY(20px);
+            min-height: 200px;
         }
 
         .map-wrapper {
@@ -90,6 +86,7 @@
             display: block;
             object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #f5f1e3;
         }
 
         .map-wrapper:hover img {
@@ -107,6 +104,34 @@
 
         .map-wrapper:hover iframe {
             transform: scale(1.02);
+        }
+
+        /* Skeleton loader for images */
+        .map-wrapper.loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                #f5f1e3 0%,
+                #e6e2d3 50%,
+                #f5f1e3 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            z-index: 1;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .map-wrapper img.loaded {
+            opacity: 1;
         }
 
         .interactive-badge {
@@ -210,6 +235,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             z-index: 9999;
             transition: opacity 0.5s ease;
         }
@@ -228,22 +254,27 @@
             animation: spin 1s linear infinite;
         }
 
+        .loading-text {
+            margin-top: 20px;
+            color: #7a8478;
+            font-size: 0.9rem;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
         /* Responsive */
         @media screen and (max-width: 1400px) {
-            .grid-sizer,
-            .grid-item {
-                width: calc(33.333% - 30px);
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 30px;
             }
         }
 
         @media screen and (max-width: 1024px) {
-            .grid-sizer,
-            .grid-item {
-                width: calc(50% - 30px);
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
             
             .header h1 {
@@ -256,13 +287,9 @@
                 padding: 0 20px 40px;
             }
             
-            .grid-sizer,
-            .grid-item {
-                width: calc(50% - 20px);
-            }
-            
-            .grid-item {
-                margin-bottom: 20px;
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
             
             .header {
@@ -279,9 +306,8 @@
         }
 
         @media screen and (max-width: 480px) {
-            .grid-sizer,
-            .grid-item {
-                width: 100%;
+            .grid {
+                grid-template-columns: 1fr;
             }
             
             .header h1 {
@@ -293,6 +319,7 @@
 <body>
     <div class="loading-overlay">
         <div class="loader"></div>
+        <div class="loading-text">Loading maps...</div>
     </div>
 
     <div class="header">
@@ -302,7 +329,6 @@
 
     <div class="gallery-container">
         <div class="grid" id="grid">
-            <div class="grid-sizer"></div>
             <!-- Grid items will be generated here -->
         </div>
     </div>
@@ -316,86 +342,106 @@
     </div>
 
     <script>
-        // Generate map items
         const grid = document.getElementById('grid');
-        let masonryInstance;
+        let loadedCount = 0;
+        const totalImages = 46;
+        let firstBatchLoaded = false;
 
-// Create 46 PNG items
-for (let i = 1; i <= 46; i++) {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.innerHTML = `
-        <div class="map-wrapper" data-type="png" data-src="${i}.png">
-            <img src="${i}.png" alt="Map ${i}">
-        </div>
-    `;
-    grid.appendChild(item);
-}
+        // Create 46 PNG items with lazy loading
+        for (let i = 1; i <= 46; i++) {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            
+            // Load first 12 images immediately, rest lazily
+            const loadingAttr = i <= 12 ? 'eager' : 'lazy';
+            
+            item.innerHTML = `
+                <div class="map-wrapper loading" data-type="png" data-src="${i}.png">
+                    <img src="${i}.png" 
+                         alt="Map ${i}" 
+                         loading="${loadingAttr}"
+                         decoding="async"
+                         onload="handleImageLoad(this)">
+                </div>
+            `;
+            grid.appendChild(item);
+        }
 
-        // Create 2 interactive HTML items
+        // Create 3 interactive HTML items
         for (let i = 42; i <= 44; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             item.innerHTML = `
                 <div class="map-wrapper" data-type="html" data-src="map${i}.html">
-                    <iframe src="map${i}.html" scrolling="no"></iframe>
+                    <iframe src="map${i}.html" scrolling="no" loading="lazy"></iframe>
                     <div class="interactive-badge">Interactive</div>
                 </div>
             `;
             grid.appendChild(item);
         }
 
-        // Initialize Masonry after images load
-        imagesLoaded(grid, function() {
-            masonryInstance = new Masonry(grid, {
-                itemSelector: '.grid-item',
-                columnWidth: '.grid-sizer',
-                gutter: 40,
-                percentPosition: true,
-                transitionDuration: 0
-            });
-
-            // Hide loading overlay
-            document.querySelector('.loading-overlay').classList.add('hidden');
-
-            // Animate items in with anime.js
-            setTimeout(() => {
-                const items = document.querySelectorAll('.grid-item');
+        // Handle image load
+        window.handleImageLoad = function(img) {
+            img.classList.add('loaded');
+            img.parentElement.classList.remove('loading');
+            loadedCount++;
+            
+            // Hide loading overlay after first batch (12 images) loads
+            if (loadedCount >= 12 && !firstBatchLoaded) {
+                firstBatchLoaded = true;
+                document.querySelector('.loading-overlay').classList.add('hidden');
                 
-                anime({
-                    targets: items,
-                    opacity: [0, 1],
-                    scale: [0.9, 1],
-                    translateY: [20, 0],
-                    duration: 1200,
-                    delay: anime.stagger(80, {start: 100}),
-                    easing: 'easeOutElastic(1, .6)'
-                });
-            }, 100);
-        });
+                // Animate first batch
+                animateItems(0, 12);
+            }
+            
+            // Animate remaining items in batches
+            if (loadedCount > 12 && loadedCount % 6 === 0) {
+                const batchStart = loadedCount - 6;
+                const batchEnd = loadedCount;
+                animateItems(batchStart, batchEnd);
+            }
+            
+            // Animate last remaining items
+            if (loadedCount === totalImages) {
+                const remainder = totalImages % 6;
+                if (remainder > 0) {
+                    animateItems(totalImages - remainder, totalImages);
+                }
+            }
+        };
+
+        function animateItems(start, end) {
+            const items = Array.from(document.querySelectorAll('.grid-item')).slice(start, end);
+            
+            anime({
+                targets: items,
+                opacity: [0, 1],
+                scale: [0.9, 1],
+                translateY: [20, 0],
+                duration: 800,
+                delay: anime.stagger(60),
+                easing: 'easeOutQuad'
+            });
+        }
 
         // Modal functionality
         const modal = document.getElementById('modal');
         const modalContent = document.getElementById('modalContent');
         const modalClose = document.getElementById('modalClose');
         let currentImageIndex = -1;
-        const pngImages = Array.from({length: 39}, (_, i) => i + 1); // 1 to 39
+        const pngImages = Array.from({length: 46}, (_, i) => i + 1);
 
         function openModal(src, type) {
             if (type === 'png') {
-                // Find current index
                 const mapNumber = parseInt(src.match(/(\d+)\.png/)[1]);
                 currentImageIndex = pngImages.indexOf(mapNumber);
-                
-                // Show PNG in modal
                 modalContent.innerHTML = `<img src="${src}" alt="Map">`;
             } else if (type === 'html') {
-                // Show interactive HTML in modal (no navigation for HTML)
                 currentImageIndex = -1;
                 modalContent.innerHTML = `<iframe src="${src}"></iframe>`;
             }
 
-            // Animate modal opening
             modal.style.display = 'flex';
             anime({
                 targets: modal,
@@ -420,27 +466,15 @@ for (let i = 1; i <= 46; i++) {
         }
 
         function navigateImage(direction) {
-            console.log('Navigate called:', direction, 'Current index:', currentImageIndex);
-            
-            if (currentImageIndex === -1) {
-                console.log('Not viewing a PNG');
-                return; // Not viewing a PNG
-            }
+            if (currentImageIndex === -1) return;
             
             const newIndex = currentImageIndex + direction;
-            console.log('New index would be:', newIndex);
-            
-            if (newIndex < 0 || newIndex >= pngImages.length) {
-                console.log('Index out of bounds');
-                return;
-            }
+            if (newIndex < 0 || newIndex >= pngImages.length) return;
             
             currentImageIndex = newIndex;
             const newMapNumber = pngImages[currentImageIndex];
             const newSrc = `${newMapNumber}.png`;
-            console.log('Loading new image:', newSrc);
             
-            // Animate transition
             anime({
                 targets: '#modalContent',
                 opacity: [1, 0],
@@ -461,7 +495,7 @@ for (let i = 1; i <= 46; i++) {
             });
         }
 
-        // Click handlers for map items - using event delegation
+        // Click handlers
         grid.addEventListener('click', function(e) {
             const mapWrapper = e.target.closest('.map-wrapper');
             if (mapWrapper) {
@@ -472,7 +506,6 @@ for (let i = 1; i <= 46; i++) {
             }
         });
 
-        // Close modal
         function closeModal() {
             anime({
                 targets: '.modal-content-wrapper',
@@ -519,17 +552,6 @@ for (let i = 1; i <= 46; i++) {
                     navigateImage(1);
                 }
             }
-        });
-
-        // Handle window resize
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(function() {
-                if (masonryInstance) {
-                    masonryInstance.layout();
-                }
-            }, 250);
         });
     </script>
 </body>
