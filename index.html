@@ -6,9 +6,7 @@
     <title>Sandesh Bhandari - Portfolio</title>
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <style>
         /* Everforest Dark Color Palette */
@@ -71,7 +69,7 @@
             height: 40px;
             margin: -20px 0 0 -20px;
             border: 8px solid var(--bg2);
-            border-bottom-color: var(--bg3);
+            border-bottom-color: var(--green);
             border-radius: 50%;
             animation: animLoader 0.8s linear infinite forwards;
         }
@@ -235,25 +233,38 @@
             color: var(--grey1);
             transition: color 0.3s ease, background 0.3s ease;
             cursor: pointer;
+            border-radius: 4px;
         }
 
         .control__radio:checked + .control__label {
             color: var(--bg0);
             background: var(--green);
+            box-shadow: 0 4px 12px rgba(168, 192, 128, 0.03);
         }
 
         .control__radio:not(:checked):hover + .control__label {
             color: var(--fg);
+            background: var(--bg2);
         }
 
-        /* Grid */
+        /* CSS Grid for Projects */
         .grid {
             position: relative;
             z-index: 2;
-            display: block;
-            margin: 0 auto;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
+        }
+
+        .page-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 0 auto;
+        }
+
+        .page-cv,
+        .page-about {
+            display: block;
         }
 
         .grid--hidden {
@@ -267,17 +278,32 @@
             transform: translateY(30px);
         }
 
-        .grid__sizer {
-            margin-bottom: 0 !important;
-            height: 0 !important;
-        }
-
         .grid__item {
             position: relative;
             overflow: hidden;
             opacity: 0;
             transform: scale(0.8);
             min-height: 200px;
+            border-radius: 12px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        box-shadow 0.4s ease,
+                        border-color 0.3s ease;
+            background: var(--bg1);
+            border: 1px solid var(--bg3);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        .grid__item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(167, 192, 128, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border-color: var(--bg4);
         }
 
         .grid__item.has-video {
@@ -287,25 +313,27 @@
         .grid__link {
             display: block;
             position: relative;
+            height: 100%;
         }
 
         .grid__img {
             display: block;
             width: 100%;
-            height: auto;
-            transition: transform 0.3s ease;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        filter 0.3s ease,
+                        opacity 0.5s ease;
             opacity: 0;
-            /* Everforest filter effect */
             filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(0.8);
         }
 
         .grid__img.loaded {
             opacity: 1;
-            transition: opacity 0.5s ease;
         }
 
         .grid__item:hover .grid__img {
-            transform: scale(1.05);
+            transform: scale(1.08);
             filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
         }
 
@@ -315,21 +343,52 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        filter 0.3s ease,
+                        opacity 0.5s ease;
             opacity: 0;
             background: var(--bg1);
-            /* Apply the same Everforest filter effect to videos */
             filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(0.8);
         }
 
         .grid__img video.loaded {
             opacity: 1;
-            transition: opacity 0.5s ease;
         }
 
         .grid__item:hover .grid__img video {
-            transform: scale(1.05);
+            transform: scale(1.08);
             filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95) contrast(1.05);
+        }
+
+        /* Shimmer loading effect */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .grid__item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(167, 192, 128, 0.1) 50%,
+                transparent 100%
+            );
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .grid__item:not(:has(.grid__img.loaded))::before {
+            opacity: 1;
         }
 
         /* Overlay */
@@ -339,18 +398,25 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(45, 53, 59, 0.92);
+            background: linear-gradient(
+                135deg,
+                rgba(45, 53, 59, 0.95) 0%,
+                rgba(45, 53, 59, 0.92) 100%
+            );
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
             padding: 25px;
+            z-index: 2;
         }
 
         .grid__item:hover .grid__overlay {
             opacity: 1;
+            backdrop-filter: blur(12px);
         }
 
         .grid__title {
@@ -363,6 +429,12 @@
             max-width: 100%;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            transform: translateY(10px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .grid__item:hover .grid__title {
+            transform: translateY(0);
         }
 
         .grid__description {
@@ -372,6 +444,12 @@
             text-align: center;
             margin-bottom: 15px;
             max-width: 100%;
+            transform: translateY(10px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+        }
+
+        .grid__item:hover .grid__description {
+            transform: translateY(0);
         }
 
         .grid__tags {
@@ -390,7 +468,21 @@
             font-size: 0.8em;
             font-weight: 500;
             border: 1px solid var(--bg3);
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        .grid__item:hover .grid__tag {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .grid__tag:nth-child(1) { transition-delay: 0.1s; }
+        .grid__tag:nth-child(2) { transition-delay: 0.15s; }
+        .grid__tag:nth-child(3) { transition-delay: 0.2s; }
+        .grid__tag:nth-child(4) { transition-delay: 0.25s; }
+
         /* CV Page */
         .cv-container {
             max-width: 900px;
@@ -504,7 +596,10 @@
             margin: 0 auto 2em;
             width: 400px;
             height: auto;
-            /* Apply Everforest filter to profile image too */
+            border-radius: 12px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 5px 15px rgba(0, 0, 0, 0.2);
             filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(1.1);
         }
 
@@ -574,6 +669,7 @@
             color: var(--grey0);
             margin-top: 1em;
         }
+
         .favorites-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -589,20 +685,23 @@
             aspect-ratio: 2/3;
             opacity: 0;
             transform: scale(0.8);
-            transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
             cursor: pointer;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06);
         }
 
         .favorite-item:hover {
-            box-shadow: 0 0 20px rgba(167, 192, 128, 0.4);
+            box-shadow: 0 0 25px rgba(167, 192, 128, 0.5);
+            transform: scale(1.05);
         }
 
         .favorite-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
-            /* Apply Everforest filter to book images */
+            transition: transform 0.3s ease, filter 0.3s ease;
             filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9) contrast(1.1);
         }
 
@@ -703,29 +802,7 @@
             transform: rotate(90deg);
         }
 
-        /* Grid sizing */
-        .grid .grid__item,
-        .grid .grid__sizer {
-            width: calc(50% - 20px);
-            margin: 0 10px 20px;
-        }
-
-        @media screen and (min-width: 60em) {
-            .grid .grid__item,
-            .grid .grid__sizer {
-                width: calc((100% / 3) - 20px);
-                margin: 0 10px 20px;
-            }
-        }
-
-        @media screen and (min-width: 70em) {
-            .grid .grid__item,
-            .grid .grid__sizer {
-                width: calc(25% - 30px);
-                margin: 0 15px 30px;
-            }
-        }
-
+        /* Responsive adjustments */
         @media screen and (max-width: 50em) {
             main {
                 display: block;
@@ -752,6 +829,10 @@
                 margin: 0 0 1em;
                 text-align: left;
             }
+            .page-projects {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
             .favorites-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 15px;
@@ -769,7 +850,6 @@
             }
         }
 
-        /* Restructure for better mobile experience */
         @media screen and (max-width: 768px) {
             .content--side {
                 position: sticky;
@@ -785,6 +865,10 @@
                 right: auto;
                 justify-content: center;
                 margin: 1em 0;
+            }
+            
+            .page-projects {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -833,7 +917,7 @@
         <div class="content content--center">
             <!-- Projects Page -->
             <div class="grid page-projects">
-                <div class="grid__sizer"></div>
+                <!-- Grid items will be generated here -->
             </div>
 
             <!-- CV Page -->
@@ -908,11 +992,9 @@
                     </div>
 
                      <div class="credits-section">
-                        <h2>Credits</h2>
                         <div class="credits-list">
-                            <p>This Portfolio was Inspired by <a href="https://github.com/codrops/GridLoadingAnimations/" target="_blank" rel="noopener noreferrer">Codrops Grid Loading Animations</a></p>
-                            <p><a href="https://masonry.desandro.com/" target="_blank" rel="noopener noreferrer">Masonry</a> • <a href="https://animejs.com/" target="_blank" rel="noopener noreferrer">anime.js</a> • <a href="https://github.com/sainnhe/everforest" target="_blank" rel="noopener noreferrer">Everforest</a></p>
-                            <p class="copyright">2025 Sandesh Bhandari</p>
+                            <p><a href="https://animejs.com/" target="_blank" rel="noopener noreferrer">anime.js</a> • <a href="https://d3js.org/" target="_blank" rel="noopener noreferrer">D3.js</a> • <a href="https://github.com/sainnhe/everforest" target="_blank" rel="noopener noreferrer">Everforest</a></p>
+                            <p class="copyright">© 2025 Sandesh Bhandari</p>
                         </div>
                     </div>
                 </div>
@@ -953,9 +1035,8 @@
             { image: "images/books/5.jpg", title: "Norwegian Wood" }
         ];
 
-        let masonryInstance;
         let currentPage = 'page-projects';
-        let gradeVizGenerated = false; // Cache flag for grade visualization
+        let gradeVizGenerated = false;
 
         // Book Modal Functions
         function openBookModal(imageSrc, title) {
@@ -967,13 +1048,13 @@
             modalTitle.textContent = title;
             
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
+            document.body.style.overflow = 'hidden';
         }
 
         function closeBookModal() {
             const modal = document.getElementById('book-modal');
             modal.classList.remove('active');
-            document.body.style.overflow = ''; // Re-enable scrolling
+            document.body.style.overflow = '';
         }
 
         function generateProjectsGrid() {
@@ -987,28 +1068,25 @@
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid__item';
                 
-                // Add class for video items
                 if (item.video) {
                     gridItem.classList.add('has-video');
                 }
                 
                 let mediaElement;
                 if (item.video) {
-                    // Use video element for MP4 files
                     mediaElement = `
-                        <video class="grid__img" autoplay loop muted playsinline 
-                               onloadedmetadata="this.classList.add('loaded'); if(window.masonryInstance) window.masonryInstance.layout();">
+                        <video class="grid__img" autoplay loop muted playsinline preload="metadata"
+                               onloadeddata="this.classList.add('loaded')">
                             <source src="${item.video}" type="video/mp4">
-                            Your browser does not support the video tag.
                         </video>
                     `;
                 } else {
-                    // Use image element for other files
                     mediaElement = `
                         <img src="${item.image}" 
                              alt="${item.title}" 
                              class="grid__img"
                              loading="lazy"
+                             decoding="async"
                              onload="this.classList.add('loaded')">
                     `;
                 }
@@ -1028,36 +1106,10 @@
                 grid.appendChild(gridItem);
             });
 
-            // Initialize Masonry after all items are added
-            initializeMasonryGrid();
+            setTimeout(() => animateProjectsGrid(), 100);
         }
-
-        function initializeMasonryGrid() {
-    const grid = document.querySelector('.page-projects');
-    
-    // Wait for both images and videos
-    imagesLoaded(grid, { background: true }, function() {
-        if (!masonryInstance) {
-            masonryInstance = new Masonry('.page-projects', {
-                itemSelector: '.grid__item',
-                columnWidth: '.grid__sizer',
-                percentPosition: true,
-                transitionDuration: '0.3s',
-                initLayout: true
-            });
-            window.masonryInstance = masonryInstance; // Make globally accessible
-        } else {
-            masonryInstance.reloadItems();
-            masonryInstance.layout();
-        }
-        
-        // Animate the grid items
-        setTimeout(() => animateProjectsGrid(), 200);
-    });
-}
 
         function generateFavoritesGrids() {
-            // Books only
             const booksGrid = document.getElementById('books-grid');
             favoriteBooks.forEach(book => {
                 const item = document.createElement('div');
@@ -1065,6 +1117,7 @@
                 item.innerHTML = `<img src="${book.image}" 
                                        alt="${book.title}"
                                        loading="lazy"
+                                       decoding="async"
                                        onload="this.style.opacity='1'">`;
                 item.addEventListener('click', () => openBookModal(book.image, book.title));
                 booksGrid.appendChild(item);
@@ -1078,9 +1131,9 @@
                 targets: items,
                 opacity: [0, 1],
                 scale: [0.8, 1],
-                duration: 800,
-                delay: anime.stagger(80, {grid: [4, 3], from: 'center'}),
-                easing: 'easeOutElastic(1, .8)'
+                duration: 900,
+                delay: anime.stagger(60, {grid: [4, 3], from: 'center'}),
+                easing: 'spring(1, 80, 10, 0)'
             });
         }
 
@@ -1091,11 +1144,10 @@
                 targets: sections,
                 opacity: [0, 1],
                 translateY: [20, 0],
-                duration: 600,
+                duration: 300,
                 delay: anime.stagger(100),
                 easing: 'easeOutQuad',
                 complete: () => {
-                    // Only generate grade visualization once
                     if (!gradeVizGenerated) {
                         generateGradeViz();
                         gradeVizGenerated = true;
@@ -1111,7 +1163,6 @@
                 94, 82, 88, 82, 86
             ];
 
-            // Process data like Observable notebook
             const numBins = 100;
             const sortedGrades = grades.slice().sort(d3.ascending);
             const n = sortedGrades.length;
@@ -1135,7 +1186,6 @@
             const width = 600;
             const height = 500;
             
-            // Create SVG
             const svg = d3.select("#grade-viz")
                 .append("svg")
                 .attr("width", width)
@@ -1144,7 +1194,6 @@
                 .style("max-width", "100%")
                 .style("height", "auto");
             
-            // Scales
             const x = d3.scaleLinear()
                 .domain([76, 96])
                 .range([60, width - 100]);
@@ -1153,12 +1202,10 @@
                 .domain([0, d3.max(binnedData, d => d.density)])
                 .range([height - 60, 60]);
             
-            // Everforest color scale
             const color = d3.scaleLinear()
                 .domain([0, 50, 100])
                 .range(['#e67e80', '#dbbc7f', '#a7c080']);
             
-            // Title
             svg.append("text")
                 .attr("x", width / 2)
                 .attr("y", 30)
@@ -1168,7 +1215,6 @@
                 .attr("fill", "#d3c6aa")
                 .text("Grade Distribution by Percentile");
             
-            // Axes
             const xAxis = d3.axisBottom(x).tickFormat(d3.format(".0f"));
             const yAxis = d3.axisLeft(y);
             
@@ -1195,7 +1241,6 @@
                 .attr("text-anchor", "middle")
                 .text("→ Density");
             
-            // Bars
             const bars = svg.append("g")
                 .selectAll("rect")
                 .data(binnedData)
@@ -1208,7 +1253,6 @@
                 .attr("fill", d => color(d.percentile))
                 .attr("stroke", "none");
             
-            // Animation
             bars.transition()
                 .duration(2000)
                 .delay((d, i) => i * 15)
@@ -1227,7 +1271,6 @@
                         .attr("y", d => y(d.density));
                 });
             
-            // Legend
             const legendWidth = 20;
             const legendHeight = 150;
             const legendX = width - 70;
@@ -1326,13 +1369,12 @@
                 targets: favoriteItems,
                 opacity: [0, 1],
                 scale: [0.8, 1],
-                duration: 600,
+                duration: 300,
                 delay: anime.stagger(50, {start: 600}),
                 easing: 'easeOutQuad'
             });
         }
 
-        // Radio button controls for page switching
         document.querySelectorAll('.control__radio').forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.checked) {
@@ -1341,14 +1383,12 @@
                     const newPageEl = document.querySelector(`.${newPage}`);
                     const headerTitle = document.querySelector('.my-header__title');
 
-                    // Hide/show header title based on page
                     if (newPage === 'page-about') {
                         headerTitle.style.display = 'none';
                     } else {
                         headerTitle.style.display = 'block';
                     }
 
-                    // Immediate switch with scale and rotation
                     anime({
                         targets: oldPageEl,
                         scale: [1, 0.95],
@@ -1360,7 +1400,6 @@
                             if (oldPageEl) oldPageEl.classList.add('grid--hidden');
                             if (newPageEl) newPageEl.classList.remove('grid--hidden');
                             
-                            // Animate in new page with spring
                             anime({
                                 targets: newPageEl,
                                 scale: [1.05, 1],
@@ -1388,7 +1427,6 @@
             });
         });
 
-        // Animate social icons on load
         function animateSocialIcons() {
             const icons = document.querySelectorAll('.social-icon');
             anime({
@@ -1401,7 +1439,6 @@
             });
         }
 
-        // Initialize on load
         window.addEventListener('load', () => {
             document.body.classList.remove('loading');
             
@@ -1409,7 +1446,6 @@
             generateFavoritesGrids();
             animateSocialIcons();
             
-            // Set up modal event listeners
             document.getElementById('book-modal-close').addEventListener('click', closeBookModal);
             document.getElementById('book-modal').addEventListener('click', function(e) {
                 if (e.target === this) {
@@ -1417,7 +1453,6 @@
                 }
             });
             
-            // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeBookModal();
