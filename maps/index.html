@@ -344,11 +344,11 @@
     <script>
         const grid = document.getElementById('grid');
         let loadedCount = 0;
-        const totalImages = 43; // 40 PNGs + 3 HTML maps
+        const totalImages = 52; // 49 PNGs + 3 HTML maps
         let firstBatchLoaded = false;
 
-        // Create 40 PNG items with lazy loading (1-41, excluding 42-44)
-        for (let i = 1; i <= 41; i++) {
+        // Create 49 PNG items with lazy loading (1-49)
+        for (let i = 1; i <= 49; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             
@@ -367,36 +367,19 @@
             grid.appendChild(item);
         }
 
-        // Create 3 interactive HTML items (42-44)
-        for (let i = 42; i <= 49; i++) {
+        // Create 3 interactive HTML items (50-52)
+        for (let i = 50; i <= 52; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             item.innerHTML = `
-                <div class="map-wrapper" data-type="html" data-src="map${i}.html">
-                    <iframe src="map${i}.html" scrolling="no" loading="lazy"></iframe>
+                <div class="map-wrapper" data-type="html" data-src="${i}.html">
+                    <iframe src="${i}.html" scrolling="no" loading="lazy"></iframe>
                     <div class="interactive-badge">Interactive</div>
                 </div>
             `;
             grid.appendChild(item);
             // Count HTML maps as loaded immediately for animation purposes
             loadedCount++;
-        }
-
-        // Continue with remaining PNGs (45-46)
-        for (let i = 50; i <= 52; i++) {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            
-            item.innerHTML = `
-                <div class="map-wrapper loading" data-type="png" data-src="${i}.png">
-                    <img src="${i}.png" 
-                         alt="Map ${i}" 
-                         loading="lazy"
-                         decoding="async"
-                         onload="handleImageLoad(this)">
-                </div>
-            `;
-            grid.appendChild(item);
         }
 
         // Animate HTML items immediately
@@ -463,8 +446,8 @@
         const modalContent = document.getElementById('modalContent');
         const modalClose = document.getElementById('modalClose');
         let currentImageIndex = -1;
-        // Only PNG images for navigation (all except 42-44)
-        const pngImages = [...Array.from({length: 41}, (_, i) => i + 1), 45, 46];
+        // Only PNG images for navigation (1-49)
+        const pngImages = Array.from({length: 49}, (_, i) => i + 1);
 
         function openModal(src, type) {
             if (type === 'png') {
