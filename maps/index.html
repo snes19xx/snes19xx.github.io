@@ -344,11 +344,11 @@
     <script>
         const grid = document.getElementById('grid');
         let loadedCount = 0;
-        const totalImages = 46;
+        const totalImages = 43; // 40 PNGs + 3 HTML maps
         let firstBatchLoaded = false;
 
-        // Create 46 PNG items with lazy loading
-        for (let i = 1; i <= 46; i++) {
+        // Create 40 PNG items with lazy loading (1-41, excluding 42-44)
+        for (let i = 1; i <= 41; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             
@@ -367,7 +367,7 @@
             grid.appendChild(item);
         }
 
-        // Create 3 interactive HTML items
+        // Create 3 interactive HTML items (42-44)
         for (let i = 42; i <= 44; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
@@ -378,7 +378,40 @@
                 </div>
             `;
             grid.appendChild(item);
+            // Count HTML maps as loaded immediately for animation purposes
+            loadedCount++;
         }
+
+        // Continue with remaining PNGs (45-46)
+        for (let i = 45; i <= 46; i++) {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            
+            item.innerHTML = `
+                <div class="map-wrapper loading" data-type="png" data-src="${i}.png">
+                    <img src="${i}.png" 
+                         alt="Map ${i}" 
+                         loading="lazy"
+                         decoding="async"
+                         onload="handleImageLoad(this)">
+                </div>
+            `;
+            grid.appendChild(item);
+        }
+
+        // Animate HTML items immediately
+        setTimeout(() => {
+            const htmlItems = document.querySelectorAll('.grid-item:has([data-type="html"])');
+            anime({
+                targets: htmlItems,
+                opacity: [0, 1],
+                scale: [0.9, 1],
+                translateY: [20, 0],
+                duration: 800,
+                delay: anime.stagger(60),
+                easing: 'easeOutQuad'
+            });
+        }, 300);
 
         // Handle image load
         window.handleImageLoad = function(img) {
@@ -430,7 +463,8 @@
         const modalContent = document.getElementById('modalContent');
         const modalClose = document.getElementById('modalClose');
         let currentImageIndex = -1;
-        const pngImages = Array.from({length: 46}, (_, i) => i + 1);
+        // Only PNG images for navigation (all except 42-44)
+        const pngImages = [...Array.from({length: 41}, (_, i) => i + 1), 45, 46];
 
         function openModal(src, type) {
             if (type === 'png') {
