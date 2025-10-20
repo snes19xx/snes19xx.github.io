@@ -46,60 +46,82 @@
         }
 
         .gallery-container {
-            max-width: 1600px;
+            max-width: 85%;
             margin: 0 auto;
-            padding: 0 40px 60px;
+            padding: 0 0 60px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
             position: relative;
+            max-width: 100%;
+            grid-auto-flow: dense;
         }
 
         .grid-item {
             opacity: 0;
             transform: scale(0.9) translateY(20px);
-            min-height: 200px;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Featured interactive maps - larger */
+        .grid-item:has([data-type="html"]) {
+            grid-column: span 2;
+            grid-row: span 2;
+            aspect-ratio: 1/1;
         }
 
         .map-wrapper {
             position: relative;
             cursor: pointer;
             overflow: hidden;
-            border-radius: 0;
-            box-shadow: 0 4px 20px rgba(45, 53, 59, 0.08);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(45, 53, 59, 0.12);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #bdc3ac50;
             height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
         }
 
         .map-wrapper:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(167, 192, 128, 0.25);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(167, 192, 128, 0.3);
+            z-index: 10;
+            background: #fffbef;
         }
 
         .map-wrapper img {
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             display: block;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #f5f1e3;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+            background: transparent;
         }
 
         .map-wrapper:hover img {
-            transform: scale(1.08);
+            transform: scale(1.17);
+            filter: brightness(1.05) contrast(1.05);
         }
 
         .map-wrapper iframe {
-            width: 100%;
-            height: 400px;
+            width: calc(100% - 30px);
+            height: calc(100% - 30px);
             border: none;
             display: block;
             pointer-events: none;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .map-wrapper:hover iframe {
@@ -136,26 +158,27 @@
 
         .interactive-badge {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: #a7c080;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #a7c080 0%, #83c092 100%);
             color: #fffbef;
-            padding: 8px 16px;
-            border-radius: 24px;
-            font-size: 0.75rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            opacity: 0;
-            transform: translateY(-10px);
+            opacity: 0.9;
+            transform: translateY(0);
             transition: all 0.3s ease;
             z-index: 10;
-            box-shadow: 0 4px 12px rgba(167, 192, 128, 0.4);
+            box-shadow: 0 4px 12px rgba(167, 192, 128, 0.5);
         }
 
         .map-wrapper:hover .interactive-badge {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(167, 192, 128, 0.6);
         }
 
         /* Modal */
@@ -266,15 +289,28 @@
 
         /* Responsive */
         @media screen and (max-width: 1400px) {
+            .gallery-container {
+                max-width: 90%;
+            }
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 30px;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 18px;
             }
         }
 
         @media screen and (max-width: 1024px) {
+            .gallery-container {
+                max-width: 95%;
+            }
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            
+            /* Interactive maps still span 2 columns on tablet */
+            .grid-item:has([data-type="html"]) {
+                grid-column: span 2;
+                grid-row: span 2;
             }
             
             .header h1 {
@@ -284,12 +320,20 @@
 
         @media screen and (max-width: 768px) {
             .gallery-container {
-                padding: 0 20px 40px;
+                max-width: 100%;
+                padding: 0 15px 40px;
             }
             
             .grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+            
+            /* Interactive maps span full width on mobile */
+            .grid-item:has([data-type="html"]) {
+                grid-column: 1 / -1;
+                grid-row: span 1;
+                aspect-ratio: 16/9;
             }
             
             .header {
@@ -299,15 +343,12 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
-            .map-wrapper iframe {
-                height: 300px;
-            }
         }
 
         @media screen and (max-width: 480px) {
             .grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .header h1 {
@@ -344,11 +385,11 @@
     <script>
         const grid = document.getElementById('grid');
         let loadedCount = 0;
-        const totalImages = 52; // 49 PNGs + 3 HTML maps
+        const totalImages = 70; // 67 PNGs + 3 HTML maps
         let firstBatchLoaded = false;
 
-        // Create 49 PNG items with lazy loading (1-49)
-        for (let i = 1; i <= 49; i++) {
+        // Create 67 PNG items with lazy loading (1-67)
+        for (let i = 1; i <= 67; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             
@@ -367,8 +408,8 @@
             grid.appendChild(item);
         }
 
-        // Create 3 interactive HTML items (50-52)
-        for (let i = 50; i <= 52; i++) {
+        // Create 3 interactive HTML items (68-70)
+        for (let i = 68; i <= 70; i++) {
             const item = document.createElement('div');
             item.className = 'grid-item';
             item.innerHTML = `
@@ -446,8 +487,8 @@
         const modalContent = document.getElementById('modalContent');
         const modalClose = document.getElementById('modalClose');
         let currentImageIndex = -1;
-        // Only PNG images for navigation (1-49)
-        const pngImages = Array.from({length: 49}, (_, i) => i + 1);
+        // Only PNG images for navigation (1-67)
+        const pngImages = Array.from({length: 67}, (_, i) => i + 1);
 
         function openModal(src, type) {
             if (type === 'png') {
