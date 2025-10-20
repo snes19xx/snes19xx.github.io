@@ -260,6 +260,13 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        @media screen and (min-width: 1200px) {
+            .page-projects {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .page-cv,
@@ -936,22 +943,32 @@
                         <h2>Skills</h2>
                         <div class="cv-item">
                             <div class="skill-category">
-                                <strong>GIS:</strong>
-                                <p>ArcGIS, GeoPandas, osmnx, shapely, folium</p>
+                                <strong>GIS & Spatial Analysis:</strong>
+                                <p>ArcGIS Pro, GeoPandas, OSMnx, Shapely, Folium</p>
                             </div>
                             <div class="skill-category">
-                                <strong>Data Analysis & Programming:</strong>
-                                <p>Python, JavaScript, Excel (Pivot Tables, VLOOKUP), Git, Linux</p>
+                                <strong>Programming & Data:</strong>
+                                <p>JavaScript (D3.js, Leaflet), Python (Pandas, NumPy, Matplotlib), Git, Linux</p>
                             </div>
                             <div class="skill-category">
                                 <strong>Design & Visualization:</strong>
-                                <p>D3.js, Three.js, Adobe Photoshop, Illustrator, InDesign</p>
+                                <p>Adobe Illustrator, Photoshop, InDesign, Figma, Plot.js</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="cv-section">
                         <h2>Experience</h2>
+                        <div class="cv-item">
+                            <h3>Public Space Public Life Survey – Gehl Studio</h3>
+                            <p class="position">Surveyor</p>
+                            <span class="date">September 2025</span>
+                            <ul>
+                                <li>Assisted Gehl Studio in a campus-wide observational study, recording usage patterns and quality of public spaces at the St. George campus.</li>
+                                <li>Conducted structured field observations during peak activity periods, contributing to a dataset for the UTSG Campus Plan 2040.</li>
+                                <li>Collaborated with a multidisciplinary team of volunteers to support research on public space planning and urban design.</li>
+                            </ul>
+                        </div>
                         <div class="cv-item">
                             <h3>Downtown Brampton Business Improvement Area</h3>
                             <p class="position">Multidisciplinary Urban Capstone Project (MUCP)</p>
