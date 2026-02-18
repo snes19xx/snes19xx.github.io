@@ -736,6 +736,7 @@
         document.querySelectorAll(".lightbox__dot").forEach((dot, i) => {
           dot.classList.toggle("active", i === current);
         });
+        preloadAround(current);
       }
 
       function goTo(idx, direction) {
@@ -774,6 +775,7 @@
         },
         { passive: true },
       );
+
       document.getElementById("lightbox").addEventListener(
         "touchend",
         (e) => {
@@ -784,6 +786,15 @@
         },
         { passive: true },
       );
+
+      function preloadAround(index) {
+        [index - 1, index, index + 1].forEach((i) => {
+          if (i < 0 || i >= images.length) return;
+
+          const img = new Image();
+          img.src = images[i].src;
+        });
+      }
     </script>
   </body>
 </html>
