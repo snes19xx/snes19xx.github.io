@@ -720,16 +720,23 @@
         const img = document.getElementById("lb-img");
         const counter = document.getElementById("lb-counter");
 
-        if (direction) {
-          wrap.classList.remove("slide-left", "slide-right");
-          void wrap.offsetWidth;
-          wrap.classList.add(
-            direction === "next" ? "slide-left" : "slide-right",
-          );
-        }
-
         // Use img.src for the lightbox (full res)
-        img.src = images[current].src;
+        const newSrc = images[current].src;
+        const temp = new Image();
+
+        temp.onload = () => {
+          if (direction) {
+            wrap.classList.remove("slide-left", "slide-right");
+            void wrap.offsetWidth;
+            wrap.classList.add(
+              direction === "next" ? "slide-left" : "slide-right",
+            );
+          }
+          img.src = newSrc;
+        };
+
+        temp.src = newSrc;
+
         img.alt = ` ${current + 1}`;
         counter.textContent = `${String(current + 1).padStart(2, "0")} / ${String(TOTAL).padStart(2, "0")}`;
 
@@ -788,9 +795,8 @@
       );
 
       function preloadAround(index) {
-        [index - 1, index, index + 1].forEach((i) => {
+        [index - 1, index + 1].forEach((i) => {
           if (i < 0 || i >= images.length) return;
-
           const img = new Image();
           img.src = images[i].src;
         });
