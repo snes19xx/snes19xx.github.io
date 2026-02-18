@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toronto Urban Heat Island Explorer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #2d353b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #d3c6aa;
+            line-height: 1.6;
+        }
+        
+        #container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        #neighborhood-selector {
+            background: #3d484d;
+            color: #d3c6aa;
+            border: 2px solid #4f585e;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        #neighborhood-selector option {
+            background: #3d484d;
+            color: #d3c6aa;
+        }
+        
+        .loading {
+            color: #859289;
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .methods-section {
+            background: #1e2326;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #a7c080;
+        }
+
+        .methods-section h2 {
+            color: #a7c080;
+            margin-top: 0;
+            font-size: 24px;
+            border-bottom: 2px solid #475258;
+            padding-bottom: 10px;
+        }
+
+        .methods-section h3 {
+            color: #d3c6aa;
+            margin-top: 25px;
+            font-size: 18px;
+        }
+
+        .methods-section p {
+            margin-bottom: 15px;
+        }
+
+        .methods-section ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .methods-section li {
+            margin-bottom: 8px;
+        }
+
+        .code-link {
+            display: inline-block;
+            background: #475258;
+            color: #a7c080;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+            margin-top: 10px;
+            border: 1px solid #4f585e;
+            transition: background-color 0.2s;
+        }
+
+        .code-link:hover {
+            background: #4f585e;
+        }
+
+        .data-source {
+            background: #2e383c;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #83c092;
+        }
+
+        .calculation {
+            background: #2e383c;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #dbbc7f;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Neighborhood selector -->
+        <select id="neighborhood-selector">
+            <option value="">Select a neighborhood...</option>
+        </select>
+        
+        <!-- Visualization will be inserted here -->
+        <div id="visualization">
+            <div class="loading">Loading visualization...</div>
+        </div>
+
+<!-- Methods Section -->
+<div class="methods-section">
+    <h2>How does it work?</h2>
+    
+    <h3>Data Sources</h3>
+    <div class="data-source">
+        <p><strong>Land Surface Temperature (LST)</strong></p>
+        <ul>
+            <li><strong>Satellite:</strong> Landsat 9</li>
+            <li><strong>Product:</strong> Collection 2 Level-2 Science Products</li>
+            <li><strong>Date:</strong> 20250919: September 19, 2025 (acquisition date), September 20, 2025 (processing date)</li>
+            <li><strong>Band:</strong> ST_B10 (Surface Temperature Band)</li>
+            <li><strong>Resolution:</strong> 100 meters</li>
+            <li><strong>Source:</strong> USGS EarthExplorer</li>
+        </ul>
+    </div>
+
+    <div class="data-source">
+        <p><strong>Geospatial Data</strong></p>
+        <ul>
+            <li><strong>Neighborhood Boundaries:</strong> City of Toronto Open Data</li>
+            <li><strong>Parks & Green Spaces:</strong> 3,320 park features from Toronto Open Data</li>
+            <li><strong>Treed Areas:</strong> 45,638 forested zones from Toronto Topographic Data</li>
+            <li><strong>Water Bodies:</strong> Toronto shoreline and water features</li>
+        </ul>
+    </div>
+
+    <h3>Methodology</h3>
+    
+    <div class="calculation">
+        <p><strong>Land Surface Temperature Calculation</strong></p>
+        <p>Raw thermal infrared data from Landsat 9 was processed using the following workflow:</p>
+        <ul>
+            <li>Clip thermal band to Toronto boundary using neighborhood union</li>
+            <li>Filter unreasonable pixel values (10,000-50,000 DN range)</li>
+            <li>Apply Landsat Collection 2 scaling factors to convert to Kelvin</li>
+            <li>Convert to Celsius: °C = K - 273.15</li>
+            <li>Calculate zonal statistics for each neighborhood polygon</li>
+        </ul>
+        <p><strong>Result:</strong> Temperature range of 26.9°C to 33.9°C across Toronto neighborhoods</p>
+    </div>
+
+    <div class="calculation">
+        <p><strong>Vegetation Coverage Calculation</strong></p>
+        <p>For each neighborhood, comprehensive vegetation coverage was calculated as:</p>
+        <p style="font-family: monospace; background: #2d353b; padding: 10px; border-radius: 4px;">
+            Vegetation Percentage = (Total Vegetation Area ÷ Neighborhood Area) × 100
+        </p>
+        <p>Where <strong>Total Vegetation Area</strong> includes:</p>
+        <ul>
+            <li><strong>Parks & Green Spaces:</strong> 3,320 designated park areas</li>
+            <li><strong>Treed Areas:</strong> 45,638 forested zones and wooded areas</li>
+        </ul>
+        <p><strong>Result:</strong> Vegetation coverage ranges from 2.1% to 89.8% across neighborhoods</p>
+    </div>
+
+    <div class="calculation">
+        <p><strong>Cooling Score Calculation</strong></p>
+        <p>A composite cooling score was developed to quantify the combined cooling effects of vegetation and temperature:</p>
+        <p style="font-family: monospace; background: #2d353b; padding: 10px; border-radius: 4px;">
+            Cooling Score = (Vegetation Percentage × 0.6) + ((100 - Temperature × 3) × 0.4)
+        </p>
+        <p>Where:</p>
+        <ul>
+            <li><strong>Vegetation Percentage (60% weight):</strong> Direct cooling effect from greenspaces and treed areas</li>
+            <li><strong>Temperature Component (40% weight):</strong> Inverse relationship where cooler areas score higher</li>
+            <li><strong>Normalization:</strong> Final scores scaled to 0-100 range for intuitive interpretation</li>
+        </ul>
+        <p>Higher scores indicate better overall cooling potential, combining both vegetation coverage and actual temperature performance.</p>
+    </div>
+
+    <div class="calculation">
+        <p><strong>Statistical Analysis</strong></p>
+        <ul>
+            <li><strong>Correlation Coefficient:</strong> Pearson's r = -0.652 (strong negative correlation)</li>
+            <li><strong>Zonal Statistics:</strong> Mean temperature calculated for each neighborhood using raster pixels</li>
+            <li><strong>Spatial Analysis:</strong> Geographic intersection between vegetation polygons and neighborhood boundaries</li>
+            <li><strong>Data Validation:</strong> 140 neighborhoods analyzed with complete temperature and vegetation data</li>
+        </ul>
+    </div>
+
+    <div class="calculation">
+        <p><strong>Key Findings</strong></p>
+        <ul>
+            <li><strong>Strong Correlation:</strong> -0.652 Pearson correlation between vegetation and temperature</li>
+            <li><strong>Temperature Range:</strong> 26.9°C (coolest) to 33.9°C (hottest)</li>
+            <li><strong>Vegetation Range:</strong> 2.1% (least vegetated) to 89.8% (most vegetated)</li>
+            <li><strong>Average Conditions:</strong> 30.8°C mean temperature, 21.1% mean vegetation coverage</li>
+        </ul>
+    </div>
+
+    <h3>Technical Implementation</h3>
+    <p>This visualization was built using:</p>
+    <ul>
+        <li><strong>Data Processing:</strong> Python with GeoPandas (spatial operations), Rasterio (satellite data), Pandas (statistical analysis)</li>
+        <li><strong>Coordinate Systems:</strong> All data converted to UTM Zone 17N (EPSG:32617) for accurate area calculations</li>
+        <li><strong>Visualization:</strong> D3.js for interactive maps and scatter plots</li>
+        <li><strong>Web Framework:</strong> Vanilla JavaScript and HTML/CSS for the frontend interface</li>
+        <li><strong>Color Scheme:</strong> Everforest dark theme for optimal readability</li>
+    </ul>
+
+    <h3>Data Quality & Limitations</h3>
+    <ul>
+        <li><strong>Satellite Data:</strong> Single acquisition date (September 19, 2025) represents specific weather conditions</li>
+        <li><strong>Vegetation Data:</strong> Comprehensive coverage includes both maintained parks and natural treed areas</li>
+        <li><strong>Spatial Resolution:</strong> 100m Landsat resolution provides neighborhood-level analysis</li>
+        <li><strong>Urban Context:</strong> Analysis focused on City of Toronto boundaries with 140 neighborhoods</li>
+    </ul>
+
+    <h3>Source Code</h3>
+    <p>Explore the complete implementation and methodology:</p>
+    <a href="https://github.com/snes19xx/Toronto-Urban-Heat-Tree-Canopy-Explorer.git" class="code-link" target="_blank">
+        View Jupyter Notebook on GitHub
+    </a>
+    <a href="https://observablehq.com/d/28763839f89cf8d8" class="code-link" target="_blank">
+        View Interactive Notebook on Observable
+    </a>
+
+    <h3>Interpretation Guide</h3>
+    <ul>
+        <li><strong>Warmer colors (reds):</strong> Higher surface temperatures, typically in dense urban areas with limited vegetation</li>
+        <li><strong>Cooler colors (blues):</strong> Lower surface temperatures, often in areas with abundant vegetation</li>
+        <li><strong>Green areas on map:</strong> Higher vegetation coverage from parks and treed areas</li>
+        <li><strong>Scatter plot trend:</strong> Downward slope demonstrates the cooling effect of urban vegetation</li>
+        <li><strong>Selected neighborhood:</strong> Click on any area to see detailed statistics and compare with city averages</li>
+        <li><strong>Correlation strength:</strong> r = -0.652 indicates strong relationship between vegetation and cooler temperatures</li>
+    </ul>
+</div>
+
+    <script src="toronto-heat-map.js"></script>
+</body>
+</html>

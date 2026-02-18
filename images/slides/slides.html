@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kensington Market Analysis</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg0: #ffffff;
+      }
+      body {
+        background-color: var(--bg0);
+        color: var(--fg);
+        font-family: "JetBrains Mono", monospace;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Slide Container */
+      .slide-container {
+        max-width: 1080px;
+        width: 100%;
+        padding: 20px;
+      }
+      .slide-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 0;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+
+    <div class="slide-container" id="slides-wrapper"></div>
+
+    <script>
+      const folderPath = "../../images/slides/";
+      const slideCount = 20;
+
+      const container = document.getElementById("slides-wrapper");
+
+      for (let i = 1; i <= slideCount; i++) {
+        const img = document.createElement("img");
+        img.src = `${folderPath}${i}.png`;
+        img.className = "slide-img";
+        img.alt = `Presentation Slide ${i}`;
+        img.loading = "lazy";
+        container.appendChild(img);
+      }
+    </script>
+  </body>
+</html>

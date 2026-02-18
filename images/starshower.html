@@ -1,0 +1,574 @@
+<!-- demo by @snes19xx
+     for use as: custom new tab pages, presentations, screensaver, live wallpaper
+     explosions based on @juliangarnier's fireworks animejs demo (https://codepen.io//pen/gmOwJX)  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Starshowers</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<style>
+  html,body { height:100%; margin:0; background:#0f1416; overflow:hidden; cursor:crosshair; }
+  .container { position:relative; width:100vw; height:100vh; overflow:hidden;
+    background:
+      radial-gradient(circle at 40% 30%, rgba(200,230,200,0.03) 0%, rgba(20,26,28,1) 60%); }
+      
+  /* canvas sits under the star and glow so trails/particles render behind DOM glow + star */
+  #trailCanvas { position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+  .glow-effect {
+    position:absolute;
+    width:180px;
+    height:180px;
+    transform:translate(-50%,-50%) scale(1);
+    border-radius:50%;
+    z-index:6;
+    pointer-events:none;
+    /* centered bright spot */
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.14) 0%,
+                                rgba(168,203,157,0.14) 20%,
+                                rgba(127,176,105,0.06) 40%,
+                                rgba(127,176,105,0.02) 60%,
+                                transparent 70%);
+    filter: blur(10px) saturate(1.2);
+    transition: transform 300ms ease, opacity 300ms ease;
+  }
+  .shooting-star {
+    position:absolute;
+    width:26px;
+    height:26px;
+    transform: translate(-50%,-50%);
+    z-index:7;
+    pointer-events:auto;
+    transition: transform 160ms linear;
+    will-change: transform;
+  }
+  .star-core {
+    position:absolute; 
+    left: 50%; 
+    top:50%; 
+    transform:translate(-50%,-50%);
+    width:10px; 
+    height:10px; 
+    border-radius:50%;
+    background: radial-gradient(circle, #fff 0%, #ffe 30%, #a8cb9d 65%, #66b07a 100%);
+    box-shadow: 0 0 14px rgba(255,255,255,0.9), inset 0 0 6px rgba(255,255,255,0.8);
+    z-index: 2;
+  }
+.star-tail {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(0, -50%) rotate(-24deg); /* This centers the tail's origin and applies the rotation */
+  width: 80px;
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(168, 203, 157, 0.65), rgba(168, 203, 157, 0));
+  filter: blur(0.6px) brightness(1.05);
+  transform-origin: 0% 0%; 
+  z-index: 1;
+}
+  .shooting-star:hover { transform: translate(-50%,-50%) scale(1.18); }
+  .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+</style>
+</head>
+<body>
+  <div class="container" id="container">
+    <canvas id="trailCanvas"></canvas>
+    <div class="glow-effect" id="glowEffect" aria-hidden="true"></div>
+    <div class="shooting-star" id="shootingStar" title="Click to explode" aria-hidden="false">
+      <div class="star-core"></div>
+      <div class="star-tail" id="starTail"></div>
+    </div>
+  </div>
+<script>
+(function(){
+  //if anime.js failed to load, show an easy error in console
+  if (typeof anime === 'undefined') {
+    console.error('anime.js not loaded — check CDN/network.');
+  }
+  const container = document.getElementById('container');
+  const canvas = document.getElementById('trailCanvas');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  const starEl = document.getElementById('shootingStar');
+  const glowEl = document.getElementById('glowEffect');
+  
+  let rotationOffset = 200; 
+  let paused = false;
+  let starPos = { x: -100, y: -100 };
+  let currentAnim = null;
+  const baseDuration = 6000;
+  let prevPos = { x: starPos.x, y: starPos.y };
+  let prevRot = 0;
+  
+  // Arrays for various space objects
+  let stars = [];
+  let satellite = null;
+  let meteors = [];
+
+  const rand = (a,b) => a + Math.random() * (b - a);
+  const randInt = (a,b) => Math.floor(rand(a,b));
+
+  function fitCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // Re-generate static stars on resize
+    generateStars();
+    // Reset satellite on resize
+    startSatellite();
+  }
+
+  // --- Static Stars ---
+  function generateStars() {
+    stars = [];
+    const numStars = Math.floor((canvas.width * canvas.height) / 8000); // Density of stars
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: rand(0, canvas.width),
+        y: rand(0, canvas.height),
+        size: rand(0.5, 2),
+        alpha: rand(0.2, 0.8),
+        blinkSpeed: rand(0.01, 0.05) // for subtle twinkling
+      });
+    }
+  }
+
+  function drawStars(dt) {
+    stars.forEach(s => {
+      ctx.save();
+      const blink = Math.sin(performance.now() * s.blinkSpeed) * 0.2 + 0.8;
+      ctx.globalAlpha = s.alpha * blink;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  // --- Satellite/Straight-line star ---
+  function startSatellite() {
+    // Randomly choose start and end points for a straight line across the screen
+    let startX, startY, endX, endY;
+
+    const side = randInt(0, 4); // 0: top, 1: right, 2: bottom, 3: left
+    switch (side) {
+      case 0: // From top
+        startX = rand(0, canvas.width);
+        startY = -50;
+        endX = rand(0, canvas.width);
+        endY = canvas.height + 50;
+        break;
+      case 1: // From right
+        startX = canvas.width + 50;
+        startY = rand(0, canvas.height);
+        endX = -50;
+        endY = rand(0, canvas.height);
+        break;
+      case 2: // From bottom
+        startX = rand(0, canvas.width);
+        startY = canvas.height + 50;
+        endX = rand(0, canvas.width);
+        endY = -50;
+        break;
+      case 3: // From left
+        startX = -50;
+        startY = rand(0, canvas.height);
+        endX = canvas.width + 50;
+        endY = rand(0, canvas.height);
+        break;
+    }
+
+    satellite = {
+      x: startX,
+      y: startY,
+      size: rand(2, 4),
+      alpha: rand(0.7, 1),
+      trail: [],
+      maxTrail: randInt(40, 80),
+      color: `rgba(180, 220, 255, 0.9)`,
+      duration: rand(10000, 20000) // Longer duration for satellite
+    };
+
+    anime({
+      targets: satellite,
+      x: endX,
+      y: endY,
+      duration: satellite.duration,
+      easing: 'linear',
+      complete: startSatellite // Loop indefinitely
+    });
+  }
+
+  function drawSatellite(dt) {
+    if (!satellite) return;
+
+    // Add current position to trail
+    satellite.trail.push({ x: satellite.x, y: satellite.y });
+    if (satellite.trail.length > satellite.maxTrail) {
+      satellite.trail.shift();
+    }
+
+    // Draw trail
+    for (let i = 0; i < satellite.trail.length; i++) {
+      const p = satellite.trail[i];
+      const alpha = (i / satellite.trail.length) * satellite.alpha * 0.6;
+      const size = satellite.size * (i / satellite.trail.length) * 0.5 + 0.5;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.fillStyle = satellite.color;
+      ctx.shadowColor = satellite.color;
+      ctx.shadowBlur = 4;
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Draw core
+    ctx.save();
+    ctx.globalAlpha = satellite.alpha;
+    ctx.beginPath();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = '#B4DCEF';
+    ctx.shadowBlur = 10;
+    ctx.arc(satellite.x, satellite.y, satellite.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // --- Meteor Shower ---
+  function spawnMeteor() {
+    if (paused) return;
+    if (Math.random() < 0.98) return; // Chance to spawn a meteor
+
+    const startX = rand(0, canvas.width * 1.2); // Can start off-screen to the right
+    const startY = rand(-50, canvas.height * 0.1); // Can start slightly above screen
+    const endX = startX - rand(canvas.width * 0.4, canvas.width * 0.8);
+    const endY = startY + rand(canvas.height * 0.6, canvas.height * 1.2);
+
+    const meteor = {
+      x: startX,
+      y: startY,
+      size: rand(3, 8),
+      alpha: rand(0.6, 1),
+      trail: [],
+      maxTrail: randInt(10, 25),
+      speed: rand(0.02, 0.08), // Duration will be based on distance and speed
+      life: 0,
+      maxLife: rand(1.5, 3), // seconds
+      color: `rgba(255, 200, 180, 0.9)`
+    };
+
+    meteors.push(meteor);
+    
+    anime({
+      targets: meteor,
+      x: endX,
+      y: endY,
+      easing: 'linear',
+      duration: meteor.maxLife * 1000,
+      update: function(anim) {
+        meteor.life = anim.progress / 100 * meteor.maxLife; // Update life based on animation progress
+      },
+      complete: function() {
+        meteors = meteors.filter(m => m !== meteor); // Remove meteor when animation is done
+      }
+    });
+  }
+
+  function drawMeteors(dt) {
+    for (let i = meteors.length - 1; i >= 0; i--) {
+      const m = meteors[i];
+      if (m.life >= m.maxLife) {
+        meteors.splice(i, 1);
+        continue;
+      }
+
+      // Add current position to trail
+      m.trail.push({ x: m.x, y: m.y });
+      if (m.trail.length > m.maxTrail) {
+        m.trail.shift();
+      }
+
+      // Draw trail
+      for (let j = 0; j < m.trail.length; j++) {
+        const p = m.trail[j];
+        const trailAlpha = (j / m.trail.length) * m.alpha * (1 - m.life / m.maxLife);
+        const trailSize = m.size * (j / m.trail.length) * 0.5 + 0.5;
+
+        ctx.save();
+        ctx.globalAlpha = trailAlpha;
+        ctx.beginPath();
+        ctx.fillStyle = m.color;
+        ctx.shadowColor = m.color;
+        ctx.shadowBlur = 6;
+        ctx.arc(p.x, p.y, trailSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Draw core
+      ctx.save();
+      ctx.globalAlpha = m.alpha * (1 - m.life / m.maxLife);
+      ctx.beginPath();
+      ctx.fillStyle = '#FFDDAA';
+      ctx.shadowColor = '#FF9966';
+      ctx.shadowBlur = 12;
+      ctx.arc(m.x, m.y, m.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  let trailParticles = [];
+  let explosionParticles = [];
+
+  function spawnTrail(px,py,vx,vy){
+    if (Math.random() >= 0.6) return;
+    trailParticles.push({
+      x: px + rand(-6,6),
+      y: py + rand(-6,6),
+      vx: -vx*0.25 + rand(-0.6,0.6),
+      vy: -vy*0.25 + rand(-0.6,0.6),
+      life: rand(0.8,1.6),
+      age: 0,
+      size: rand(2,6),
+      alpha: rand(0.5,0.95)
+    });
+  }
+
+  function createExplosion(x,y){
+    paused = true;
+    for (let i=0;i<40;i++){
+      const angle = Math.random()*Math.PI*2;
+      const speed = rand(1.6,5.5);
+      explosionParticles.push({
+        x,y,
+        vx: Math.cos(angle)*speed + rand(-0.6,0.6),
+        vy: Math.sin(angle)*speed + rand(-0.6,0.6) - 0.2,
+        life: rand(0.8,1.4),
+        age: 0,
+        size: rand(1.5,5.5),
+        color: ['#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#ffeaa7'][Math.floor(Math.random()*5)],
+        blur: rand(0,6)
+      });
+    }
+    starEl.style.transition = 'opacity 220ms linear';
+    glowEl.style.transition = 'opacity 220ms linear';
+    starEl.style.opacity = '0';
+    glowEl.style.opacity = '0';
+    setTimeout(() => {
+      setTimeout(() => {
+        explosionParticles.length = 0;
+        starEl.style.opacity = '1';
+        glowEl.style.opacity = '1';
+        paused = false;
+        startShootingStar();
+      }, 900);
+    }, 120);
+  }
+
+  function startShootingStar(){
+    if (currentAnim) currentAnim.pause();
+    const pad = 200;
+    const startX = rand(-pad, -pad + 100);
+    const startY = rand(-pad, -pad + 100);
+    const endX = rand(window.innerWidth + pad - 100, window.innerWidth + pad);
+    const endY = rand(window.innerHeight + pad - 100, window.innerHeight + pad);
+    starPos.x = startX;
+    starPos.y = startY;
+    prevPos.x = startX;
+    prevPos.y = startY;
+    starEl.style.opacity = '0';
+    glowEl.style.opacity = '0';
+    const distance = Math.hypot(endX - startX, endY - startY);
+    const screenDiagonal = Math.hypot(window.innerWidth, window.innerHeight);
+    const duration = baseDuration * (distance / screenDiagonal);
+    currentAnim = anime({
+      targets: starPos,
+      x: endX,
+      y: endY,
+      duration: duration,
+      easing: 'linear',
+      update: function() {
+        // no-op here; we render from RAF
+      },
+      complete: function(){
+        setTimeout(startShootingStar, rand(800,1500));
+      }
+    });
+    anime({
+      targets: [starEl, glowEl],
+      opacity: [0,1,1,0],
+      duration: duration,
+      easing: 'linear',
+      keyframes: [
+        {opacity: 0, duration: duration * 0.05},
+        {opacity: 1, duration: duration * 0.75},
+        {opacity: 0, duration: duration * 0.20}
+      ]
+    });
+  }
+
+  function renderAt(x,y,deg){
+    starEl.style.left = x + 'px';
+    starEl.style.top = y + 'px';
+    starEl.style.transform = `translate(-50%,-50%) rotate(${deg}deg)`;
+    glowEl.style.left = x + 'px';
+    glowEl.style.top = y + 'px';
+    glowEl.style.transform = 'translate(-50%,-50%) scale(1)';
+  }
+
+  // main loop
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.max(0.001, (now - last) / 1000);
+    last = now;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Draw static stars
+    drawStars(dt);
+    // Draw satellite
+    drawSatellite(dt);
+    // Draw meteors
+    drawMeteors(dt);
+    // Spawn meteors
+    spawnMeteor();
+
+    // trails (from the main shooting star)
+    for (let i = trailParticles.length -1; i >= 0; i--) {
+      const p = trailParticles[i];
+      p.age += dt;
+      if (p.age >= p.life) { trailParticles.splice(i,1); continue; }
+      p.x += p.vx * 60 * dt;
+      p.y += p.vy * 60 * dt;
+      const t = 1 - (p.age / p.life);
+      const alpha = p.alpha * t * 0.85;
+      const size = p.size * (0.5 + t*0.5);
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.shadowColor = 'rgba(180,240,200,0.85)';
+      ctx.shadowBlur = 8 * t;
+      ctx.arc(p.x, p.y, size, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    // explosions based on @juliangarnier's fireworks animejs demo (https://codepen.io//pen/gmOwJX)
+    for (let i = explosionParticles.length -1; i >= 0; i--) {
+      const p = explosionParticles[i];
+      p.age += dt;
+      if (p.age >= p.life) { explosionParticles.splice(i,1); continue; }
+      p.vy += 0.06;
+      p.vx *= 0.995;
+      p.vy *= 0.995;
+      p.x += p.vx;
+      p.y += p.vy;
+      const t = 1 - (p.age / p.life);
+      ctx.save();
+      ctx.globalAlpha = t;
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = p.blur + 6 * t;
+      ctx.arc(p.x, p.y, p.size * (0.8 + 0.7 * t), 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (currentAnim && !paused) {
+      const vx = (starPos.x - prevPos.x) / Math.max(dt, 1/120);
+      const vy = (starPos.y - prevPos.y) / Math.max(dt, 1/120);
+      prevPos.x = starPos.x;
+      prevPos.y = starPos.y;
+      const speed = Math.hypot(vx, vy);
+      if (speed > 0.5 && Math.random() < Math.min(0.9, speed/20)) {
+        spawnTrail(starPos.x - vx * 0.02, starPos.y - vy * 0.02, vx / 60, vy / 60);
+      }
+      // compute rotation from velocity; add small offset to align sprite visually
+      let desired = Math.atan2(vy, vx) * 180 / Math.PI + rotationOffset;
+      // normalize delta to [-180,180] to avoid big jumps
+      let delta = ((desired - prevRot + 540) % 360) - 180;
+      const smooth = Math.min(1, dt * 12);
+      prevRot = prevRot + delta * smooth;
+      renderAt(starPos.x, starPos.y, prevRot);
+      // subtle extra glow point
+      ctx.save();
+      ctx.globalAlpha = 0.12;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.shadowBlur = 24;
+      ctx.shadowColor = 'rgba(220,250,210,0.95)';
+      ctx.arc(starPos.x, starPos.y, 6 + Math.min(12, speed * 0.03), 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  // interactions
+  starEl.addEventListener('mouseenter', () => {
+    if (currentAnim && !paused) {
+      try {
+        const remaining = Math.max(200, currentAnim.duration - currentAnim.currentTime);
+        // attempt to read end values (fallback if unavailable)
+        let endX = window.innerWidth + 200;
+        let endY = window.innerHeight + 200;
+        if (currentAnim.animatables && currentAnim.animatables[0] && currentAnim.animatables[0].tweens) {
+          const tweens = currentAnim.animatables[0].tweens;
+          if (tweens.length) {
+            endX = tweens.find(t => t.prop === 'x')?.to || endX;
+            endY = tweens.find(t => t.prop === 'y')?.to || endY;
+          }
+        }
+        currentAnim.pause();
+        currentAnim = anime({
+          targets: starPos,
+          x: endX,
+          y: endY,
+          duration: remaining * 0.4,
+          easing: 'linear',
+          complete: function(){ setTimeout(startShootingStar, 300); }
+        });
+        glowEl.style.transform = 'translate(-50%,-50%) scale(1.05)';
+      } catch (err) {
+        console.warn('Hover speed-boost failed:', err);
+      }
+    }
+  });
+  starEl.addEventListener('mouseleave', () => {
+    glowEl.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+  starEl.addEventListener('click', (e) => {
+    const r = starEl.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top + r.height/2;
+    if (currentAnim) currentAnim.pause();
+    createExplosion(cx, cy);
+  });
+  container.addEventListener('click', (e) => {
+    if (e.target !== starEl && e.target !== glowEl) {
+      if (currentAnim) currentAnim.pause();
+      createExplosion(e.clientX, e.clientY);
+    }
+  });
+  // start
+  startShootingStar();
+  fitCanvas(); // Initial call to setup stars and satellite
+  startSatellite(); // Ensure satellite starts immediately
+  const vis = document.createElement('div');
+  vis.className = 'visually-hidden';
+  vis.textContent = 'Shooting star animation. Hover the star to speed it up; click to make it explode. Also features static stars, a satellite trail, and occasional meteor showers.';
+  container.appendChild(vis);
+  // for debug: report runtime errors to console visibly
+  window.addEventListener('error', function(ev){
+    console.error('Runtime error:', ev.error || ev.message);
+  });
+})();
+</script>
+</body>
+</html>
