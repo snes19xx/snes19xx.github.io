@@ -719,6 +719,23 @@
         clear: right;
       }
 
+      @media screen and (max-width: 800px) {
+        .academics-viz {
+          float: none;
+          width: 100%;
+          margin: 2em 0;
+          clear: both;
+        }
+
+        /* Stack sidebar and center content on mobile */
+        .content--side,
+        .content--center {
+          width: 100%;
+          max-width: 100%;
+          flex: none;
+        }
+      }
+
       .academics-viz svg {
         max-width: 100%;
         height: auto;
@@ -732,7 +749,7 @@
       }
 
       .cv-section--education {
-        margin-bottom: -2em;
+        margin-bottom: -0.25em;
       }
 
       /* About Page */
