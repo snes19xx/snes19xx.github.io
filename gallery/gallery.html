@@ -679,7 +679,7 @@
         const cell = document.createElement("div");
         cell.className = "grid__cell";
         cell.innerHTML = `
-        <img src="${img.src}" alt="Photography ${i + 1}" loading="${i < 4 ? "eager" : "lazy"}" />
+        <img src="${img.src}" alt=" ${i + 1}" loading="${i < 4 ? "eager" : "lazy"}" />
         <div class="grid__cell__overlay">
           <span class="grid__cell__num">${String(i + 1).padStart(2, "0")}</span>
         </div>
@@ -727,7 +727,7 @@
         }
 
         img.src = images[current].src;
-        img.alt = `Photography ${current + 1}`;
+        img.alt = ` ${current + 1}`;
         counter.textContent = `${String(current + 1).padStart(2, "0")} / ${String(TOTAL).padStart(2, "0")}`;
 
         document.querySelectorAll(".lightbox__dot").forEach((dot, i) => {
