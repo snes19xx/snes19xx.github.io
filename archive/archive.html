@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>archive</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap");
+
+      :root {
+        --bg-color: #fdfbf7;
+        --surface: #ffffff;
+        --text-main: #292524;
+        --text-muted: #78716c;
+        --line-color: #d6d3d1;
+        --status-finished: #10b981;
+        --status-dropped: #ef4444;
+        --status-unfinished: #f59e0b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.4;
+        padding: 4rem 2rem;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* --- NAVIGATION --- */
+      .nav__back {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .nav__back:hover {
+        color: var(--text-main);
+        transform: translateX(-4px);
+      }
+
+      .nav__viz {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--surface);
+        background-color: var(--text-main);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition:
+          background-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .nav__viz:hover {
+        background-color: var(--text-muted);
+        transform: translateY(-2px);
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+      }
+
+      /* --- S-CURVE TIMELINE LAYOUT --- */
+      .timeline {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        padding: 0 2rem;
+      }
+
+      .year-section {
+        position: relative;
+        margin-bottom: 4rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.1rem;
+        width: 85%;
+        z-index: 2;
+      }
+
+      /* Alternating sides for the S-Curve */
+      .year-section:nth-child(odd) {
+        align-items: flex-start;
+      }
+      .year-section:nth-child(even) {
+        align-items: flex-end;
+      }
+      .year-section:nth-child(even) .year-label {
+        align-self: flex-end;
+      }
+
+      .year-label {
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: var(--text-main);
+        margin-bottom: 1.5rem;
+        background: var(--bg-color);
+        padding: 0.2rem 1rem;
+        border: 1px solid var(--line-color);
+        border-radius: 2rem;
+        display: inline-block;
+        z-index: 3;
+      }
+
+      .year-section::after {
+        content: "";
+        position: absolute;
+        top: 3rem;
+        bottom: -4rem;
+        width: 50%;
+        border: 2px solid var(--line-color);
+        z-index: 0;
+      }
+
+      .year-section:nth-child(odd):not(:last-child)::after {
+        right: 5%;
+        border-left: none;
+        border-radius: 0 100px 100px 0;
+      }
+
+      .year-section:nth-child(even):not(:last-child)::after {
+        left: 5%;
+        border-right: none;
+        border-radius: 100px 0 0 100px;
+      }
+
+      .year-section:last-child::after {
+        display: none;
+      }
+
+      /* --- CARD DESIGN --- */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line-color);
+        padding: 0.8rem;
+        border-radius: 6px;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.04);
+      }
+
+      .cover {
+        flex-shrink: 0;
+        width: 50px;
+        height: 75px;
+        background-color: #f5f5f4;
+        border: 1px solid var(--line-color);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .cover::after {
+        /* Fallback text if no image is loaded */
+        content: "COVER";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.5rem;
+        color: #a8a29e;
+        letter-spacing: 1px;
+      }
+
+      .cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: 1;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+      }
+
+      /* Typography */
+      .book .title {
+        font-family: "Lora", serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        font-style: italic;
+        color: var(--text-main);
+        margin: 0.2rem 0;
+      }
+
+      .game .title {
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin: 0.2rem 0;
+      }
+
+      .meta {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* Status Indicators */
+      .status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.2rem;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+      }
+
+      .status::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .status.finished::before {
+        background-color: var(--status-finished);
+      }
+      .status.dropped::before {
+        background-color: var(--status-dropped);
+      }
+      .status.unfinished::before {
+        background-color: var(--status-unfinished);
+      }
+
+      .type-label {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .nav__back {
+          top: 1.5rem;
+          left: 1.5rem;
+        }
+        .nav__viz {
+          top: 1.5rem;
+          right: 1.5rem;
+        }
+        .grid {
+          width: 100%;
+        }
+        .year-section::after {
+          display: none; /* Turn off curves on small screens */
+        }
+        .year-section:nth-child(even) {
+          align-items: flex-start;
+        }
+        .year-section:nth-child(even) .year-label {
+          align-self: flex-start;
+        }
+        .year-section {
+          margin-bottom: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="../index.html" class="nav__back">← Back</a>
+    <a href="visualizations.html" class="nav__viz">Data Trends →</a>
+
+    <header>
+      <h1>Archive</h1>
+      <div class="subtitle">
+        An ongoing log of books and video games I started in 2021
+      </div>
+    </header>
+
+    <div class="timeline">
+      <div class="year-section">
+        <div class="year-label">2025</div>
+        <div class="grid">
+          <div class="card book">
+            <div class="cover"><img src="3.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Emigrants</div>
+              <div class="meta">W.G. Sebald</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="2.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Rings of Saturn</div>
+              <div class="meta">W.G. Sebald</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="1.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Too Much of Life</div>
+              <div class="meta">Clarice Lispector</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="4.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Hour of the Star</div>
+              <div class="meta">Clarice Lispector</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="5.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Vertigo</div>
+              <div class="meta">W.G. Sebald</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="year-section">
+        <div class="year-label">2024</div>
+        <div class="grid">
+          <div class="card book">
+            <div class="cover"><img src="6.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Encyclopedia of the Dead</div>
+              <div class="meta">Danilo Kiš</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="7.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Dubliners</div>
+              <div class="meta">James Joyce</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="8.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Whalestoe Letters</div>
+              <div class="meta">Mark Z. Danielewski</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="aa.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Persona 3 Reload</div>
+              <div class="meta">Atlus</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="a.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Final Fantasy VII Rebirth</div>
+              <div class="meta">Square Enix</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="b.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Stellar Blade</div>
+              <div class="meta">Shift Up</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="year-section">
+        <div class="year-label">2023</div>
+        <div class="grid">
+          <div class="card book">
+            <div class="cover"><img src="9.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Letters to Milena</div>
+              <div class="meta">Franz Kafka</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="11.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Let the Great World Spin</div>
+              <div class="meta">Colum McCann</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="12.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">A Million Little Pieces</div>
+              <div class="meta">James Frey</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="13.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Color of Law</div>
+              <div class="meta">Richard Rothstein</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="10.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Diaries</div>
+              <div class="meta">Franz Kafka</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="c.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Katamari Damacy Reroll</div>
+              <div class="meta">Bandai Namco</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="g.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Resident Evil 4 Remake</div>
+              <div class="meta">Capcom</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="d.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">The Legend of Zelda: Tears of the Kingdom</div>
+              <div class="meta">Nintendo</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="e.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Final Fantasy XVI</div>
+              <div class="meta">Square Enix</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="f.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Final Fantasy IX</div>
+              <div class="meta">Square Enix</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="year-section">
+        <div class="year-label">2022</div>
+        <div class="grid">
+          <div class="card book">
+            <div class="cover"><img src="14.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Letters to a Young Poet</div>
+              <div class="meta">Rainer Maria Rilke</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="15.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Kafka on the Shore</div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="16.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">After the Quake</div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="17.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Men Without Women</div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="18.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">
+                Hard-Boiled Wonderland and the End of the World
+              </div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="19.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Complete Cosmicomics</div>
+              <div class="meta">Italo Calvino</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="22.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Sons</div>
+              <div class="meta">Franz Kafka</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="20.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Complete Stories</div>
+              <div class="meta">Clarice Lispector</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="21.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Complete Stories</div>
+              <div class="meta">Franz Kafka</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="h.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">God of War Ragnarök</div>
+              <div class="meta">Santa Monica Studio</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="i.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Bayonetta 3</div>
+              <div class="meta">PlatinumGames</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="j.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Persona 5 Royal</div>
+              <div class="meta">Atlus</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="smt.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Shin Megami Tensei V</div>
+              <div class="meta">Atlus</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="l.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Kirby & the Forgotten Land</div>
+              <div class="meta">HAL Laboratory</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="pla.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status dropped">Dropped</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Pokémon Legends: Arceus</div>
+              <div class="meta">Game Freak</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="sp.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status dropped">Dropped</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Pokémon Shining Pearl</div>
+              <div class="meta">ILCA</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="sonic.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status dropped">Dropped</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Sonic Colors Ultimate</div>
+              <div class="meta">Blind Squirrel</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="k.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status dropped">Dropped</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Soul Hackers 2</div>
+              <div class="meta">Atlus</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="year-section">
+        <div class="year-label">2021</div>
+        <div class="grid">
+          <div class="card book">
+            <div class="cover"><img src="23.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">1Q84</div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="24.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">And the Mountains Echoed</div>
+              <div class="meta">Khaled Hosseini</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="25.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Norwegian Wood</div>
+              <div class="meta">Haruki Murakami</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="26.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Castle</div>
+              <div class="meta">Franz Kafka</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="28.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Order of Time</div>
+              <div class="meta">Carlo Rovelli</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="30.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">The Log from the Sea of Cortez</div>
+              <div class="meta">John Steinbeck</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="27.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status unfinished">Unfinished</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Selected Stories</div>
+              <div class="meta">Virginia Woolf</div>
+            </div>
+          </div>
+          <div class="card book">
+            <div class="cover"><img src="29.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status dropped">Dropped</span
+                ><span class="type-label">Book</span>
+              </div>
+              <div class="title">Tropic of Cancer</div>
+              <div class="meta">Henry Miller</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="fe3h.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Fire Emblem: Three Houses</div>
+              <div class="meta">Intelligent Systems</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="pk1.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Pokémon Sword</div>
+              <div class="meta">Game Freak</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="pk2.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">New Pokémon Snap</div>
+              <div class="meta">Bandai Namco</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="cat.png" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Catherine: Full Body</div>
+              <div class="meta">Atlus</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="ff.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Final Fantasy XV</div>
+              <div class="meta">Square Enix</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="gr.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Gravity Rush 2</div>
+              <div class="meta">Japan Studio</div>
+            </div>
+          </div>
+          <div class="card game">
+            <div class="cover"><img src="vii.jpg" alt="" /></div>
+            <div class="info">
+              <div class="status-bar">
+                <span class="status finished">Finished</span
+                ><span class="type-label">Game</span>
+              </div>
+              <div class="title">Final Fantasy VII Remake</div>
+              <div class="meta">Square Enix</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizations</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap");
+
+      :root {
+        --bg-color: #fdfbf7;
+        --surface: #ffffff;
+        --text-main: #292524;
+        --text-muted: #78716c;
+        --line-color: #d6d3d1;
+        --status-finished: #10b981;
+        --status-dropped: #ef4444;
+        --status-unfinished: #f59e0b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.4;
+        padding: 4rem 2rem;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .nav__back {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .nav__back:hover {
+        color: var(--text-main);
+        transform: translateX(-4px);
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        z-index: 10;
+        position: relative;
+      }
+
+      button {
+        background: var(--surface);
+        border: 1px solid var(--line-color);
+        padding: 0.5rem 1.2rem;
+        border-radius: 4px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      button:hover {
+        border-color: var(--text-main);
+        color: var(--text-main);
+      }
+
+      button.active {
+        background: var(--text-main);
+        color: var(--surface);
+        border-color: var(--text-main);
+      }
+
+      #viz-container {
+        width: 100%;
+        max-width: 1200px;
+        height: 600px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .tooltip {
+        position: absolute;
+        background: var(--surface);
+        border: 1px solid var(--line-color);
+        padding: 1rem;
+        border-radius: 6px;
+        pointer-events: none;
+        opacity: 0;
+        transition:
+          opacity 0.2s ease,
+          transform 0.1s ease;
+        box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.08);
+        z-index: 100;
+        min-width: 200px;
+      }
+
+      .tooltip .meta-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .tooltip .status {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+      }
+
+      .tooltip .status::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .tooltip .status.finished::before {
+        background-color: var(--status-finished);
+      }
+      .tooltip .status.dropped::before {
+        background-color: var(--status-dropped);
+      }
+      .tooltip .status.unfinished::before {
+        background-color: var(--status-unfinished);
+      }
+
+      .tooltip .year {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .tooltip .title {
+        color: var(--text-main);
+        margin-bottom: 0.2rem;
+      }
+
+      .tooltip.book .title {
+        font-family: "Lora", serif;
+        font-size: 1rem;
+        font-weight: 500;
+        font-style: italic;
+      }
+
+      .tooltip.game .title {
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .tooltip .creator {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .node {
+        stroke: var(--surface);
+        stroke-width: 2px;
+        cursor: pointer;
+        transition: stroke-width 0.2s ease;
+      }
+
+      .node:hover {
+        stroke-width: 4px;
+        stroke: var(--text-main);
+      }
+
+      .label {
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        fill: var(--text-muted);
+        text-anchor: middle;
+        pointer-events: none;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <a href="archive.html" class="nav__back">← Back</a>
+
+    <header>
+      <h1>Trends</h1>
+      <div class="subtitle">in four years of the archive</div>
+    </header>
+
+    <div class="controls">
+      <button class="active" data-group="year">Timeline</button>
+      <button data-group="type">By Medium</button>
+      <button data-group="status">By Status</button>
+    </div>
+
+    <div id="viz-container">
+      <div id="tooltip" class="tooltip"></div>
+    </div>
+
+    <script>
+      const data = [
+        {
+          title: "The Emigrants",
+          creator: "W.G. Sebald",
+          year: 2025,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Rings of Saturn",
+          creator: "W.G. Sebald",
+          year: 2025,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Too Much of Life",
+          creator: "Clarice Lispector",
+          year: 2025,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Hour of the Star",
+          creator: "Clarice Lispector",
+          year: 2025,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Vertigo",
+          creator: "W.G. Sebald",
+          year: 2025,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Encyclopedia of the Dead",
+          creator: "Danilo Kiš",
+          year: 2024,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Dubliners",
+          creator: "James Joyce",
+          year: 2024,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Whalestoe Letters",
+          creator: "Mark Z. Danielewski",
+          year: 2024,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Persona 3 Reload",
+          creator: "Atlus",
+          year: 2024,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Final Fantasy VII Rebirth",
+          creator: "Square Enix",
+          year: 2024,
+          type: "Game",
+          status: "Unfinished",
+        },
+        {
+          title: "Stellar Blade",
+          creator: "Shift Up",
+          year: 2024,
+          type: "Game",
+          status: "Unfinished",
+        },
+        {
+          title: "Letters to Milena",
+          creator: "Franz Kafka",
+          year: 2023,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Let the Great World Spin",
+          creator: "Colum McCann",
+          year: 2023,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "A Million Little Pieces",
+          creator: "James Frey",
+          year: 2023,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Color of Law",
+          creator: "Richard Rothstein",
+          year: 2023,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Diaries",
+          creator: "Franz Kafka",
+          year: 2023,
+          type: "Book",
+          status: "Unfinished",
+        },
+        {
+          title: "Katamari Damacy Reroll",
+          creator: "Bandai Namco",
+          year: 2023,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Resident Evil 4 Remake",
+          creator: "Capcom",
+          year: 2023,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "The Legend of Zelda: Tears of the Kingdom",
+          creator: "Nintendo",
+          year: 2023,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Final Fantasy XVI",
+          creator: "Square Enix",
+          year: 2023,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Final Fantasy IX",
+          creator: "Square Enix",
+          year: 2023,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Letters to a Young Poet",
+          creator: "Rainer Maria Rilke",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Kafka on the Shore",
+          creator: "Haruki Murakami",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "After the Quake",
+          creator: "Haruki Murakami",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Men Without Women",
+          creator: "Haruki Murakami",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Hard-Boiled Wonderland and the End of the World",
+          creator: "Haruki Murakami",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Complete Cosmicomics",
+          creator: "Italo Calvino",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Sons",
+          creator: "Franz Kafka",
+          year: 2022,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Complete Stories",
+          creator: "Clarice Lispector",
+          year: 2022,
+          type: "Book",
+          status: "Unfinished",
+        },
+        {
+          title: "The Complete Stories",
+          creator: "Franz Kafka",
+          year: 2022,
+          type: "Book",
+          status: "Unfinished",
+        },
+        {
+          title: "God of War Ragnarök",
+          creator: "Santa Monica Studio",
+          year: 2022,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Bayonetta 3",
+          creator: "PlatinumGames",
+          year: 2022,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Persona 5 Royal",
+          creator: "Atlus",
+          year: 2022,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Shin Megami Tensei V",
+          creator: "Atlus",
+          year: 2022,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Kirby & the Forgotten Land",
+          creator: "HAL Laboratory",
+          year: 2022,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Pokémon Legends: Arceus",
+          creator: "Game Freak",
+          year: 2022,
+          type: "Game",
+          status: "Dropped",
+        },
+        {
+          title: "Pokémon Shining Pearl",
+          creator: "ILCA",
+          year: 2022,
+          type: "Game",
+          status: "Dropped",
+        },
+        {
+          title: "Sonic Colors Ultimate",
+          creator: "Blind Squirrel",
+          year: 2022,
+          type: "Game",
+          status: "Dropped",
+        },
+        {
+          title: "Soul Hackers 2",
+          creator: "Atlus",
+          year: 2022,
+          type: "Game",
+          status: "Dropped",
+        },
+        {
+          title: "1Q84",
+          creator: "Haruki Murakami",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "And the Mountains Echoed",
+          creator: "Khaled Hosseini",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Norwegian Wood",
+          creator: "Haruki Murakami",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Castle",
+          creator: "Franz Kafka",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Order of Time",
+          creator: "Carlo Rovelli",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "The Log from the Sea of Cortez",
+          creator: "John Steinbeck",
+          year: 2021,
+          type: "Book",
+          status: "Finished",
+        },
+        {
+          title: "Selected Stories",
+          creator: "Virginia Woolf",
+          year: 2021,
+          type: "Book",
+          status: "Unfinished",
+        },
+        {
+          title: "Tropic of Cancer",
+          creator: "Henry Miller",
+          year: 2021,
+          type: "Book",
+          status: "Dropped",
+        },
+        {
+          title: "Fire Emblem: Three Houses",
+          creator: "Intelligent Systems",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Pokémon Sword",
+          creator: "Game Freak",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "New Pokémon Snap",
+          creator: "Bandai Namco",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Catherine: Full Body",
+          creator: "Atlus",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Final Fantasy XV",
+          creator: "Square Enix",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Gravity Rush 2",
+          creator: "Japan Studio",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+        {
+          title: "Final Fantasy VII Remake",
+          creator: "Square Enix",
+          year: 2021,
+          type: "Game",
+          status: "Finished",
+        },
+      ];
+
+      const colors = {
+        Finished: "#10b981",
+        Unfinished: "#f59e0b",
+        Dropped: "#ef4444",
+      };
+
+      const container = document.getElementById("viz-container");
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      const svg = d3
+        .select("#viz-container")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const tooltip = d3.select("#tooltip");
+
+      const nodeRadius = 14;
+
+      const groups = {
+        year: {
+          2021: { x: width * 0.15, y: height / 2 },
+          2022: { x: width * 0.32, y: height / 2 },
+          2023: { x: width * 0.5, y: height / 2 },
+          2024: { x: width * 0.68, y: height / 2 },
+          2025: { x: width * 0.85, y: height / 2 },
+        },
+        type: {
+          Book: { x: width * 0.35, y: height / 2 },
+          Game: { x: width * 0.65, y: height / 2 },
+        },
+        status: {
+          Finished: { x: width * 0.25, y: height / 2 },
+          Unfinished: { x: width * 0.5, y: height / 2 },
+          Dropped: { x: width * 0.75, y: height / 2 },
+        },
+      };
+
+      const simulation = d3
+        .forceSimulation(data)
+        .force("charge", d3.forceManyBody().strength(1))
+        .force(
+          "collide",
+          d3
+            .forceCollide()
+            .radius(nodeRadius + 2)
+            .iterations(4),
+        )
+        .alphaDecay(0.05);
+
+      const nodes = svg
+        .selectAll(".node")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "node")
+        .attr("r", nodeRadius)
+        .attr("fill", (d) => colors[d.status])
+        .on("mouseover", function (event, d) {
+          d3.select(this)
+            .style("stroke", "var(--text-main)")
+            .style("stroke-width", "4px");
+
+          tooltip
+            .html(
+              `
+            <div class="meta-top">
+              <span class="status ${d.status.toLowerCase()}">${d.status}</span>
+              <span class="year">${d.year}</span>
+            </div>
+            <div class="title">${d.title}</div>
+            <div class="creator">${d.creator}</div>
+          `,
+            )
+            .attr("class", `tooltip ${d.type.toLowerCase()}`)
+            .style("opacity", 1);
+        })
+        .on("mousemove", function (event) {
+          const tNode = tooltip.node();
+          const tWidth = tNode.offsetWidth;
+          const tHeight = tNode.offsetHeight;
+
+          const [relX, relY] = d3.pointer(event, container);
+
+          let x = relX + 15;
+          let y = relY - 15;
+
+          if (x + tWidth > container.clientWidth) {
+            x = relX - tWidth - 15;
+          }
+
+          if (y + tHeight > container.clientHeight) {
+            y = relY - tHeight - 15;
+          } else if (y < 0) {
+            y = relY + 15;
+          }
+
+          tooltip.style("left", x + "px").style("top", y + "px");
+        })
+        .on("mouseout", function () {
+          d3.select(this)
+            .style("stroke", "var(--surface)")
+            .style("stroke-width", "2px");
+          tooltip.style("opacity", 0);
+        });
+
+      const labels = svg.append("g").attr("class", "labels");
+
+      function updateSimulation(groupMode) {
+        const groupCenters = groups[groupMode];
+
+        simulation
+          .force(
+            "x",
+            d3.forceX((d) => groupCenters[d[groupMode]].x).strength(0.12),
+          )
+          .force(
+            "y",
+            d3.forceY((d) => groupCenters[d[groupMode]].y).strength(0.12),
+          );
+
+        simulation.alpha(0.8).restart();
+
+        labels.selectAll("text").remove();
+
+        const labelData = Object.keys(groupCenters).map((key) => ({
+          key: key,
+          x: groupCenters[key].x,
+          y: height * 0.2,
+        }));
+
+        labels
+          .selectAll("text")
+          .data(labelData)
+          .enter()
+          .append("text")
+          .attr("class", "label")
+          .attr("x", (d) => d.x)
+          .attr("y", (d) => d.y)
+          .text((d) => d.key)
+          .style("opacity", 0)
+          .transition()
+          .duration(800)
+          .style("opacity", 1);
+      }
+
+      simulation.on("tick", () => {
+        nodes.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+      });
+
+      updateSimulation("year");
+
+      d3.selectAll("button").on("click", function () {
+        d3.selectAll("button").classed("active", false);
+        d3.select(this).classed("active", true);
+        const mode = d3.select(this).attr("data-group");
+        updateSimulation(mode);
+      });
+
+      window.addEventListener("resize", () => {
+        const newWidth = container.clientWidth;
+        svg.attr("width", newWidth);
+
+        groups.year = {
+          2021: { x: newWidth * 0.15, y: height / 2 },
+          2022: { x: newWidth * 0.32, y: height / 2 },
+          2023: { x: newWidth * 0.5, y: height / 2 },
+          2024: { x: newWidth * 0.68, y: height / 2 },
+          2025: { x: newWidth * 0.85, y: height / 2 },
+        };
+        groups.type = {
+          Book: { x: newWidth * 0.35, y: height / 2 },
+          Game: { x: newWidth * 0.65, y: height / 2 },
+        };
+        groups.status = {
+          Finished: { x: newWidth * 0.25, y: height / 2 },
+          Unfinished: { x: newWidth * 0.5, y: height / 2 },
+          Dropped: { x: newWidth * 0.75, y: height / 2 },
+        };
+        const activeMode = d3.select("button.active").attr("data-group");
+        updateSimulation(activeMode);
+      });
+    </script>
+  </body>
+</html>
