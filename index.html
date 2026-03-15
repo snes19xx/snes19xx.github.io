@@ -163,36 +163,42 @@
         z-index: 100;
         display: flex;
         align-items: center;
-        justify-content: center;
         width: 100%;
-        padding: 3em 1em 2em;
+        padding: 3em 2em 2em;
         order: 1;
         transition: background 0.4s ease;
       }
 
+      .my-header::before {
+        content: "";
+        flex: 1;
+      }
+
       .page-about:not(.grid--hidden) ~ header .my-header__title,
-      body:has(.page-about:not(.grid--hidden)) .my-header__title {
+      body:has(.page-about:not(.grid--hidden)) .my-header__title,
+      .page-about:not(.grid--hidden) ~ header .my-header::before,
+      body:has(.page-about:not(.grid--hidden)) .my-header::before {
         display: none;
       }
 
       .my-header__title {
+        flex: 0 1 auto;
         font-size: 1.2em;
         font-weight: 500;
         margin: 0;
         text-align: center;
+        text-indent: 199px;
         color: var(--fg);
         letter-spacing: 0.5px;
         transition: color 0.4s ease;
       }
 
       .social-links {
-        position: absolute;
-        top: 3em;
-        right: 2em;
+        flex: 1;
         display: flex;
-        gap: 2em;
+        justify-content: flex-end;
+        gap: 1em;
         z-index: 101;
-        opacity: 1;
       }
 
       .social-icon {
@@ -583,6 +589,7 @@
         font-weight: 400;
         letter-spacing: 0.03em;
         padding-top: 0.4em;
+        text-indent: 0;
       }
 
       /* CV Page */
@@ -759,9 +766,9 @@
         padding: 2em;
       }
 
-      .page-about ~ .my-header,
-      body:has(.page-about:not(.grid--hidden)) .my-header {
-        justify-content: center;
+      .page-about ~ .my-header .social-links,
+      body:has(.page-about:not(.grid--hidden)) .social-links {
+        justify-content: right;
       }
 
       .about-profile-image {
@@ -993,14 +1000,17 @@
         }
         .my-header {
           padding: 1em;
-          flex-wrap: wrap;
+          flex-direction: column;
+          justify-content: center;
+          gap: 1.5em;
+        }
+        .my-header::before {
+          display: none;
         }
         .social-links {
-          position: relative;
-          top: auto;
-          right: auto;
-          margin-top: 1em;
+          margin-top: 0;
           justify-content: center;
+          flex: none;
         }
         .content--side {
           width: 100%;
@@ -1043,9 +1053,6 @@
           padding: 1em;
         }
         .social-links {
-          position: relative;
-          top: auto;
-          right: auto;
           justify-content: center;
           margin: 1em 0;
         }
@@ -1067,6 +1074,13 @@
           d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
         />
       </symbol>
+      <symbol id="icon-observable" viewBox="0 0 24 24">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M12 21.411c-5.197 0-9.411-4.214-9.411-9.411 0-5.197 4.214-9.411 9.411-9.411 5.197 0 9.411 4.214 9.411 9.411 0 5.197-4.214 9.411-9.411 9.411zm0-15.688c-3.465 0-6.277 2.812-6.277 6.277s2.812 6.277 6.277 6.277 6.277-2.812 6.277-6.277-2.812-6.277-6.277-6.277zM12 24C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12z"
+        />
+      </symbol>
     </svg>
     <main>
       <header class="my-header">
@@ -1086,6 +1100,14 @@
             title="GitHub"
           >
             <svg><use xlink:href="#icon-github"></use></svg>
+          </a>
+          <a
+            href="https://observablehq.com/@snes19xx"
+            target="_blank"
+            class="social-icon"
+            title="Observable"
+          >
+            <svg><use xlink:href="#icon-observable"></use></svg>
           </a>
         </div>
       </header>
@@ -1267,12 +1289,16 @@
                 </div>
                 <div class="skill-category">
                   <strong>Programming &amp; Data</strong>
-                  <p>JavaScript, Dart, QML, Python, C</p>
+                  <p>
+                    Pandas, JavaScript, Dart, QML, Python, C, Rust, Polars,
+                    Tauri
+                  </p>
                 </div>
                 <div class="skill-category">
                   <strong>Design &amp; Visualization</strong>
                   <p>
-                    D3.js, Leaflet, Illustrator, Photoshop, InDesign, Plot.js
+                    D3.js, Seaborn, Leaflet, Illustrator, Photoshop, InDesign,
+                    Plot.js, Figma
                   </p>
                 </div>
               </div>
@@ -1335,6 +1361,13 @@
           link: "UH_exp/index.htm",
         },
         {
+          title: "Earth in Hues",
+          desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
+          tags: ["Python", "D3.js"],
+          image: "images/tb_eart.jpg",
+          link: "earth_hues/index.html",
+        },
+        {
           title: "Re-Zoning the Yard",
           desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto",
           tags: ["ArcGIS"],
@@ -1375,13 +1408,6 @@
           tags: ["Presentation"],
           image: "images/thumbnail.png",
           link: "images/slides/slides.html",
-        },
-        {
-          title: "Toronto Urban Heat Explorer",
-          desc: "Land surface temperature analysis showing the cooling effect of urban vegetation.",
-          tags: ["Python", "D3.js"],
-          image: "images/111.png",
-          link: "Toronto_UH/toronto-heat-map.html",
         },
       ];
 
@@ -1757,13 +1783,6 @@
             const newPage = this.value;
             const oldPageEl = document.querySelector(`.${currentPage}`);
             const newPageEl = document.querySelector(`.${newPage}`);
-            const headerTitle = document.querySelector(".my-header__title");
-
-            if (newPage === "page-about") {
-              headerTitle.style.display = "none";
-            } else {
-              headerTitle.style.display = "block";
-            }
 
             anime({
               targets: oldPageEl,
