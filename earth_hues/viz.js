@@ -1,7 +1,7 @@
-/* ─────────────────────────────────────────
+/* 
    Earth in Hues — viz.js
-   D3 v7 · scroll-triggered animations only
-───────────────────────────────────────── */
+   D3 v7
+ */
 
 const earth_hues = [
   {
@@ -323,9 +323,9 @@ function registerViz(id, buildFn) {
   vizObserver.observe(el);
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 1 — True Mean Earth Color
-════════════════════════════════════════ */
+ */
 function buildHeatmap() {
   const container = document.getElementById("viz-heatmap");
   const cW = 80,
@@ -451,9 +451,9 @@ function buildHeatmap() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 2 — Annual Color Signature
-════════════════════════════════════════ */
+ */
 function buildSignature() {
   const container = document.getElementById("viz-signature");
   const blockH = 90,
@@ -638,9 +638,9 @@ function buildSignature() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 3 — Seasonal Color Drift
-════════════════════════════════════════ */
+ */
 function buildDriftLines() {
   const container = document.getElementById("viz-drift");
   const W = 900,
@@ -839,9 +839,9 @@ function buildDriftLines() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 4 — Seasonal Color Wheels
-════════════════════════════════════════ */
+ */
 function buildColorWheels() {
   const container = document.getElementById("viz-wheels");
   const ecoCats = categories.filter((c) => !c.startsWith("Total"));
@@ -994,9 +994,9 @@ function buildColorWheels() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 5 — RGB Channel Decomposition
-════════════════════════════════════════ */
+ */
 function buildRgbChannels() {
   const container = document.getElementById("viz-rgb");
   const COLS = 4,
@@ -1160,9 +1160,9 @@ function buildRgbChannels() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    CHART 6 — Seasonal Brightness Anomaly
-════════════════════════════════════════ */
+ */
 function buildAnomalyHeatmap() {
   const container = document.getElementById("viz-anomaly");
   const W = 1050,
@@ -1359,9 +1359,9 @@ function buildAnomalyHeatmap() {
   container.appendChild(svg.node());
 }
 
-/* ════════════════════════════════════════
+/* 
    TOC Scroll Spy
-════════════════════════════════════════ */
+ */
 function initScrollSpy() {
   const pills = document.querySelectorAll(".toc-pill");
   const sections = Array.from(document.querySelectorAll("[id^='s']")).filter(
@@ -1393,9 +1393,9 @@ function initScrollSpy() {
   sections.forEach((s) => spy.observe(s));
 }
 
-/* ════════════════════════════════════════
-   Init — all viz deferred to scroll
-════════════════════════════════════════ */
+/* 
+   Init
+ */
 document.addEventListener("DOMContentLoaded", () => {
   registerViz("viz-heatmap", buildHeatmap);
   registerViz("viz-signature", buildSignature);
