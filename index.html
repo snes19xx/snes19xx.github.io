@@ -193,6 +193,13 @@
         transition: color 0.4s ease;
       }
 
+      /* Remove text-indent on small/phone screens */
+      @media screen and (max-width: 768px) {
+        .my-header__title {
+          text-indent: 0;
+        }
+      }
+
       .social-links {
         flex: 1;
         display: flex;
@@ -407,8 +414,7 @@
           filter 0.3s ease,
           opacity 0.5s ease;
         opacity: 0;
-        filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9)
-          contrast(0.8);
+        filter: hue-rotate(-5deg) saturate(0.7) brightness(0.9) contrast(0.9);
       }
 
       .grid__img.loaded {
@@ -726,20 +732,10 @@
         clear: right;
       }
 
+      /* Hide the grade viz on small/phone screens */
       @media screen and (max-width: 800px) {
         .academics-viz {
-          float: none;
-          width: 100%;
-          margin: 2em 0;
-          clear: both;
-        }
-
-        /* Stack sidebar and center content on mobile */
-        .content--side,
-        .content--center {
-          width: 100%;
-          max-width: 100%;
-          flex: none;
+          display: none;
         }
       }
 
@@ -1122,7 +1118,6 @@
               name="grid-type"
               value="page-projects"
               id="control-projects"
-              checked
             />
             <label class="control__label" for="control-projects"
               >projects</label
@@ -1351,6 +1346,10 @@
 
     <script>
       document.documentElement.className = "js";
+      (function () {
+        const projectsRadio = document.getElementById("control-projects");
+        if (projectsRadio) projectsRadio.checked = true;
+      })();
 
       const portfolioItems = [
         {
@@ -1364,7 +1363,7 @@
           title: "Earth in Hues",
           desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
           tags: ["Python", "D3.js"],
-          image: "images/tb_eart.jpg",
+          image: "images/tb_eart.png",
           link: "earth_hues/index.html",
         },
         {
