@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Portfolio - Sandesh Bhandari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Josefin+Sans:wght@100;200;300;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --ink: #1c1916;
+        --ink-lift: #282420;
+        --parchment: #f3ede2;
+        --parchment-mid: #e9e1d1;
+        --parchment-dark: #d7cbba;
+        --cream: #faf7f1;
+        --terracotta: #b5582f;
+        --terra-light: #cb7a50;
+        --sand: #c7a87b;
+        --olive: #596038;
+        --olive-light: #788050;
+        --stone: #8a796a;
+        --stone-light: #a99a8c;
+      }
+
+      html {
+        scroll-snap-type: y mandatory;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Lora", Georgia, serif;
+        background: var(--ink);
+        cursor: default;
+      }
+
+      .page {
+        height: 100vh;
+        width: 100%;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #nav-dots {
+        position: fixed;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .nav-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--stone);
+        opacity: 0.35;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .nav-dot.active {
+        background: var(--terracotta);
+        opacity: 1;
+        transform: scale(1.4);
+      }
+
+      .page-cover {
+        background: var(--parchment);
+      }
+
+      .cover-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 52px 72px 48px;
+      }
+
+      .cover-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--parchment-dark);
+      }
+
+      .cover-top-left {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        color: var(--stone-light);
+      }
+
+      .cover-top-right {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--stone-light);
+      }
+
+      .cover-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .cover-label {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.44em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 32px;
+      }
+
+      .cover-name {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: clamp(64px, 9vw, 110px);
+        color: var(--ink);
+        line-height: 0.95;
+        letter-spacing: -0.01em;
+      }
+
+      .cover-rule {
+        width: 48px;
+        height: 1px;
+        background: var(--terracotta);
+        margin: 36px 0;
+      }
+
+      .cover-title-word {
+        font-family: "EB Garamond", serif;
+        font-weight: 500;
+        font-size: clamp(14px, 1.6vw, 20px);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--stone);
+      }
+
+      .cover-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-top: 28px;
+        border-top: 1px solid var(--parchment-dark);
+      }
+
+      .cover-project-name {
+        font-family: "Lora", serif;
+        font-style: italic;
+        font-size: 12.5px;
+        color: var(--stone);
+        line-height: 1.75;
+        max-width: 420px;
+      }
+
+      .cover-student-info {
+        text-align: right;
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--stone-light);
+        line-height: 2.4;
+      }
+
+      .page-inner {
+        background: var(--parchment);
+      }
+
+      .page-inner::after {
+        content: "";
+        position: absolute;
+        left: 44px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--terracotta);
+        opacity: 0.18;
+        pointer-events: none;
+      }
+
+      .page-header {
+        position: absolute;
+        top: 28px;
+        right: 48px;
+        z-index: 10;
+        flex-shrink: 0;
+      }
+
+      .pg-num {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        color: var(--stone-light);
+        opacity: 0.6;
+      }
+
+      .pg-label {
+        display: none;
+      }
+
+      .page-content {
+        flex: 1;
+        padding: 52px 64px 28px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .section-mark {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+        flex-shrink: 0;
+        margin-bottom: 28px;
+      }
+
+      .s-number {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 68px;
+        color: var(--parchment-dark);
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      .s-title-block {
+        border-left: 2px solid var(--terracotta);
+        padding-left: 18px;
+        padding-bottom: 4px;
+      }
+
+      .s-title {
+        font-family: "EB Garamond", serif;
+        font-weight: 600;
+        font-size: 24px;
+        color: var(--ink);
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+
+      .s-sub {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-top: 5px;
+      }
+
+      .img-wrap {
+        position: relative;
+        background-color: var(--parchment-mid);
+        background-image:
+          linear-gradient(var(--parchment-dark) 1px, transparent 1px),
+          linear-gradient(90deg, var(--parchment-dark) 1px, transparent 1px);
+        background-size: 22px 22px;
+        overflow: hidden;
+      }
+
+      .img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+
+      .img-tag {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        z-index: 2;
+        font-family: "Josefin Sans", sans-serif;
+        font-size: 8.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--stone);
+        background: rgba(243, 237, 226, 0.88);
+        padding: 2px 8px;
+      }
+
+      .fig-caption {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 200;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--stone-light);
+        margin-top: 6px;
+        line-height: 1.6;
+      }
+
+      .body-text {
+        font-family: "Lora", serif;
+        font-size: 13px;
+        line-height: 1.88;
+        color: var(--ink);
+      }
+
+      .body-text p + p {
+        margin-top: 10px;
+      }
+
+      .pull-quote {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 20px;
+        color: var(--ink);
+        line-height: 1.55;
+        border-top: 1px solid var(--sand);
+        padding-top: 16px;
+      }
+
+      .tag-pill {
+        display: inline-block;
+        font-family: "Josefin Sans", sans-serif;
+        font-size: 8.5px;
+        font-weight: 300;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+      }
+
+      .tag-olive {
+        color: var(--cream);
+        background: var(--olive);
+      }
+
+      .tag-terra {
+        color: var(--cream);
+        background: var(--terracotta);
+      }
+
+      .dark-card {
+        background: var(--ink);
+        padding: 22px 22px 20px;
+      }
+
+      .dark-card .dc-label {
+        font-family: "Josefin Sans", sans-serif;
+        font-size: 9px;
+        font-weight: 200;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 10px;
+      }
+
+      .dark-card .dc-title {
+        font-family: "EB Garamond", serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--cream);
+        line-height: 1.3;
+        margin-bottom: 10px;
+      }
+
+      .dark-card .dc-body {
+        font-family: "Lora", serif;
+        font-size: 11px;
+        color: var(--parchment-dark);
+        line-height: 1.82;
+      }
+
+      .p1-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1.35fr 0.95fr;
+        gap: 0 44px;
+        min-height: 0;
+      }
+
+      .p1-col {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        overflow: hidden;
+      }
+
+      .p2-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 44px;
+        min-height: 0;
+      }
+
+      .p2-figures {
+        display: flex;
+        gap: 12px;
+        height: 100%;
+        min-height: 0;
+      }
+
+      .p2-figures .img-wrap {
+        flex: 1;
+        height: 100%;
+      }
+
+      .p2-text-area {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .p3-spatial-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        min-height: 0;
+      }
+
+      .p3-map-container {
+        width: 100%;
+        max-width: 900px;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .p3-map-container .img-wrap {
+        flex: 1;
+      }
+
+      .p3-text-container {
+        width: 100%;
+        max-width: 1100px;
+        text-align: center;
+      }
+
+      .p4-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 44px;
+        min-height: 0;
+      }
+
+      .p4-left {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow: hidden;
+      }
+
+      .p4-right {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow: hidden;
+      }
+
+      .finding-row {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+
+      .finding-num {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 36px;
+        font-weight: 300;
+        color: var(--terracotta);
+        line-height: 1;
+        flex-shrink: 0;
+        width: 32px;
+      }
+
+      .finding-body {
+        font-family: "Lora", serif;
+        font-size: 12.5px;
+        line-height: 1.78;
+        color: var(--ink);
+      }
+
+      .finding-body strong {
+        font-size: 13px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 1px;
+      }
+
+      .p4-divider {
+        height: 1px;
+        background: var(--parchment-dark);
+      }
+
+      .p5-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 2.5fr 1fr;
+        gap: 40px;
+        min-height: 0;
+      }
+
+      .p5-poster-area {
+        position: relative;
+        min-height: 0;
+        height: 100%;
+      }
+
+      .p5-poster-area .img-wrap {
+        height: 100%;
+        background-image: none;
+        background-color: transparent;
+      }
+
+      .p5-poster-area .img-wrap img {
+        object-fit: contain;
+        object-position: left center;
+        cursor: zoom-in;
+      }
+
+      .poster-corner-label {
+        position: absolute;
+        top: 12px;
+      }
+
+      .p5-reflection {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        overflow-y: auto;
+        padding-right: 12px;
+      }
+
+      .r-block h4 {
+        font-family: "Josefin Sans", sans-serif;
+        font-weight: 300;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 9px;
+      }
+
+      .r-block p {
+        font-family: "Lora", serif;
+        font-style: italic;
+        font-size: 13.5px;
+        color: var(--stone);
+        line-height: 1.82;
+      }
+
+      .expanded-poster {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(28, 25, 22, 0.95);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: zoom-out;
+      }
+
+      .expanded-poster img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+      }
+
+      .page-cream {
+        background: var(--cream);
+      }
+      .page-cream .page-header {
+        background: var(--cream);
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="nav-dots" aria-label="Page navigation">
+      <div class="nav-dot active" data-page="0" title="Cover"></div>
+      <div class="nav-dot" data-page="1" title="Introduction"></div>
+      <div class="nav-dot" data-page="2" title="Data Visualization"></div>
+      <div class="nav-dot" data-page="3" title="Spatial Analysis"></div>
+      <div class="nav-dot" data-page="4" title="Process & Workshops"></div>
+      <div class="nav-dot" data-page="5" title="Poster & Reflection"></div>
+    </nav>
+
+    <section class="page page-cover" id="page-0">
+      <div class="cover-inner">
+        <div class="cover-top">
+          <span class="cover-top-left"
+            >Multidisciplinary Urban Capstone Project</span
+          >
+          <span class="cover-top-right">2025–26</span>
+        </div>
+
+        <div class="cover-main">
+          <h1 class="cover-name">Sandesh<br />Bhandari</h1>
+          <div class="cover-rule"></div>
+          <p class="cover-title-word">Design Portfolio</p>
+        </div>
+
+        <div class="cover-footer">
+          <p class="cover-project-name">
+            Downtown Brampton Business Improvement Area &mdash;<br />
+            Supporting Small Business Impacted by Infrastructure Construction
+          </p>
+          <div class="cover-student-info">
+            Student No. 1010179058<br />
+            MUCP 2025–26
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page page-inner" id="page-1">
+      <div class="page-header">
+        <span class="pg-num">01 &hairsp;/&hairsp; 05</span>
+        <span class="pg-label"
+          ><em>01 —</em>&ensp; Introduction &amp; Context</span
+        >
+      </div>
+
+      <div class="page-content">
+        <div class="section-mark">
+          <span class="s-number">01</span>
+          <div class="s-title-block">
+            <h2 class="s-title">Introduction<br />&amp; Context</h2>
+            <p class="s-sub">Project Background &middot; Community Partner</p>
+          </div>
+        </div>
+
+        <div class="p1-body">
+          <div class="p1-col">
+            <blockquote class="pull-quote">
+              "Cities are built in layers, and so is disruption — my job was to
+              make those layers visible."
+            </blockquote>
+            <div class="body-text">
+              <p>
+                Most of my coursework sits at the intersection of spatial
+                analysis, environmental systems, and data-driven decision
+                making. What pulled me toward this particular project was
+                straightforward: it was one of the few MUCP placements that had
+                a genuinely spatial problem at its core. Construction disruption
+                is not just a policy or business challenge, it is a geographic
+                one. Where the construction is, which blocks it touches, how far
+                its footprint extends, which businesses fall inside or outside
+                the affected zone, these are questions that only make sense when
+                you put them on a map. I had spent a lot of time in my degree
+                learning how to do exactly that, and this project felt like a
+                real application of those skills rather than a classroom
+                exercise. My background also gave me a particular sensitivity to
+                how infrastructure and built environments interact with
+                communities over time, which shaped how I read the case study
+                evidence and thought about what the data was actually showing
+              </p>
+            </div>
+          </div>
+
+          <div class="p1-col">
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-height: 0;
+              "
+            >
+              <div class="img-wrap" style="flex: 1">
+                <img src="image1.png" alt="Project context image" />
+                <span class="img-tag"></span>
+              </div>
+              <p class="fig-caption">
+                The MUCP is an Institutional collaboration between the Downtown
+                Brampton BIA and the University of Toronto School of Cities
+              </p>
+            </div>
+          </div>
+
+          <div class="p1-col">
+            <div class="dark-card">
+              <p class="dc-label">Community Partner</p>
+              <p class="dc-title">
+                Downtown Brampton<br />Business Improvement Area
+              </p>
+              <p class="dc-body">
+                Representing 350+ businesses and property owners in the historic
+                core of Brampton since 1982. The BIA strengthens the
+                neighbourhood's economic health through strategic investments,
+                cultural programming, and advocacy.
+              </p>
+            </div>
+            <div class="body-text">
+              <p>
+                <strong
+                  style="
+                    font-family: &quot;EB Garamond&quot;, serif;
+                    font-size: 15px;
+                    font-weight: 600;
+                  "
+                  >The Challenge.</strong
+                >
+                The core challenge the DBBIA brought to our team was one of
+                compounding uncertainty: multiple overlapping construction
+                projects, no clear single timeline, and a business community
+                that was already absorbing disruption before the largest
+                project, the Hazel McCallion LRT extension, had even broken
+                ground. My specific role within the team was to ground the
+                project spatially. Before we could make any recommendations,
+                someone had to establish where exactly the disruption was
+                happening, which businesses were in the most affected zones, and
+                how the construction footprint mapped onto the BIA boundary.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page page-inner page-cream" id="page-2">
+      <div class="page-header">
+        <span class="pg-num">02 &hairsp;/&hairsp; 05</span>
+        <span class="pg-label"><em>02 —</em>&ensp; Data Visualization</span>
+      </div>
+
+      <div class="page-content" style="background: var(--parchment)">
+        <div class="section-mark">
+          <span class="s-number">02</span>
+          <div class="s-title-block">
+            <h2 class="s-title">Data Visualization</h2>
+            <p class="s-sub">
+              Data Analysis &middot; Statistics &middot; Findings
+            </p>
+          </div>
+        </div>
+
+        <div class="p2-body">
+          <div class="p2-figures">
+            <div class="img-wrap">
+              <img src="chart1.png" alt="Data Chart 1" />
+            </div>
+            <div class="img-wrap">
+              <img src="chart2.png" alt="Data Chart 2" />
+            </div>
+          </div>
+
+          <div class="p2-text-area">
+            <div class="body-text">
+              <p>
+                <strong
+                  style="
+                    font-family: &quot;EB Garamond&quot;, serif;
+                    font-size: 18px;
+                  "
+                  >Quantitative Insights</strong
+                ><br />
+                While our team designed and distributed a stakeholder survey to
+                DBBIA member businesses, response rates were too low to produce
+                usable data, so our primary quantitative source became the
+                CFIB's 2024 report, Hard Hats and Hard Times. The figures drawn
+                from that dataset tell a consistent story: disruption has gotten
+                worse over time, not better. Between 2018 and 2024, the share of
+                Canadian small businesses reporting major construction impacts
+                jumped by 17 percentage points, and the average disruption
+                duration sits at 508 days. For businesses already operating on
+                thin margins, that timeline is not an inconvenience, it is an
+                existential threat.
+              </p>
+              <p>
+                All data was processed and analyzed in python with the
+                <i>pandas</i> library and all visualizations were also designed
+                and made in python with the <i>matplotlib</i> and
+                <i>seaborn</i> libraries.
+              </p>
+            </div>
+
+            <div class="dark-card">
+              <p class="dc-label">Data Highlight</p>
+              <p class="dc-title">Key Statistical Finding</p>
+              <p class="dc-body">
+                57% of affected businesses received less than one month of
+                notice, or none at all, before construction began. For small
+                business owners, preparation time is everything. Late or absent
+                communication does not just cause frustration, it removes the
+                window to adjust inventory, staffing, and cash flow before the
+                damage is already done.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page page-inner" id="page-3">
+      <div class="page-header">
+        <span class="pg-num">03 &hairsp;/&hairsp; 05</span>
+        <span class="pg-label"><em>03 —</em>&ensp; Spatial Analysis</span>
+      </div>
+
+      <div class="page-content">
+        <div class="section-mark">
+          <span class="s-number">03</span>
+          <div class="s-title-block">
+            <h2 class="s-title">Spatial Analysis</h2>
+            <p class="s-sub">GIS Mapping &middot; Geography</p>
+          </div>
+        </div>
+
+        <div class="p3-spatial-body">
+          <div class="p3-map-container">
+            <div class="img-wrap">
+              <img src="map.png" alt="Spatial Analysis Map" />
+            </div>
+            <p class="fig-caption" style="text-align: left">
+              Downtown Brampton BIA boundary; our geography of interest.
+            </p>
+          </div>
+
+          <div class="p3-text-container body-text">
+            <p>
+              My spatial analysis work focused on producing the maps and figures
+              throughout the report. I combined the BIA boundary, City of
+              Brampton parcel data, construction zone extents, and the business
+              directory to build a picture of which members were most exposed.
+              What the overlaid layers made clear was that disruption was not
+              uniform: mid-block businesses on Main Street South and Queen
+              Street East were far more physically cut off than corner
+              properties.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page page-inner" id="page-4">
+      <div class="page-header">
+        <span class="pg-num">04 &hairsp;/&hairsp; 05</span>
+        <span class="pg-label"
+          ><em>04 —</em>&ensp; Research Process, Findings &amp; Workshops</span
+        >
+      </div>
+
+      <div class="page-content">
+        <div class="section-mark">
+          <span class="s-number">04</span>
+          <div class="s-title-block">
+            <h2 class="s-title">
+              Research Process,<br />Findings &amp; Workshops
+            </h2>
+          </div>
+        </div>
+
+        <div class="p4-body">
+          <div class="p4-left">
+            <div class="finding-row">
+              <span class="finding-num">01</span>
+              <div class="finding-body">
+                <strong>Location Determines Impact </strong>
+                GIS mapping of the three overlapping construction projects
+                revealed that disruption in Downtown Brampton is not evenly
+                distributed. Mid-block businesses on Main Street South and Queen
+                Street East face the steepest visibility losses, physically cut
+                off from pedestrian flow in ways that corner properties are not.
+              </div>
+            </div>
+
+            <div class="p4-divider"></div>
+
+            <div class="finding-row">
+              <span class="finding-num">02</span>
+              <div class="finding-body">
+                <strong>The Eglinton Corridor as a Warning</strong>
+
+                The Eglinton Crosstown's 15-year construction timeline showed
+                that reactive, short-term gestures like parking discounts and
+                single-day shopping events do not offset sustained revenue loss.
+                Brampton has an opportunity to act earlier and more
+                deliberately, building support structures before disruption
+                peaks rather than scrambling after it.
+              </div>
+            </div>
+
+            <div class="p4-divider"></div>
+
+            <div class="finding-row">
+              <span class="finding-num">03</span>
+              <div class="finding-body">
+                <strong>Most Businesses Had No Time to Prepare</strong>
+                National data from the CFIB showed that 57% of affected
+                businesses received less than one month of notice before
+                construction began. Without preparation time, businesses cannot
+                adjust staffing, inventory, or cash flow. Early, structured
+                communication from the city is not a courtesy, it is a
+                mitigation strategy.
+              </div>
+            </div>
+
+            <div class="dark-card" style="margin-top: auto">
+              <p class="dc-label">Lifelong Learning &amp; Teamwork</p>
+              <p class="dc-body">
+                The biggest shift for me came from working alongside teammates
+                who approached the same problem from completely different
+                angles. My instinct was always to reach for the data first, but
+                commerce students on the team were asking about customer
+                psychology and budget feasibility from the start. Learning to
+                translate spatial findings into language that informed design
+                decisions rather than just described geography was genuinely
+                challenging, and something I would not have developed working
+                within a single discipline.
+              </p>
+            </div>
+          </div>
+
+          <div class="p4-right">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div class="img-wrap" style="height: 150px">
+                <img src="image7.png" alt="Process image" />
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div class="img-wrap" style="height: 130px">
+                <img src="image8.png" alt="Process image 2" />
+              </div>
+            </div>
+
+            <div class="body-text">
+              <p>
+                The main case studies I undertook were on the Eglinton Crosstown
+                and Ontario Line, as they are the most directly comparable
+                Ontario precedents. Drawing on City of Toronto staff reports,
+                and the Canadian Urban Institute's Thorncliffe Park study, these
+                case studies provided us with a concrete record of what happens
+                when mitigation is reactive rather than proactive, which
+                businesses get left behind, and what institutional frameworks
+                actually move the needle.
+              </p>
+              <p>
+                Having geography, planning, and commerce students working on the
+                same problem created real productive friction. The spatial
+                analysis shaped what questions we asked, but the team's breadth
+                shaped how we answered them. Recommendations that started as
+                mapping outputs became feasibility-tested, equity-weighted
+                interventions precisely because multiple disciplines were
+                pushing on the same problem from different directions.
+              </p>
+            </div>
+
+            <div
+              style="margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="tag-pill tag-terra">Case Studies</span>
+              <span class="tag-pill tag-olive">GIS Analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="page page-inner"
+      id="page-5"
+      style="background: var(--parchment)"
+    >
+      <div class="page-header">
+        <span class="pg-num">05 &hairsp;/&hairsp; 05</span>
+        <span class="pg-label"
+          ><em>05 —</em>&ensp; Capstone Poster &amp; Reflection</span
+        >
+      </div>
+
+      <div class="page-content">
+        <div class="section-mark" style="margin-bottom: 18px">
+          <span class="s-number">05</span>
+          <div class="s-title-block">
+            <h2 class="s-title">Capstone Poster</h2>
+          </div>
+          <div style="margin-left: auto; align-self: flex-end">
+            <span class="tag-pill tag-olive">Web Design</span>
+          </div>
+        </div>
+
+        <div class="p5-body">
+          <div class="p5-poster-area">
+            <div
+              class="img-wrap"
+              style="height: 100%; background-size: 36px 36px"
+            >
+              <img src="poster.png" alt="Capstone poster — landscape format" />
+              >
+            </div>
+            <div class="poster-corner-label">
+              <span class="tag-pill tag-terra">Capstone Poster 2025–26</span>
+            </div>
+          </div>
+
+          <div class="p5-reflection">
+            <div class="r-block">
+              <h4>What I Did</h4>
+              <p>
+                I designed and built almost all of the capstone poster for our
+                March 25 showcase. My role covered every aspect of the poster:
+                the layout structure, visual hierarchy, typography choices,
+                color system, data presentation, and the translation of our
+                team's research findings into something a public audience could
+                read quickly and absorb. Some elements visible in the original
+                showcase version have been removed from what appears here, as
+                those sections were written and designed by teammates and belong
+                in their own portfolios.
+              </p>
+            </div>
+            <div class="r-block">
+              <h4>How I Did It</h4>
+              <p>
+                I built the poster entirely in HTML and CSS, drawing on prior
+                experience in web design and front-end development. This gave me
+                precise control over layout, spacing, and visual consistency in
+                a way that drag-and-drop tools rarely allow. This portfolio
+                itself is a direct extension of that work, built on the same
+                codebase, which is why the visual language across both feels
+                consistent.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Nav dot scroll tracking
+      const pages = document.querySelectorAll(".page");
+      const dots = document.querySelectorAll(".nav-dot");
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const idx = Array.from(pages).indexOf(e.target);
+              dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+
+      pages.forEach((p) => io.observe(p));
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => {
+          pages[i].scrollIntoView({ behavior: "smooth" });
+        });
+      });
+
+      // Expandable Poster Script
+      const posterArea = document.querySelector(".p5-poster-area .img-wrap");
+
+      if (posterArea) {
+        posterArea.addEventListener("click", function () {
+          const posterImg = this.querySelector("img");
+          if (posterImg) {
+            const expandedContainer = document.createElement("div");
+            expandedContainer.className = "expanded-poster";
+            expandedContainer.setAttribute(
+              "aria-label",
+              "Full size poster view",
+            );
+
+            const expandedImg = document.createElement("img");
+            expandedImg.src = posterImg.src;
+            expandedImg.alt = posterImg.alt;
+
+            expandedContainer.appendChild(expandedImg);
+            document.body.appendChild(expandedContainer);
+
+            expandedContainer.addEventListener("click", function () {
+              this.remove();
+            });
+
+            document.addEventListener(
+              "keydown",
+              function (e) {
+                if (e.key === "Escape") {
+                  expandedContainer.remove();
+                }
+              },
+              { once: true },
+            );
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
