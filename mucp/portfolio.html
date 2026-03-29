@@ -420,8 +420,7 @@
 
       .p2-body {
         flex: 1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: flex;
         gap: 44px;
         min-height: 0;
       }
@@ -431,14 +430,36 @@
         gap: 12px;
         height: 100%;
         min-height: 0;
+        flex-shrink: 0;
       }
 
       .p2-figures .img-wrap {
-        flex: 1;
+        flex: 0 0 auto;
         height: 100%;
+        width: auto;
+        overflow: visible;
+        background-image: none;
+        background-color: transparent;
+        position: relative;
+      }
+
+      .p2-figures .img-wrap:first-child {
+        margin-right: -60px;
+      }
+
+      .p2-figures .img-wrap img {
+        position: relative;
+        width: auto;
+        height: 100%;
+        object-fit: unset;
+        top: auto;
+        left: auto;
+        display: block;
       }
 
       .p2-text-area {
+        flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -612,7 +633,7 @@
         background: var(--cream);
       }
       .page-cream .page-header {
-        background: var(--cream);
+        background: none;
       }
     </style>
   </head>
@@ -1041,15 +1062,15 @@
             <div class="r-block">
               <h4>What I Did</h4>
               <p>
-                I designed and built almost all of the capstone poster for our
-                March 25 showcase. My role covered every aspect of the poster:
-                the layout structure, visual hierarchy, typography choices,
-                color system, data presentation, and the translation of our
-                team's research findings into something a public audience could
-                read quickly and absorb. Some elements visible in the original
-                showcase version have been removed from what appears here, as
-                those sections were written and designed by teammates and belong
-                in their own portfolios.
+                I designed and built the capstone poster for our March 25
+                showcase. My role covered every aspect of the poster: the layout
+                structure, visual hierarchy, typography choices, color system,
+                data presentation, and the translation of our team's research
+                findings into something a public audience could read quickly and
+                absorb. Some elements visible in the original showcase version
+                have been removed from what appears here, as those sections were
+                written and designed by teammates and belong in their own
+                portfolios.
               </p>
             </div>
             <div class="r-block">

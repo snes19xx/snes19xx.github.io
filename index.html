@@ -13,7 +13,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 
     <style>
+      /* light mode (default) */
       :root {
+        --bg0: #fdfbf7;
+        --bg1: #ede8de;
+        --bg2: #e3ddd0;
+        --bg3: #d0c9ba;
+        --bg4: #bfb8a8;
+        --fg: #2d353b;
+        --red: #c94040;
+        --orange: #c07040;
+        --yellow: #a08030;
+        --green: #4f7942;
+        --aqua: #3a7a65;
+        --blue: #3a7080;
+        --purple: #8050a0;
+        --grey0: #7a8478;
+        --grey1: #4a5048;
+        --grey2: #6a7068;
+      }
+
+      /* dark mode */
+      body.dark-mode {
         --bg0: #2d353b;
         --bg1: #343f44;
         --bg2: #3d484d;
@@ -55,11 +76,11 @@
 
       /* CV page */
       body:has(.page-cv:not(.grid--hidden)) {
-        background: #f5f0e8;
+        background: #fdfbf7;
       }
 
       body:has(.page-cv:not(.grid--hidden)) .my-header {
-        background: #f5f0e8;
+        background: #fdfbf7;
       }
 
       body:has(.page-cv:not(.grid--hidden)) .social-icon svg {
@@ -71,11 +92,11 @@
       }
 
       body:has(.page-cv:not(.grid--hidden)) .content--side {
-        background: #f5f0e8;
+        background: #fdfbf7;
       }
 
       body:has(.page-cv:not(.grid--hidden)) .content--center {
-        background: #f5f0e8;
+        background: #fdfbf7;
       }
 
       body:has(.page-cv:not(.grid--hidden)) .control__title {
@@ -414,6 +435,12 @@
           filter 0.3s ease,
           opacity 0.5s ease;
         opacity: 0;
+        /* opacity filter */
+        filter: saturate(0.85);
+      }
+
+      /* dark mode thumbnail filter */
+      body.dark-mode .grid__img {
         filter: hue-rotate(-5deg) saturate(0.7) brightness(0.9) contrast(0.9);
       }
 
@@ -423,31 +450,10 @@
 
       .grid__item:hover .grid__img {
         transform: scale(1.08);
-        filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95)
-          contrast(1.05);
+        filter: brightness(0.88) contrast(1.05) saturate(0.95);
       }
 
-      .grid__img video {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition:
-          transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-          filter 0.3s ease,
-          opacity 0.5s ease;
-        opacity: 0;
-        background: var(--bg1);
-        filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9)
-          contrast(0.8);
-      }
-
-      .grid__img video.loaded {
-        opacity: 1;
-      }
-
-      .grid__item:hover .grid__img video {
-        transform: scale(1.08);
+      body.dark-mode .grid__item:hover .grid__img {
         filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95)
           contrast(1.05);
       }
@@ -531,6 +537,7 @@
 
       .grid__item:hover .grid__title {
         transform: translateY(0);
+        color: #d3c6aa;
       }
 
       .grid__description {
@@ -546,6 +553,7 @@
 
       .grid__item:hover .grid__description {
         transform: translateY(0);
+        color: #9da9a0;
       }
 
       .grid__tags {
@@ -572,6 +580,9 @@
       .grid__item:hover .grid__tag {
         transform: translateY(0);
         opacity: 1;
+        background: #3d484d;
+        color: #83c092;
+        border-color: #475258;
       }
 
       .grid__tag:nth-child(1) {
@@ -1056,6 +1067,66 @@
           grid-template-columns: 1fr;
         }
       }
+
+      /* theme toggle button */
+      .theme-toggle {
+        position: fixed;
+        bottom: 1.5em;
+        right: 1.5em;
+        z-index: 9999;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.3s ease;
+        box-shadow: none;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.12);
+        border-color: var(--green);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: var(--grey1);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke 0.3s ease;
+      }
+
+      .theme-toggle:hover svg {
+        stroke: var(--green);
+      }
+
+      .theme-toggle__sun {
+        display: none;
+      }
+
+      body.dark-mode .theme-toggle__moon {
+        display: none;
+      }
+      body.dark-mode .theme-toggle__sun {
+        display: block;
+      }
+
+      /* CV is always light */
+      body:has(.page-cv:not(.grid--hidden)) .theme-toggle {
+        display: none;
+      }
     </style>
   </head>
   <body class="js loading">
@@ -1329,6 +1400,36 @@
       </div>
     </main>
 
+    <!-- theme toggle button -->
+    <button
+      class="theme-toggle"
+      id="theme-toggle"
+      aria-label="Toggle dark mode"
+    >
+      <svg
+        class="theme-toggle__moon"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+      <svg
+        class="theme-toggle__sun"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    </button>
+
     <div class="book-modal" id="book-modal">
       <div class="book-modal__content">
         <button class="book-modal__close" id="book-modal-close">&times;</button>
@@ -1346,6 +1447,12 @@
 
     <script>
       document.documentElement.className = "js";
+
+      // default is light mode
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+
       (function () {
         const projectsRadio = document.getElementById("control-projects");
         if (projectsRadio) projectsRadio.checked = true;
@@ -1837,6 +1944,17 @@
         generateProjectsGrid();
         generateFavoritesGrids();
         animateSocialIcons();
+
+        // theme toggle
+        document
+          .getElementById("theme-toggle")
+          .addEventListener("click", function () {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem(
+              "theme",
+              document.body.classList.contains("dark-mode") ? "dark" : "light",
+            );
+          });
 
         document
           .getElementById("book-modal-close")
