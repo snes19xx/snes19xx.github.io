@@ -2241,17 +2241,16 @@ display(HTML(cases_table[['Profile', 'GradCafe P(admit)', 'Adjusted P(admit)']].
             to 21.4%. A GPA of 3.92 places Applicant A in the 3.75–4.0 bin,
             which Query 5 showed has the highest acceptance rate in the GradCafe
             sample at both schools (although not by a lot). Even there, the
-            adjusted probability sits below one-in-five at UofT and below
-            one-in-eight at UPenn. This is consistent with what a 33% and 21%
-            base rate implies for any individual: the vast majority of
-            applicants at any GPA level are rejected, and GPA alone cannot
-            overcome that.
+            adjusted probability sits below 40% at UofT and below 33% at UPenn.
+            This is consistent with what a 33% and 21% base rate implies for any
+            individual: the vast majority of applicants at any GPA level are
+            rejected, and GPA alone cannot overcome that.
           </p>
           <p>
             Applicant B's adjusted probabilities are 20.8% at UofT and 15.7% at
             UPenn. The GRE submission does not help &mdash; the model assigns it
             a negative weight. At a 3.44 GPA with a GRE score, Applicant B falls
-            below a one-in-ten chance at UofT and below one-in-twenty at UPenn
+            below a one-in-five chance at UofT and below one-in-seven at UPenn
             once the prior is corrected.
           </p>
           <p>
@@ -2269,7 +2268,7 @@ display(HTML(cases_table[['Profile', 'GradCafe P(admit)', 'Adjusted P(admit)']].
             associated with higher acceptance rates across GPA bins at both
             schools, and the logistic regression assigns a GPA odds ratio of
             1.22 (at UofT) and 1.29 (at UPenn). The relationship is real but
-            modest. The KDE distributions show GPA has a positive but weak
+            modest. The KDE distributions also show GPA has a positive but weak
             association with admission, with substantial overlap between
             accepted and rejected applicants even at high GPA levels.
           </p>
