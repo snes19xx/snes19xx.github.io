@@ -893,8 +893,7 @@
         transition:
           transform 0.3s ease,
           filter 0.3s ease;
-        filter: sepia(0.3) hue-rotate(-5deg) saturate(0.8) brightness(0.9)
-          contrast(1.1);
+        filter: saturate(0.8) brightness(0.9);
       }
 
       .favorite-item:hover img {
@@ -1502,11 +1501,12 @@
           link: "https://observablehq.com/d/ec14d0aa25e9f007",
         },
         {
-          title: "Visualizing Magnetometer Survey Data with Plot",
-          desc: "In this project I use plot.js to visualize data my team obtained from Deep River, ON as part of our Geophysics field course",
-          tags: ["JavaScript"],
-          image: "images/6.png",
-          link: "https://observablehq.com/d/af7c80cf0774f406",
+          title:
+            "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
+          desc: "",
+          tags: ["Python"],
+          image: "images/gradcafe.png",
+          link: "gradcafe_analysis/web.html",
         },
         {
           title: "Critical Analysis of the Kensington Market HCD Plan",
@@ -1561,31 +1561,31 @@
           let mediaElement;
           if (item.video) {
             mediaElement = `
-              <video class="grid__img" autoplay loop muted playsinline preload="metadata"
-                     onloadeddata="this.classList.add('loaded')">
-                <source src="${item.video}" type="video/mp4">
-              </video>`;
+                    <video class="grid__img" autoplay loop muted playsinline preload="metadata"
+                           onloadeddata="this.classList.add('loaded')">
+                      <source src="${item.video}" type="video/mp4">
+                    </video>`;
           } else {
             mediaElement = `
-              <img src="${item.image}"
-                   alt="${item.title}"
-                   class="grid__img"
-                   loading="lazy"
-                   decoding="async"
-                   onload="this.classList.add('loaded')">`;
+                    <img src="${item.image}"
+                         alt="${item.title}"
+                         class="grid__img"
+                         loading="lazy"
+                         decoding="async"
+                         onload="this.classList.add('loaded')">`;
           }
 
           gridItem.innerHTML = `
-            <a href="${item.link}" class="grid__link">
-              ${mediaElement}
-              <div class="grid__overlay">
-                <h3 class="grid__title">${item.title}</h3>
-                <p class="grid__description">${item.desc}</p>
-                <div class="grid__tags">
-                  ${item.tags.map((tag) => `<span class="grid__tag">${tag}</span>`).join("")}
-                </div>
-              </div>
-            </a>`;
+                  <a href="${item.link}" class="grid__link">
+                    ${mediaElement}
+                    <div class="grid__overlay">
+                      <h3 class="grid__title">${item.title}</h3>
+                      <p class="grid__description">${item.desc}</p>
+                      <div class="grid__tags">
+                        ${item.tags.map((tag) => `<span class="grid__tag">${tag}</span>`).join("")}
+                      </div>
+                    </div>
+                  </a>`;
           grid.appendChild(gridItem);
         });
 
@@ -1598,10 +1598,10 @@
           const item = document.createElement("div");
           item.className = "favorite-item";
           item.innerHTML = `<img src="${book.image}"
-                                 alt="${book.title}"
-                                 loading="lazy"
-                                 decoding="async"
-                                 onload="this.style.opacity='1'">`;
+                                       alt="${book.title}"
+                                       loading="lazy"
+                                       decoding="async"
+                                       onload="this.style.opacity='1'">`;
           item.addEventListener("click", () =>
             openBookModal(book.image, book.title),
           );
