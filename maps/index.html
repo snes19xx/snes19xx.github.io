@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maps by me</title>
+    <title>Maps — Sandesh Bhandari</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=EB+Garamond:ital,wght@0,400;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap"
       rel="stylesheet"
     />
 
@@ -36,14 +36,8 @@
       }
 
       body {
-        font-family: "EB Garamond", Georgia, serif;
+        font-family: "DM Sans", sans-serif;
         background-color: var(--cream);
-        background-image: radial-gradient(
-          circle,
-          rgba(150, 135, 110, 0.13) 1px,
-          transparent 1px
-        );
-        background-size: 24px 24px;
         color: var(--ink);
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
@@ -55,51 +49,29 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 62px;
+        height: 54px;
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         justify-content: space-between;
-        padding: 0 40px 14px;
+        padding: 0 40px;
         z-index: 200;
-        background: linear-gradient(
-          to bottom,
-          rgba(253, 251, 247, 0.97) 68%,
-          transparent
-        );
-        pointer-events: none;
-      }
-      .topbar > * {
-        pointer-events: all;
+        background: rgba(253, 251, 247, 0.96);
+        border-bottom: 1px solid var(--ink-ghost);
       }
 
       .wordmark {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
         text-decoration: none;
-      }
-      .wordmark-title {
-        font-family: "Cormorant Garamond", serif;
-        font-style: italic;
-        font-weight: 650;
-        font-size: 2rem;
-        line-height: 1;
-        color: var(--ink);
-        letter-spacing: -0.01em;
-      }
-      .wordmark-by {
-        font-family: "EB Garamond", serif;
-        font-size: 0.65rem;
-        letter-spacing: 0.18em;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: var(--ink-light);
-        margin-top: 2px;
+        color: var(--ink);
       }
 
       .back-link {
-        font-family: "EB Garamond", serif;
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         color: var(--ink-light);
         text-decoration: none;
@@ -109,11 +81,11 @@
         transition: color 0.2s;
       }
       .back-link svg {
-        width: 12px;
-        height: 12px;
+        width: 11px;
+        height: 11px;
         stroke: currentColor;
         fill: none;
-        stroke-width: 1.6;
+        stroke-width: 1.5;
         transition: transform 0.2s;
       }
       .back-link:hover {
@@ -126,31 +98,30 @@
       /*  SECTION NAV  */
       .section-nav {
         position: sticky;
-        top: 0;
+        top: 54px;
         z-index: 100;
         display: flex;
-        gap: 36px;
-        padding: 14px 40px;
-        background: rgba(253, 251, 247, 0.97);
+        gap: 32px;
+        padding: 12px 40px;
+        background: rgba(253, 251, 247, 0.96);
         border-bottom: 1px solid var(--ink-ghost);
-        margin-top: 62px;
       }
       .section-nav a {
-        font-family: "EB Garamond", serif;
         font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        font-weight: 400;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: var(--ink-light);
+        color: var(--ink-faint);
         text-decoration: none;
         transition: color 0.2s;
       }
       .section-nav a:hover {
-        color: var(--ink);
+        color: var(--ink-mid);
       }
 
       /*  SECTIONS  */
       .map-section {
-        padding: 52px 40px 76px;
+        padding: 56px 40px 80px;
         border-bottom: 1px solid var(--ink-ghost);
       }
       .map-section:last-child {
@@ -160,10 +131,10 @@
       .section-head {
         display: flex;
         align-items: baseline;
-        gap: 14px;
-        margin-bottom: 26px;
+        gap: 12px;
+        margin-bottom: 28px;
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
         transition:
           opacity 0.5s ease,
           transform 0.5s ease;
@@ -174,16 +145,15 @@
       }
 
       .section-title {
-        font-family: "EB Garamond", serif;
-        font-size: 0.72rem;
-        letter-spacing: 0.22em;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--ink-mid);
       }
       .section-count {
-        font-family: "EB Garamond", serif;
-        font-style: italic;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
+        font-weight: 300;
         color: var(--ink-faint);
       }
 
@@ -219,34 +189,17 @@
         display: block;
         width: 100%;
         height: auto;
-        filter: sepia(0.05) brightness(0.98);
+        filter: brightness(0.98);
         transition:
-          filter 0.35s ease,
-          transform 0.35s ease;
+          filter 0.4s ease,
+          transform 0.4s ease;
       }
       .masonry-item:hover img {
-        filter: sepia(0) brightness(1.01);
-        transform: scale(1.012);
-      }
-      .masonry-item::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border: 1px solid transparent;
-        pointer-events: none;
-        transition: border-color 0.3s;
-      }
-      .masonry-item:hover::after {
-        border-color: rgba(74, 66, 53, 0.2);
+        filter: brightness(1.01);
+        transform: scale(1.01);
       }
 
       /*  INTERACTIVE  */
-      .interactive-layout {
-        display: grid;
-        grid-template-columns: 1.1fr 1fr;
-        gap: 52px;
-        align-items: center;
-      }
       .int-preview {
         overflow: hidden;
         cursor: pointer;
@@ -257,6 +210,7 @@
         transition:
           opacity 0.5s ease,
           transform 0.5s ease;
+        margin-bottom: 18px;
       }
       .int-preview.visible {
         opacity: 1;
@@ -265,78 +219,64 @@
       .int-preview iframe {
         display: block;
         width: 100%;
-        height: 360px;
+        height: 420px;
         border: none;
         pointer-events: none;
-        filter: sepia(0.05);
-        transition: transform 0.35s ease;
+        transition: transform 0.4s ease;
       }
       .int-preview:hover iframe {
-        transform: scale(1.008);
-      }
-      .int-preview::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border: 1px solid transparent;
-        pointer-events: none;
-        transition: border-color 0.3s;
-      }
-      .int-preview:hover::after {
-        border-color: rgba(74, 66, 53, 0.22);
+        transform: scale(1.006);
       }
 
-      .int-info {
+      .int-caption {
+        display: flex;
+        align-items: baseline;
+        gap: 24px;
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(6px);
         transition:
           opacity 0.5s ease 0.1s,
           transform 0.5s ease 0.1s;
       }
-      .int-info.visible {
+      .int-caption.visible {
         opacity: 1;
         transform: translateY(0);
       }
       .int-tag {
-        font-family: "EB Garamond", serif;
         font-size: 0.66rem;
-        letter-spacing: 0.22em;
+        font-weight: 400;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
         color: var(--ink-faint);
-        margin-bottom: 12px;
-      }
-      .int-title {
-        font-family: "Cormorant Garamond", serif;
-        font-style: italic;
-        font-weight: 300;
-        font-size: 2rem;
-        line-height: 1.1;
-        color: var(--ink);
-        margin-bottom: 12px;
-        letter-spacing: -0.01em;
+        white-space: nowrap;
       }
       .int-body {
-        font-family: "EB Garamond", serif;
-        font-size: 0.95rem;
+        font-size: 0.8rem;
+        font-weight: 300;
         color: var(--ink-light);
-        line-height: 1.7;
-        margin-bottom: 26px;
+        line-height: 1.6;
+        flex: 1;
       }
       .btn-open {
         background: none;
         border: none;
-        border-bottom: 1px solid var(--ink-mid);
-        padding: 0 0 2px;
-        font-family: "EB Garamond", serif;
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        border-bottom: 1px solid var(--ink-faint);
+        padding: 0 0 1px;
+        font-family: inherit;
+        font-size: 0.66rem;
+        font-weight: 400;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: var(--ink-mid);
+        color: var(--ink-light);
         cursor: pointer;
-        transition: opacity 0.2s;
+        white-space: nowrap;
+        transition:
+          color 0.2s,
+          border-color 0.2s;
       }
       .btn-open:hover {
-        opacity: 0.4;
+        color: var(--ink);
+        border-color: var(--ink-mid);
       }
 
       /*  LIGHTBOX  */
@@ -344,14 +284,14 @@
         position: fixed;
         inset: 0;
         background: rgba(253, 251, 247, 0.97);
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(6px);
         z-index: 3000;
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.26s ease;
+        transition: opacity 0.24s ease;
       }
       .lightbox.open {
         opacity: 1;
@@ -370,24 +310,25 @@
         max-height: 87vh;
         object-fit: contain;
         display: block;
-        box-shadow: 0 6px 48px rgba(28, 23, 16, 0.11);
+        box-shadow: 0 4px 40px rgba(28, 23, 16, 0.1);
       }
       .lb-inner iframe {
         width: 88vw;
         height: 84vh;
         border: none;
         background: #fff;
-        box-shadow: 0 6px 48px rgba(28, 23, 16, 0.11);
+        box-shadow: 0 4px 40px rgba(28, 23, 16, 0.1);
       }
       .lb-close {
         position: fixed;
-        top: 24px;
+        top: 22px;
         right: 36px;
         background: none;
         border: none;
-        font-family: "EB Garamond", serif;
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        font-family: inherit;
+        font-size: 0.68rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--ink-light);
         cursor: pointer;
@@ -398,36 +339,38 @@
         z-index: 3001;
       }
       .lb-close svg {
-        width: 12px;
-        height: 12px;
+        width: 11px;
+        height: 11px;
         stroke: currentColor;
         fill: none;
-        stroke-width: 1.6;
+        stroke-width: 1.5;
       }
       .lb-close:hover {
         color: var(--ink);
       }
+
       .lb-nav {
         position: fixed;
         top: 50%;
         transform: translateY(-50%);
         background: none;
         border: none;
-        font-family: "Cormorant Garamond", serif;
-        font-style: italic;
-        font-size: 2.6rem;
+        font-family: inherit;
+        font-size: 1.1rem;
+        font-weight: 300;
         color: var(--ink-faint);
         cursor: pointer;
-        padding: 18px 22px;
+        padding: 20px 24px;
         transition: color 0.2s;
         z-index: 3001;
         line-height: 1;
+        letter-spacing: 0;
       }
       .lb-nav:hover {
         color: var(--ink-mid);
       }
       .lb-nav:disabled {
-        opacity: 0.1;
+        opacity: 0.15;
         cursor: default;
       }
       .lb-nav.prev {
@@ -436,20 +379,20 @@
       .lb-nav.next {
         right: 4px;
       }
+
       .lb-counter {
         position: fixed;
         bottom: 22px;
         left: 50%;
         transform: translateX(-50%);
-        font-family: "EB Garamond", serif;
-        font-size: 0.68rem;
-        letter-spacing: 0.2em;
+        font-size: 0.64rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--ink-light);
+        color: var(--ink-faint);
         white-space: nowrap;
       }
 
-      /*  RESPONSIVE  */
       @media (max-width: 1100px) {
         :root {
           --cols: 3;
@@ -459,12 +402,12 @@
         :root {
           --cols: 2;
         }
-        .interactive-layout {
-          grid-template-columns: 1fr;
-          gap: 28px;
-        }
         .int-preview iframe {
-          height: 260px;
+          height: 280px;
+        }
+        .int-caption {
+          flex-direction: column;
+          gap: 10px;
         }
         .map-section {
           padding: 40px 24px 60px;
@@ -475,7 +418,8 @@
           padding-right: 24px;
         }
         .section-nav {
-          gap: 22px;
+          gap: 20px;
+          top: 54px;
         }
       }
       @media (max-width: 500px) {
@@ -484,17 +428,13 @@
         }
         .lb-nav {
           padding: 12px 10px;
-          font-size: 2rem;
         }
       }
     </style>
   </head>
   <body>
     <div class="topbar">
-      <div class="wordmark">
-        <span class="wordmark-title">Maps</span>
-        <span class="wordmark-by">by Sandesh Bhandari</span>
-      </div>
+      <a href="#" class="wordmark">Maps</a>
       <a href="../index.html" class="back-link">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
         Portfolio
@@ -514,29 +454,26 @@
         <span class="section-title">Interactive</span>
         <span class="section-count">1 map</span>
       </div>
-      <div class="interactive-layout">
-        <div
-          class="int-preview"
-          id="intPreview"
-          role="button"
-          tabindex="0"
-          aria-label="Open interactive map"
-        >
-          <iframe
-            src="interactive_1.html"
-            scrolling="no"
-            loading="lazy"
-            tabindex="-1"
-          ></iframe>
-        </div>
-        <div class="int-info" id="intInfo">
-          <p class="int-tag">HTML · Interactive</p>
-          <h2 class="int-title">Explore the map</h2>
-          <p class="int-body">
-            Pan, zoom, and explore the data directly in your browser.
-          </p>
-          <button class="btn-open" id="openInteractive">Open full map</button>
-        </div>
+      <div
+        class="int-preview"
+        id="intPreview"
+        role="button"
+        tabindex="0"
+        aria-label="Open interactive map"
+      >
+        <iframe
+          src="interactive_1.html"
+          scrolling="no"
+          loading="lazy"
+          tabindex="-1"
+        ></iframe>
+      </div>
+      <div class="int-caption" id="intInfo">
+        <span class="int-tag">HTML · Interactive</span>
+        <p class="int-body">
+          Pan, zoom, and explore the data directly in your browser.
+        </p>
+        <button class="btn-open" id="openInteractive">Open full map</button>
       </div>
     </section>
 
@@ -576,9 +513,9 @@
         </svg>
         Close
       </button>
-      <button class="lb-nav prev" id="lbPrev">‹</button>
+      <button class="lb-nav prev" id="lbPrev">←</button>
       <div class="lb-inner" id="lbInner"></div>
-      <button class="lb-nav next" id="lbNext">›</button>
+      <button class="lb-nav next" id="lbNext">→</button>
       <div class="lb-counter" id="lbCounter"></div>
     </div>
 
@@ -595,7 +532,6 @@
         );
       }
 
-      // Build masonry
       function buildMasonry(wrapperId, folder, count) {
         const wrap = document.getElementById(wrapperId);
         const numCols = getNumCols();
@@ -642,7 +578,7 @@
       buildMasonry("stylized-masonry", "stylized", 15);
       buildMasonry("class-masonry", "class", 24);
 
-      // Lightbox state
+      // Lightbox
       const lightbox = document.getElementById("lightbox");
       const lbInner = document.getElementById("lbInner");
       const lbCounter = document.getElementById("lbCounter");
@@ -731,7 +667,7 @@
         if (e.key === "Enter" || e.key === " ") openInteractive();
       });
 
-      // Scroll reveal
+      // Scroll
       const sectionObs = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -744,7 +680,7 @@
         { threshold: 0.06 },
       );
       document
-        .querySelectorAll(".section-head, .int-preview, .int-info")
+        .querySelectorAll(".section-head, .int-preview, .int-caption")
         .forEach((el) => sectionObs.observe(el));
 
       const itemObs = new IntersectionObserver(
