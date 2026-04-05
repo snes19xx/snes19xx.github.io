@@ -42,21 +42,21 @@ const portfolioItems = [
   {
     title: "MAPS",
     desc: "Maps I made on my spare time and as part of my courses at the University of Toronto",
-    tags: ["ArcGIS", "Matplotlib"],
+    tags: ["ArcGIS", "Python", "JavaScript"],
     image: "images/maps.png",
     link: "maps/index.html",
   },
   {
     title: "Better Geophysics",
     desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations",
-    tags: ["JavaScript"],
+    tags: ["D3.js"],
     video: "images/5.mp4",
     link: "https://observablehq.com/d/ec14d0aa25e9f007",
   },
   {
     title:
       "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
-    desc: "",
+    desc: "A study showing GradCafe data is biased and weak at predicting admissions.",
     tags: ["Python"],
     image: "images/gradcafe.png",
     link: "gradcafe_analysis/web.html",
