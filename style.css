@@ -1,4 +1,4 @@
-/* light mode (default) */
+/* light mode */
 :root {
   --bg0: #fdfbf7;
   --bg1: #ede8de;
@@ -794,7 +794,7 @@ body:has(.page-about:not(.grid--hidden)) .social-links {
 
 .about-intro {
   font-family: "Computer Modern";
-  font-size: 1.1em;
+  font-size: 1.2em;
   line-height: 1.8;
   color: var(--fg);
   margin-bottom: 3em;

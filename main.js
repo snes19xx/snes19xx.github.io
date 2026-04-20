@@ -125,7 +125,7 @@ function animateProjectsGrid() {
     targets: items,
     opacity: [0, 1],
     scale: [0.8, 1],
-    duration: 900,
+    duration: 600,
     delay: anime.stagger(60, { grid: [4, 3], from: "center" }),
     easing: "spring(1, 80, 10, 0)",
   });
@@ -158,7 +158,6 @@ function generateGradeViz() {
 
   const container = document.getElementById("grade-viz");
 
-  // tooltip div inside grade-viz container
   const tooltipDiv = document.createElement("div");
   tooltipDiv.id = "grade-viz-tooltip";
   tooltipDiv.style.cssText =
@@ -311,9 +310,30 @@ function generateGradeViz() {
     .attr("stroke", "#fff")
     .attr("stroke-width", 0.5)
     .attr("opacity", 0)
+    .attr("pointer-events", "none")
+    .transition()
+    .delay((_, i) => (i / (grades.length - 1)) * 2000)
+    .duration(300)
+    .attr("opacity", 1);
+
+  const points = grades.map((d, i) => [xScale(i + 1), yScale(d)]);
+  const delaunay = d3.Delaunay.from(points);
+  const voronoi = delaunay.voronoi([0, 0, iW, iH]);
+
+  g.selectAll(".voronoi-cell")
+    .data(grades)
+    .enter()
+    .append("path")
+    .attr("class", "voronoi-cell")
+    .attr("d", (_, i) => voronoi.renderCell(i))
+    .attr("fill", "transparent")
     .attr("cursor", "pointer")
     .on("mouseover", function (event, d) {
-      d3.select(this).attr("r", 5).attr("stroke", "#1a1918");
+      const i = g.selectAll(".voronoi-cell").nodes().indexOf(this);
+      d3.selectAll(".dot")
+        .filter((_, j) => j === i)
+        .attr("r", 5)
+        .attr("stroke", "#1a1918");
       const containerRect = document
         .getElementById("grade-viz")
         .getBoundingClientRect();
@@ -327,13 +347,13 @@ function generateGradeViz() {
         .style("top", topPos + "px");
     })
     .on("mouseout", function () {
-      d3.select(this).attr("r", 2.5).attr("stroke", "#fff");
+      const i = g.selectAll(".voronoi-cell").nodes().indexOf(this);
+      d3.selectAll(".dot")
+        .filter((_, j) => j === i)
+        .attr("r", 2.5)
+        .attr("stroke", "#fff");
       tooltip.transition().duration(200).style("opacity", 0);
-    })
-    .transition()
-    .delay((_, i) => (i / (grades.length - 1)) * 2000)
-    .duration(300)
-    .attr("opacity", 1);
+    });
 
   g.append("line")
     .attr("x1", 0)
