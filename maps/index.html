@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maps — Sandesh Bhandari</title>
+    <title>Maps - Sandesh Bhandari</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,8 +27,9 @@
         --ink-light: #8a7d6b;
         --ink-faint: #c8bfaa;
         --ink-ghost: #e2dbd0;
-        --gap: 10px;
+        --gap: 7px;
         --cols: 4;
+        --max-w: 1200px;
       }
 
       html {
@@ -41,9 +42,14 @@
         color: var(--ink);
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
+        padding-top: 50px;
       }
 
-      /*  TOPBAR  */
+      img {
+        image-rendering: -webkit-optimize-contrast;
+      }
+
+      /* TOPBAR */
       .topbar {
         position: fixed;
         top: 0;
@@ -52,20 +58,11 @@
         height: 54px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
         padding: 0 40px;
         z-index: 200;
         background: rgba(253, 251, 247, 0.96);
         border-bottom: 1px solid var(--ink-ghost);
-      }
-
-      .wordmark {
-        text-decoration: none;
-        font-size: 0.78rem;
-        font-weight: 500;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--ink);
       }
 
       .back-link {
@@ -79,6 +76,7 @@
         align-items: center;
         gap: 6px;
         transition: color 0.2s;
+        z-index: 2;
       }
       .back-link svg {
         width: 11px;
@@ -95,13 +93,27 @@
         transform: translateX(-3px);
       }
 
-      /*  SECTION NAV  */
+      .wordmark {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink);
+        z-index: 1;
+      }
+
+      /* SECTION NAV */
       .section-nav {
         position: sticky;
         top: 54px;
         z-index: 100;
         display: flex;
-        gap: 32px;
+        justify-content: center;
+        gap: 40px;
         padding: 12px 40px;
         background: rgba(253, 251, 247, 0.96);
         border-bottom: 1px solid var(--ink-ghost);
@@ -119,10 +131,11 @@
         color: var(--ink-mid);
       }
 
-      /*  SECTIONS  */
+      /* SECTIONS */
       .map-section {
-        padding: 56px 40px 80px;
+        padding: 32px 100px 10px;
         border-bottom: 1px solid var(--ink-ghost);
+        scroll-margin-top: 110px;
       }
       .map-section:last-child {
         border-bottom: none;
@@ -131,8 +144,10 @@
       .section-head {
         display: flex;
         align-items: baseline;
+        justify-content: center;
         gap: 12px;
-        margin-bottom: 28px;
+        margin: 0 auto 24px auto;
+        max-width: var(--max-w);
         opacity: 0;
         transform: translateY(8px);
         transition:
@@ -145,22 +160,23 @@
       }
 
       .section-title {
-        font-size: 0.68rem;
+        font-size: 0.75rem;
         font-weight: 500;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--ink-mid);
+        color: var(--ink);
       }
       .section-count {
-        font-size: 0.68rem;
-        font-weight: 300;
-        color: var(--ink-faint);
+        font-size: 0.7rem;
+        color: var(--ink-light);
       }
 
-      /*  MASONRY  */
-      .masonry-wrap {
+      /* GALLERY GRID */
+      .gallery-grid {
         display: flex;
         gap: var(--gap);
+        max-width: var(--max-w);
+        margin: 0 auto;
         align-items: flex-start;
       }
       .masonry-col {
@@ -170,128 +186,101 @@
         flex-direction: column;
         gap: var(--gap);
       }
-      .masonry-item {
+
+      .gallery-item {
         display: block;
         cursor: pointer;
-        overflow: hidden;
         position: relative;
         opacity: 0;
         transform: translateY(12px);
+        background: #fff;
+        border: 1px solid var(--ink-ghost);
+        box-shadow: 0 4px 16px rgba(28, 23, 16, 0.04);
+        border-radius: 6px;
+        padding: 7px;
+        will-change: transform;
         transition:
-          opacity 0.5s ease,
-          transform 0.5s ease;
+          opacity 0.7s ease,
+          transform 0.4s ease,
+          box-shadow 0.4s ease;
       }
-      .masonry-item.visible {
+      .gallery-item.visible {
         opacity: 1;
         transform: translateY(0);
       }
-      .masonry-item img {
+      .gallery-item:hover {
+        box-shadow: 0 12px 32px rgba(28, 23, 16, 0.08);
+        transform: translateY(-4px);
+      }
+
+      .gallery-item img {
         display: block;
         width: 100%;
         height: auto;
-        filter: brightness(0.98);
-        transition:
-          filter 0.4s ease,
-          transform 0.4s ease;
+        border-radius: 2px;
+        will-change: transform;
+        transition: filter 0.4s ease;
       }
-      .masonry-item:hover img {
-        filter: brightness(1.01);
-        transform: scale(1.01);
+      .gallery-item:hover img {
+        filter: brightness(0.97);
       }
 
-      /*  INTERACTIVE  */
+      /* INTERACTIVE */
+      .int-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 6px;
+        max-width: var(--max-w);
+        margin: 0 auto;
+      }
+
       .int-preview {
+        height: 200px;
         overflow: hidden;
         cursor: pointer;
         position: relative;
-        background: var(--ink-ghost);
+        background: #fff;
+        border: 1px solid var(--ink-ghost);
+        box-shadow: 0 4px 16px rgba(28, 23, 16, 0.04);
+        border-radius: 6px;
+        padding: 4px;
         opacity: 0;
         transform: translateY(12px);
+        will-change: transform;
         transition:
-          opacity 0.5s ease,
-          transform 0.5s ease;
-        margin-bottom: 18px;
+          opacity 0.7s ease,
+          transform 0.4s ease,
+          box-shadow 0.4s ease;
       }
       .int-preview.visible {
         opacity: 1;
         transform: translateY(0);
       }
+      .int-preview:hover {
+        box-shadow: 0 12px 32px rgba(28, 23, 16, 0.08);
+        transform: translateY(-4px);
+      }
       .int-preview iframe {
         display: block;
         width: 100%;
-        height: 420px;
+        height: 100%;
         border: none;
+        border-radius: 2px;
         pointer-events: none;
-        transition: transform 0.4s ease;
-      }
-      .int-preview:hover iframe {
-        transform: scale(1.006);
       }
 
-      .int-caption {
-        display: flex;
-        align-items: baseline;
-        gap: 24px;
-        opacity: 0;
-        transform: translateY(6px);
-        transition:
-          opacity 0.5s ease 0.1s,
-          transform 0.5s ease 0.1s;
-      }
-      .int-caption.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .int-tag {
-        font-size: 0.66rem;
-        font-weight: 400;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        white-space: nowrap;
-      }
-      .int-body {
-        font-size: 0.8rem;
-        font-weight: 300;
-        color: var(--ink-light);
-        line-height: 1.6;
-        flex: 1;
-      }
-      .btn-open {
-        background: none;
-        border: none;
-        border-bottom: 1px solid var(--ink-faint);
-        padding: 0 0 1px;
-        font-family: inherit;
-        font-size: 0.66rem;
-        font-weight: 400;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        color: var(--ink-light);
-        cursor: pointer;
-        white-space: nowrap;
-        transition:
-          color 0.2s,
-          border-color 0.2s;
-      }
-      .btn-open:hover {
-        color: var(--ink);
-        border-color: var(--ink-mid);
-      }
-
-      /*  LIGHTBOX  */
+      /* LIGHTBOX */
       .lightbox {
         position: fixed;
         inset: 0;
-        background: rgba(253, 251, 247, 0.97);
-        backdrop-filter: blur(6px);
+        background: rgba(253, 251, 247, 0.98);
         z-index: 3000;
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.24s ease;
+        transition: opacity 0.3s ease;
       }
       .lightbox.open {
         opacity: 1;
@@ -303,14 +292,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.16s ease;
+        transition: opacity 0.2s ease;
       }
       .lb-inner img {
         max-width: 88vw;
         max-height: 87vh;
         object-fit: contain;
         display: block;
-        box-shadow: 0 4px 40px rgba(28, 23, 16, 0.1);
       }
       .lb-inner iframe {
         width: 88vw;
@@ -401,16 +389,14 @@
       @media (max-width: 800px) {
         :root {
           --cols: 2;
+          --gap: 6px;
         }
-        .int-preview iframe {
-          height: 280px;
-        }
-        .int-caption {
-          flex-direction: column;
-          gap: 10px;
+        .int-preview {
+          height: 150px;
         }
         .map-section {
-          padding: 40px 24px 60px;
+          padding: 24px 24px 12px;
+          scroll-margin-top: 100px;
         }
         .topbar,
         .section-nav {
@@ -424,21 +410,23 @@
       }
       @media (max-width: 500px) {
         :root {
-          --cols: 2;
+          --cols: 1;
         }
-        .lb-nav {
-          padding: 12px 10px;
+        .section-nav {
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
         }
       }
     </style>
   </head>
   <body>
     <div class="topbar">
-      <a href="#" class="wordmark">Maps</a>
       <a href="../index.html" class="back-link">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
         Portfolio
       </a>
+      <a href="#" class="wordmark">Maps</a>
     </div>
 
     <nav class="section-nav">
@@ -448,63 +436,72 @@
       <a href="#class">Course Work</a>
     </nav>
 
-    <!-- INTERACTIVE -->
     <section class="map-section" id="interactive">
       <div class="section-head">
         <span class="section-title">Interactive</span>
-        <span class="section-count">1 map</span>
+        <span class="section-count">2 maps</span>
       </div>
-      <div
-        class="int-preview"
-        id="intPreview"
-        role="button"
-        tabindex="0"
-        aria-label="Open interactive map"
-      >
-        <iframe
-          src="interactive_1.html"
-          scrolling="no"
-          loading="lazy"
-          tabindex="-1"
-        ></iframe>
-      </div>
-      <div class="int-caption" id="intInfo">
-        <span class="int-tag">HTML · Interactive</span>
-        <p class="int-body">
-          Pan, zoom, and explore the data directly in your browser.
-        </p>
-        <button class="btn-open" id="openInteractive">Open full map</button>
+      <div class="int-grid">
+        <div class="map-item">
+          <div
+            class="int-preview"
+            id="intPreview1"
+            role="button"
+            tabindex="0"
+            aria-label="Open interactive map 1"
+          >
+            <iframe
+              src="interactive_1.html"
+              scrolling="no"
+              loading="lazy"
+              tabindex="-1"
+            ></iframe>
+          </div>
+        </div>
+
+        <div class="map-item">
+          <div
+            class="int-preview"
+            id="intPreview2"
+            role="button"
+            tabindex="0"
+            aria-label="Open interactive map 2"
+          >
+            <iframe
+              src="interactive_2.html"
+              scrolling="no"
+              loading="lazy"
+              tabindex="-1"
+            ></iframe>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- MAIN -->
     <section class="map-section" id="main">
       <div class="section-head">
         <span class="section-title">Main</span>
-        <span class="section-count">34 maps</span>
+        <span class="section-count" id="count-main">Loading...</span>
       </div>
-      <div class="masonry-wrap" id="main-masonry"></div>
+      <div class="gallery-grid" id="main-masonry"></div>
     </section>
 
-    <!-- STYLIZED -->
     <section class="map-section" id="stylized">
       <div class="section-head">
         <span class="section-title">Stylized</span>
-        <span class="section-count">15 maps</span>
+        <span class="section-count" id="count-stylized">Loading...</span>
       </div>
-      <div class="masonry-wrap" id="stylized-masonry"></div>
+      <div class="gallery-grid" id="stylized-masonry"></div>
     </section>
 
-    <!-- COURSE WORK -->
     <section class="map-section" id="class">
       <div class="section-head">
         <span class="section-title">Course Work</span>
-        <span class="section-count">24 maps</span>
+        <span class="section-count" id="count-class">Loading...</span>
       </div>
-      <div class="masonry-wrap" id="class-masonry"></div>
+      <div class="gallery-grid" id="class-masonry"></div>
     </section>
 
-    <!-- LIGHTBOX -->
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
       <button class="lb-close" id="lbClose">
         <svg viewBox="0 0 24 24">
@@ -520,7 +517,7 @@
     </div>
 
     <script>
-      const CATALOG = { main: 34, stylized: 15, class: 24 };
+      const CATALOG = { main: 0, stylized: 0, class: 0 };
 
       function getNumCols() {
         return (
@@ -532,8 +529,10 @@
         );
       }
 
-      function buildMasonry(wrapperId, folder, count) {
+      function loadGallery(folder, wrapperId) {
         const wrap = document.getElementById(wrapperId);
+        wrap.innerHTML = "";
+
         const numCols = getNumCols();
         const cols = [];
 
@@ -544,41 +543,56 @@
           cols.push(col);
         }
 
-        for (let i = 0; i < count; i++) {
-          const colIdx = i % numCols;
+        let i = 0;
+
+        function tryLoadNext() {
           const num = i + 1;
+          const img = new Image();
 
-          const item = document.createElement("div");
-          item.className = "masonry-item";
-          item.tabIndex = 0;
-          item.setAttribute("role", "button");
-          item.setAttribute("aria-label", `View ${folder} map ${num}`);
+          img.onload = () => {
+            const colIdx = i % numCols;
 
-          const img = document.createElement("img");
-          img.alt = `${folder} map ${num}`;
-          img.loading = i < numCols * 2 ? "eager" : "lazy";
-          img.decoding = "async";
-          img.onerror = function () {
-            if (this.src.endsWith(".png")) this.src = `${folder}/${num}.jpg`;
+            const item = document.createElement("div");
+            item.className = "gallery-item";
+            item.tabIndex = 0;
+            item.setAttribute("role", "button");
+            item.setAttribute("aria-label", `View ${folder} map ${num}`);
+
+            item.appendChild(img);
+            cols[colIdx].appendChild(item);
+
+            CATALOG[folder] = num;
+            document.getElementById(`count-${folder}`).textContent =
+              `${num} maps`;
+
+            const ci = i;
+            item.addEventListener("click", () => openLB(folder, ci));
+            item.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") openLB(folder, ci);
+            });
+            itemObs.observe(item);
+
+            i++;
+            tryLoadNext();
           };
+
+          img.onerror = () => {
+            if (img.src.endsWith(".png")) {
+              img.src = `${folder}/${num}.jpg`;
+            } else {
+              if (i === 0) {
+                document.getElementById(`count-${folder}`).textContent =
+                  `0 maps`;
+              }
+            }
+          };
+
           img.src = `${folder}/${num}.png`;
-
-          item.appendChild(img);
-          cols[colIdx].appendChild(item);
-
-          const ci = i;
-          item.addEventListener("click", () => openLB(folder, ci));
-          item.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") openLB(folder, ci);
-          });
         }
+
+        tryLoadNext();
       }
 
-      buildMasonry("main-masonry", "main", 34);
-      buildMasonry("stylized-masonry", "stylized", 15);
-      buildMasonry("class-masonry", "class", 24);
-
-      // Lightbox
       const lightbox = document.getElementById("lightbox");
       const lbInner = document.getElementById("lbInner");
       const lbCounter = document.getElementById("lbCounter");
@@ -601,10 +615,10 @@
         document.body.style.overflow = "hidden";
       }
 
-      function openInteractive() {
+      function openInteractive(src, title) {
         lbIsInt = true;
-        lbInner.innerHTML = '<iframe src="interactive_1.html"></iframe>';
-        lbCounter.textContent = "Interactive Map";
+        lbInner.innerHTML = `<iframe src="${src}"></iframe>`;
+        lbCounter.textContent = title;
         lbPrev.style.display = lbNext.style.display = "none";
         lightbox.classList.add("open");
         document.body.style.overflow = "hidden";
@@ -657,17 +671,28 @@
         if (e.key === "ArrowRight" && !lbIsInt) navigate(1);
       });
 
-      document
-        .getElementById("openInteractive")
-        .addEventListener("click", openInteractive);
-      document
-        .getElementById("intPreview")
-        .addEventListener("click", openInteractive);
-      document.getElementById("intPreview").addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") openInteractive();
-      });
+      const previewMap1 = document.getElementById("intPreview1");
+      if (previewMap1) {
+        previewMap1.addEventListener("click", () =>
+          openInteractive("interactive_1.html", "Interactive Map 1"),
+        );
+        previewMap1.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ")
+            openInteractive("interactive_1.html", "Interactive Map 1");
+        });
+      }
 
-      // Scroll
+      const previewMap2 = document.getElementById("intPreview2");
+      if (previewMap2) {
+        previewMap2.addEventListener("click", () =>
+          openInteractive("interactive_2.html", "Interactive Map 2"),
+        );
+        previewMap2.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ")
+            openInteractive("interactive_2.html", "Interactive Map 2");
+        });
+      }
+
       const sectionObs = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -680,7 +705,7 @@
         { threshold: 0.06 },
       );
       document
-        .querySelectorAll(".section-head, .int-preview, .int-caption")
+        .querySelectorAll(".section-head, .int-preview")
         .forEach((el) => sectionObs.observe(el));
 
       const itemObs = new IntersectionObserver(
@@ -697,9 +722,10 @@
         },
         { threshold: 0.04, rootMargin: "0px 0px -24px 0px" },
       );
-      document
-        .querySelectorAll(".masonry-item")
-        .forEach((el) => itemObs.observe(el));
+
+      loadGallery("main", "main-masonry");
+      loadGallery("stylized", "stylized-masonry");
+      loadGallery("class", "class-masonry");
     </script>
   </body>
 </html>
