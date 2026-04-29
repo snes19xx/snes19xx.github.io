@@ -1,1 +1,2 @@
-./maps/** linguist-vendored=true
+maps/**/* linguist-vendored=true
+UH_exp/**/* linguist-vendored=true
