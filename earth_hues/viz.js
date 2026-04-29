@@ -859,38 +859,40 @@ function buildColorWheels() {
   const quarters = [
     {
       label: "Winter",
-      hex: "#c9dff4",
+      hex: "#0055a454",
       start: initA - radStep,
       end: initA + 2 * radStep,
     },
     {
       label: "Spring",
-      hex: "#ffd6dc",
+      hex: "#ff00c33d",
       start: initA + 2 * radStep,
       end: initA + 5 * radStep,
     },
     {
       label: "Summer",
-      hex: "#b8e6b8",
+      hex: "#00793697",
       start: initA + 5 * radStep,
       end: initA + 8 * radStep,
     },
     {
       label: "Fall",
-      hex: "#f5c8a0",
+      hex: "#ff590057",
       start: initA + 8 * radStep,
       end: initA + 11 * radStep,
     },
   ];
+
   const wArc = d3
     .arc()
     .innerRadius(0)
-    .outerRadius(R - 2)
+    .outerRadius(R - 4)
     .padAngle(0.01)
     .padRadius(R);
+
   const rArc = d3
     .arc()
-    .innerRadius(R - 2)
+    .innerRadius(R - 4)
     .outerRadius(R);
 
   const svg = d3
@@ -898,6 +900,7 @@ function buildColorWheels() {
     .attr("viewBox", [0, 0, cW, cH])
     .style("background", "#f8f7f2")
     .style("font-family", "'Times New Roman',Georgia,serif");
+
   svg
     .append("text")
     .attr("x", pad.left)
@@ -907,6 +910,7 @@ function buildColorWheels() {
     .attr("font-weight", "bold")
     .attr("letter-spacing", "1px")
     .text("SEASONAL COLOR WHEELS");
+
   svg
     .append("text")
     .attr("x", pad.left)
@@ -933,6 +937,7 @@ function buildColorWheels() {
         .attr("fill", hex)
         .attr("stroke", "#f8f7f2")
         .attr("stroke-width", 0.5);
+
       w.transition()
         .delay(mi * wDur)
         .duration(wDur)
@@ -941,6 +946,7 @@ function buildColorWheels() {
           const I = d3.interpolate(sA, eA);
           return (t) => wArc({ startAngle: sA, endAngle: I(t) });
         });
+
       w.append("title").text(`${eco}  ·  ${mo}\n${hex.toUpperCase()}`);
     });
 
@@ -950,6 +956,7 @@ function buildColorWheels() {
         .attr("fill", q.hex)
         .attr("stroke", "#f8f7f2")
         .attr("stroke-width", 0.5);
+
       qp.transition()
         .delay(qi * 3 * wDur)
         .duration(3 * wDur)
@@ -958,6 +965,7 @@ function buildColorWheels() {
           const I = d3.interpolate(q.start, q.end);
           return (t) => rArc({ startAngle: q.start, endAngle: I(t) });
         });
+
       qp.append("title").text(q.label);
     });
 
@@ -973,6 +981,7 @@ function buildColorWheels() {
   const legX = cW - 280,
     legY = cH - 26;
   const lg = svg.append("g").attr("transform", `translate(${legX},${legY})`);
+
   quarters.forEach((q, i) => {
     const ix = i * 66;
     lg.append("rect")
@@ -982,6 +991,7 @@ function buildColorWheels() {
       .attr("height", 10)
       .attr("fill", q.hex)
       .attr("rx", 2);
+
     lg.append("text")
       .attr("x", ix + 14)
       .attr("y", 9)
