@@ -2,8 +2,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const THEMES = {
   light: {
-    url: "mapbox://styles/mapbox/light-v11",
-    filter: "none",
+    url: "mapbox://styles/mapbox/outdoors-v12",
+    filter: "sepia(0.2) saturate(0.6) contrast(1.05) brightness(1.02)",
     vars: {
       "--bg": "#f4f1ea",
       "--bone": "#1a1a1a",
@@ -56,11 +56,21 @@ const THEMES = {
   },
 };
 
+// State
 let narrativeData = [];
 let routeGeoJSON = null;
 let activeChapterIndex = -1;
 let currentRevealIndex = -1;
 let introDismissed = false;
+let flyInProgress = false;
+let typewriterTimer = null;
+let lineDrawRaf = null;
+
+// Map-ready gate — all flyTo calls wait so we never animate before tiles load
+const mapReady = new Promise((resolve) => {
+  if (map.loaded()) resolve();
+  else map.once("load", resolve);
+});
 
 function getThemeVar(prop) {
   return getComputedStyle(document.documentElement)
@@ -88,7 +98,6 @@ async function init() {
 function renderChapters() {
   const container = document.getElementById("story-panel");
   const bottomSpacer = container.querySelector(".outro-spacer");
-  const nav = document.getElementById("chapter-nav");
 
   narrativeData.forEach((chapter, index) => {
     const section = document.createElement("div");
@@ -122,18 +131,9 @@ function renderChapters() {
     proseCard.appendChild(contentWrapper);
     section.appendChild(proseCard);
     container.insertBefore(section, bottomSpacer);
-    gsap.set(proseCard, { opacity: 0, y: 16 });
 
-    const dot = document.createElement("button");
-    dot.className = "chapter-dot";
-    dot.dataset.index = index;
-    dot.setAttribute("aria-label", chapter.title);
-    dot.title = chapter.title;
-    dot.addEventListener("click", () => {
-      const el = document.getElementById(chapter.triggerId);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-    nav.appendChild(dot);
+    // Initial state for the sweep-in animation
+    gsap.set(proseCard, { opacity: 0, x: -32, clipPath: "inset(0 100% 0 0)" });
   });
 }
 
@@ -198,8 +198,8 @@ function setupMapLayers() {
         layout: { "line-join": "round", "line-cap": "round" },
         paint: {
           "line-color": boneColor,
-          "line-width": 1.75,
-          "line-opacity": 0.8,
+          "line-width": 2,
+          "line-opacity": 0.9,
         },
       });
     }
@@ -216,51 +216,79 @@ function setupMapLayers() {
         },
       });
     }
-    if (currentRevealIndex >= 0) revealRoute(currentRevealIndex);
+    if (currentRevealIndex >= 0) revealRoute(currentRevealIndex, false);
   };
   if (map.loaded()) addLayers();
   else map.on("load", addLayers);
   map.on("style.load", addLayers);
 }
 
-function revealRoute(index) {
-  currentRevealIndex = index;
+function revealRoute(targetIndex, animate = true) {
   const coords = routeGeoJSON.features[0].geometry.coordinates;
-  const lineSource = map.getSource("route-reveal");
-  if (lineSource) {
-    const end = Math.min(index + 2, coords.length);
-    const visibleCoords = coords.slice(0, end);
-    if (visibleCoords.length >= 2) {
-      lineSource.setData({
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: visibleCoords },
-          },
-        ],
-      });
+
+  if (lineDrawRaf) cancelAnimationFrame(lineDrawRaf);
+
+  const startIndex = Math.max(currentRevealIndex, 0);
+  const endIndex = Math.min(targetIndex + 1, coords.length - 1);
+  currentRevealIndex = targetIndex;
+
+  if (!animate || startIndex >= endIndex) {
+    flushLine(coords, endIndex);
+    flushPoints(coords, targetIndex);
+    return;
+  }
+
+  const duration = 900;
+  const startTime = performance.now();
+
+  const tick = (now) => {
+    const t = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const currentEnd = Math.round(startIndex + (endIndex - startIndex) * eased);
+    flushLine(coords, currentEnd);
+    if (t < 1) {
+      lineDrawRaf = requestAnimationFrame(tick);
+    } else {
+      flushPoints(coords, targetIndex);
+      lineDrawRaf = null;
     }
-  }
-  const pointsSource = map.getSource("route-visited");
-  if (pointsSource) {
-    pointsSource.setData({
-      type: "FeatureCollection",
-      features: coords.slice(0, index + 1).map((coord, i) => ({
+  };
+
+  lineDrawRaf = requestAnimationFrame(tick);
+}
+
+function flushLine(coords, endIndex) {
+  const lineSource = map.getSource("route-reveal");
+  if (!lineSource) return;
+  const visibleCoords = coords.slice(0, endIndex + 1);
+  if (visibleCoords.length < 2) return;
+  lineSource.setData({
+    type: "FeatureCollection",
+    features: [
+      {
         type: "Feature",
-        properties: { isCurrent: i === index },
-        geometry: { type: "Point", coordinates: coord },
-      })),
-    });
-  }
-  document.querySelectorAll(".chapter-dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
-    dot.classList.toggle("visited", i < index);
+        properties: {},
+        geometry: { type: "LineString", coordinates: visibleCoords },
+      },
+    ],
   });
 }
 
-function startAmbientDrift(chapter) {
+function flushPoints(coords, targetIndex) {
+  const pointsSource = map.getSource("route-visited");
+  if (!pointsSource) return;
+  pointsSource.setData({
+    type: "FeatureCollection",
+    features: coords.slice(0, targetIndex + 1).map((coord, i) => ({
+      type: "Feature",
+      properties: { isCurrent: i === targetIndex },
+      geometry: { type: "Point", coordinates: coord },
+    })),
+  });
+}
+
+function startAmbientDrift(chapter, forIndex) {
+  if (activeChapterIndex !== forIndex) return;
   map.easeTo({
     bearing: (chapter.bearing || 0) + 9,
     pitch: Math.min((chapter.pitch || 45) + 4, 65),
@@ -278,11 +306,11 @@ function setupScrollAnimations() {
       end: "bottom center",
       onEnter: () => {
         updateActiveChapter(index);
-        animateCard(chapter.triggerId, 1);
+        animateCardIn(chapter.triggerId);
       },
       onEnterBack: () => {
         updateActiveChapter(index);
-        animateCard(chapter.triggerId, -1);
+        animateCardIn(chapter.triggerId);
       },
     });
   });
@@ -299,7 +327,6 @@ function setupScrollAnimations() {
           document.querySelector(".style-btn.active").dataset.style;
         const mapEl = document.getElementById("map");
         const blurVal = self.progress * 4;
-
         if (activeTheme === "satellite") {
           mapEl.style.filter = `${THEMES.satellite.filter} blur(${blurVal}px)`;
         }
@@ -314,22 +341,45 @@ function setupScrollAnimations() {
   });
 }
 
-function animateCard(triggerId, direction) {
+// Sweep in from the left
+function animateCardIn(triggerId) {
   const card = document.querySelector(`#${triggerId} .prose-card`);
   if (!card) return;
   gsap.fromTo(
     card,
-    { opacity: 0, y: direction * 14 },
-    { opacity: 1, y: 0, duration: 0.75, ease: "power2.out", overwrite: true },
+    { opacity: 0, x: -32, clipPath: "inset(0 100% 0 0)" },
+    {
+      opacity: 1,
+      x: 0,
+      clipPath: "inset(0 0% 0 0)",
+      duration: 0.9,
+      ease: "expo.out",
+      overwrite: true,
+    },
   );
 }
 
-function updateActiveChapter(index) {
+function typewriterCoord(text) {
+  const el = document.getElementById("hud-coord");
+  if (!el) return;
+  if (typewriterTimer) clearInterval(typewriterTimer);
+  el.innerText = "";
+  let i = 0;
+  typewriterTimer = setInterval(() => {
+    el.innerText = text.slice(0, ++i);
+    if (i >= text.length) clearInterval(typewriterTimer);
+  }, 28);
+}
+
+async function updateActiveChapter(index) {
   if (activeChapterIndex === index) return;
   activeChapterIndex = index;
   const chapter = narrativeData[index];
 
-  map.stop();
+  await mapReady;
+
+  if (flyInProgress) map.stop();
+  flyInProgress = true;
 
   map.flyTo({
     center: chapter.center,
@@ -341,59 +391,77 @@ function updateActiveChapter(index) {
     curve: 1.2,
     essential: true,
   });
+
   map.once("moveend", () => {
-    if (activeChapterIndex === index) startAmbientDrift(chapter);
+    flyInProgress = false;
+    startAmbientDrift(chapter, index);
   });
-  revealRoute(index);
+
+  revealRoute(index, true);
+
   document.getElementById("hud-chapter").innerText =
-    `${chapter.title.toUpperCase()}`;
+    chapter.title.toUpperCase();
+  typewriterCoord(
+    `LAT ${chapter.center[1].toFixed(4)}° N, LNG ${chapter.center[0].toFixed(4)}° E`,
+  );
 }
 
+// dismissIntro only fades the overlay and scrolls the panel.
 function setupUIListeners() {
   const intro = document.getElementById("intro-screen");
   const panel = document.getElementById("story-panel");
+
   const dismissIntro = () => {
     if (introDismissed) return;
     introDismissed = true;
+
     const mapEl = document.getElementById("map");
     const activeThemeKey =
       document.querySelector(".style-btn.active").dataset.style;
     mapEl.style.filter = THEMES[activeThemeKey].filter;
+
     gsap.to(intro, {
       opacity: 0,
-      duration: 1,
+      duration: 1.2,
+      ease: "power2.inOut",
       onComplete: () => {
         intro.style.visibility = "hidden";
         intro.style.pointerEvents = "none";
       },
     });
+
     const firstChapter = document.getElementById("chap-0");
-    if (firstChapter)
-      firstChapter.scrollIntoView({ behavior: "smooth", block: "center" });
-    if (activeChapterIndex === -1) updateActiveChapter(0);
+    if (firstChapter) {
+      setTimeout(() => {
+        firstChapter.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 180);
+    }
   };
 
   intro.addEventListener("click", dismissIntro);
-  panel.addEventListener(
-    "scroll",
-    () => {
-      if (panel.scrollTop > 20 && !introDismissed) dismissIntro();
-    },
-    { passive: true },
-  );
+
+  const onPanelScroll = () => {
+    if (panel.scrollTop > 20 && !introDismissed) {
+      dismissIntro();
+      panel.removeEventListener("scroll", onPanelScroll);
+    }
+  };
+  panel.addEventListener("scroll", onPanelScroll, { passive: true });
+
   intro.addEventListener(
     "wheel",
     () => {
       if (!introDismissed) dismissIntro();
     },
-    { passive: true },
+    { once: true, passive: true },
   );
+
   intro.addEventListener(
     "touchmove",
     () => {
       if (!introDismissed) dismissIntro();
     },
-    { passive: true },
+    { once: true, passive: true },
   );
 
   window.addEventListener("keydown", (e) => {
@@ -467,10 +535,6 @@ map.on("move", () => {
   const bearing = map.getBearing();
   const compass = document.getElementById("compass-svg");
   if (compass) compass.style.transform = `rotate(${bearing * -1}deg)`;
-  const center = map.getCenter();
-  const coordDisplay = document.getElementById("hud-coord");
-  if (coordDisplay)
-    coordDisplay.innerText = `LAT ${center.lat.toFixed(4)}° N, LNG ${center.lng.toFixed(4)}° E`;
 });
 
 init();

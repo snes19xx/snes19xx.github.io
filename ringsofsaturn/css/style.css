@@ -14,6 +14,7 @@
   --grain-op: 0.05;
   --intro-bg: var(--bg);
 }
+
 body,
 html {
   margin: 0;
@@ -25,12 +26,14 @@ html {
   color: var(--bone);
   overflow: hidden;
 }
+
 #map {
   position: fixed;
   inset: 0;
   z-index: 1;
   transition: filter 1s ease;
 }
+
 #vignette {
   position: fixed;
   inset: 0;
@@ -39,6 +42,7 @@ html {
   background: var(--vignette-bg);
   transition: background 0.5s ease;
 }
+
 #grain {
   position: fixed;
   inset: 0;
@@ -51,6 +55,7 @@ html {
     opacity 0.5s ease,
     background-image 0.5s ease;
 }
+
 #hud {
   position: fixed;
   top: 30px;
@@ -64,6 +69,7 @@ html {
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
+
 #compass-wrapper {
   width: 36px;
   height: 36px;
@@ -71,15 +77,18 @@ html {
   align-items: center;
   justify-content: center;
 }
+
 #compass-svg {
   width: 100%;
   height: 100%;
 }
+
 .hud-text span {
   display: block;
   margin-bottom: 5px;
   color: var(--silver);
 }
+
 #style-picker {
   position: fixed;
   top: 30px;
@@ -89,6 +98,7 @@ html {
   gap: 10px;
   pointer-events: auto;
 }
+
 .style-btn {
   background: var(--glass);
   backdrop-filter: blur(4px);
@@ -102,15 +112,18 @@ html {
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
 }
+
 .style-btn:hover {
   color: var(--bone);
   border-color: var(--bone);
 }
+
 .style-btn.active {
   background: var(--bone);
   color: var(--bg);
   border-color: var(--bone);
 }
+
 #story-panel {
   position: fixed;
   top: 0;
@@ -127,9 +140,11 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 #story-panel::-webkit-scrollbar {
   display: none;
 }
+
 #intro-screen,
 #outro-screen {
   position: fixed;
@@ -147,38 +162,45 @@ html {
     visibility 0.8s,
     background 0.8s ease;
 }
+
 #intro-screen {
   pointer-events: auto;
   cursor: pointer;
 }
+
 #outro-screen {
   z-index: 5;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
+
 .satellite-text-bg {
   background: rgba(6, 8, 10, 0.7);
   padding: 30px 40px;
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
+
 h1 {
   font-weight: 400;
   font-size: 2.4rem;
   margin: 0 0 20px 0;
   line-height: 1.1;
 }
+
 p {
   font-size: 1.15rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
+
 .scroll-spacer {
   height: 100vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
+
 .chapter {
   min-height: 100vh;
   display: flex;
@@ -188,6 +210,7 @@ p {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
+
 .prose-card {
   background: var(--glass);
   backdrop-filter: blur(8px);
@@ -196,13 +219,14 @@ p {
   width: 100%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   transform: translateZ(0);
-  will-change: transform, opacity;
+  will-change: transform, opacity, clip-path;
   color: var(--bone);
   transition:
     background 0.5s,
     border-color 0.5s,
     color 0.5s;
 }
+
 .chapter-img {
   display: block;
   width: 75%;
@@ -211,9 +235,11 @@ p {
   border-radius: 2px;
   margin: 0 auto 20px auto;
 }
+
 .chapter[data-index="9"] .prose-card p {
   font-size: calc(1.15rem - 1.5px);
 }
+
 .frag-id {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.7rem;
@@ -224,6 +250,7 @@ p {
   border-bottom: 1px solid var(--border);
   padding-bottom: 10px;
 }
+
 .loc-tag {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.65rem;
@@ -231,6 +258,7 @@ p {
   display: block;
   color: var(--silver);
 }
+
 .outro-passage {
   max-width: 600px;
   text-align: justify;
@@ -238,10 +266,12 @@ p {
   font-size: 1.1rem;
   line-height: 1.7;
 }
+
 .outro-spacer {
   height: 100vh;
   scroll-snap-align: start;
 }
+
 .ink-filter {
   position: absolute;
   width: 0;
