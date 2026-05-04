@@ -1,9 +1,10 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// Themes
 const THEMES = {
   light: {
-    url: "mapbox://styles/mapbox/outdoors-v12",
-    filter: "sepia(0.2) saturate(0.6) contrast(1.05) brightness(1.02)",
+    url: "mapbox://styles/mapbox/light-v11",
+    filter: "none",
     vars: {
       "--bg": "#f4f1ea",
       "--bone": "#1a1a1a",
@@ -66,7 +67,6 @@ let flyInProgress = false;
 let typewriterTimer = null;
 let lineDrawRaf = null;
 
-// Map-ready gate — all flyTo calls wait so we never animate before tiles load
 const mapReady = new Promise((resolve) => {
   if (map.loaded()) resolve();
   else map.once("load", resolve);
@@ -407,6 +407,7 @@ async function updateActiveChapter(index) {
 }
 
 // dismissIntro only fades the overlay and scrolls the panel.
+
 function setupUIListeners() {
   const intro = document.getElementById("intro-screen");
   const panel = document.getElementById("story-panel");
