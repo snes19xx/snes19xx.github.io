@@ -153,7 +153,8 @@ function animateCVSections() {
 function generateGradeViz() {
   const grades = [
     94, 90, 77, 95, 88, 93, 83, 96, 92, 76, 87, 85, 90, 86, 92, 95, 87, 86, 87,
-    90, 94, 82, 88, 82, 86, 92, 86, 90, 94, 81, 85, 95, 80, 90, 85, 85,
+    90, 94, 82, 88, 82, 86, 92, 86, 90, 94, 81, 85, 95, 80, 90, 85, 88, 98, 80,
+    95, 88,
   ];
 
   const container = document.getElementById("grade-viz");
