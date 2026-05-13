@@ -162,9 +162,9 @@ function generateGradeViz() {
   const tooltipDiv = document.createElement("div");
   tooltipDiv.id = "grade-viz-tooltip";
   tooltipDiv.style.cssText =
-    "position:absolute;background:rgba(253,251,247,0.95);border:1px solid #d0c9ba;" +
+    "position:absolute;background:var(--bg0);border:1px solid var(--bg3);" +
     "padding:4px 8px;border-radius:4px;font-size:11px;font-family:\'JetBrains Mono\',monospace;" +
-    "pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:10;";
+    "color:var(--fg);pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:10;";
   container.style.position = "relative";
   container.appendChild(tooltipDiv);
 
@@ -220,7 +220,7 @@ function generateGradeViz() {
     .attr("text-anchor", "middle")
     .attr("font-size", "12px")
     .attr("letter-spacing", "0.5px")
-    .attr("fill", "#1a1918")
+    .attr("fill", "var(--fg)")
     .text("Undergraduate Grades");
 
   const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
@@ -244,7 +244,7 @@ function generateGradeViz() {
       .attr("x2", iW)
       .attr("y1", yScale(t))
       .attr("y2", yScale(t))
-      .attr("stroke", "#e8e5de")
+      .attr("stroke", "var(--bg3)")
       .attr("stroke-width", 0.5);
     g.append("text")
       .attr("x", -6)
@@ -252,7 +252,7 @@ function generateGradeViz() {
       .attr("text-anchor", "end")
       .attr("dominant-baseline", "middle")
       .attr("font-size", "9px")
-      .attr("fill", "#999")
+      .attr("fill", "var(--grey2)")
       .attr("font-family", "system-ui, sans-serif")
       .text(t);
   });
@@ -308,7 +308,7 @@ function generateGradeViz() {
     .attr("cy", (d) => yScale(d))
     .attr("r", 2.5)
     .attr("fill", (d) => getGradeColor(d))
-    .attr("stroke", "#fff")
+    .attr("stroke", "var(--bg0)")
     .attr("stroke-width", 0.5)
     .attr("opacity", 0)
     .attr("pointer-events", "none")
@@ -334,7 +334,7 @@ function generateGradeViz() {
       d3.selectAll(".dot")
         .filter((_, j) => j === i)
         .attr("r", 5)
-        .attr("stroke", "#1a1918");
+        .attr("stroke", "var(--fg)");
       const containerRect = document
         .getElementById("grade-viz")
         .getBoundingClientRect();
@@ -352,7 +352,7 @@ function generateGradeViz() {
       d3.selectAll(".dot")
         .filter((_, j) => j === i)
         .attr("r", 2.5)
-        .attr("stroke", "#fff");
+        .attr("stroke", "var(--bg0)");
       tooltip.transition().duration(200).style("opacity", 0);
     });
 
@@ -361,7 +361,7 @@ function generateGradeViz() {
     .attr("x2", iW)
     .attr("y1", iH)
     .attr("y2", iH)
-    .attr("stroke", "#ccc")
+    .attr("stroke", "var(--bg3)")
     .attr("stroke-width", 1);
 }
 

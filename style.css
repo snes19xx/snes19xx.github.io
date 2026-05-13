@@ -17,16 +17,19 @@
   --grey0: #7a8478;
   --grey1: #4a5048;
   --grey2: #706868;
+  /* cv section colors */
+  --cv-green: #3a5a30;
+  --cv-blue: #354656;
 }
 
 /* dark mode */
 body.dark-mode {
-  --bg0: #2d353b;
+  --bg0: #1a1a1c;
   --bg1: #343f44;
   --bg2: #3d484d;
   --bg3: #475258;
   --bg4: #4f585e;
-  --fg: #d3c6aa;
+  --fg: #ece6dc;
   --red: #e67e80;
   --orange: #e69875;
   --yellow: #dbbc7f;
@@ -38,6 +41,9 @@ body.dark-mode {
   --grey0: #7a8478;
   --grey1: #859289;
   --grey2: #9da9a0;
+  /* cv section dark mode colors */
+  --cv-green: #a8c080cf;
+  --cv-blue: #7fa3bbc7;
 }
 
 *,
@@ -77,53 +83,6 @@ body {
   transition:
     background 0.4s ease,
     color 0.4s ease;
-}
-
-/* CV page */
-body:has(.page-cv:not(.grid--hidden)) {
-  background: #fdfbf7;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .my-header {
-  background: #fdfbf7;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .social-icon svg {
-  fill: #3a3a3a;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .social-icon:hover svg {
-  fill: #4f7942;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .content--side {
-  background: #fdfbf7;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .content--center {
-  background: #fdfbf7;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .control__title {
-  color: #4f7942;
-}
-
-body:has(.page-cv:not(.grid--hidden)) .control__label {
-  color: #3a3a3a;
-}
-
-body:has(.page-cv:not(.grid--hidden))
-  .control__radio:checked
-  + .control__label {
-  color: #f5f0e8;
-  background: #4f7942;
-}
-
-body:has(.page-cv:not(.grid--hidden))
-  .control__radio:not(:checked):hover
-  + .control__label {
-  color: #1a1a1a;
-  background: #e8e0d0;
 }
 
 .js .loading::before,
@@ -446,7 +405,7 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
 
 /* dark mode thumbnail filter */
 body.dark-mode .grid__img {
-  filter: hue-rotate(-5deg) saturate(0.7) brightness(0.9) contrast(0.9);
+  filter: hue-rotate(-5deg) saturate(0.8) brightness(0.79) contrast(0.9);
 }
 
 .grid__img.loaded {
@@ -599,7 +558,7 @@ body.dark-mode .grid__item:hover .grid__img {
 
 /* CV page header title override */
 body:has(.page-cv:not(.grid--hidden)) .my-header__title {
-  color: #1a1a1a;
+  color: var(--fg);
   font-family: "EB Garamond", Georgia, serif;
   font-size: 1.6em;
   font-weight: 400;
@@ -613,7 +572,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   max-width: 1020px;
   margin: 0 auto;
   padding: 1.2em 2em 3em 2em;
-  color: #1a1a1a;
+  color: var(--fg);
   font-family: "EB Garamond", Georgia, serif;
   font-size: 16.5px;
   line-height: 1.35;
@@ -629,11 +588,11 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   font-family: "EB Garamond", Georgia, serif;
   font-size: 1.25em;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--fg);
   margin-top: 0;
   margin-bottom: 0.45em;
   padding-bottom: 0.25em;
-  border-bottom: 1px solid #b0a090;
+  border-bottom: 1px solid var(--bg4);
   letter-spacing: 0.015em;
 }
 
@@ -645,21 +604,21 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   font-family: "EB Garamond", Georgia, serif;
   font-size: 1.05em;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--fg);
   margin: 0 0 0.1em 0;
 }
 
 .cv-item .position {
   font-family: "CMUnti", Georgia, serif;
   font-size: 0.97em;
-  color: #3a5a30;
+  color: var(--cv-green);
   margin: 0 0 0.1em 0;
   font-style: regular;
 }
 
 .cv-item .date {
   font-family: "EB Garamond", Georgia, serif;
-  color: #354656;
+  color: var(--cv-blue);
   font-size: 0.93em;
   margin-bottom: 0.4em;
   display: block;
@@ -668,7 +627,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
 .cv-item p,
 .cv-item ul {
   font-family: "Computer Modern", "EB Garamond", Georgia, serif;
-  color: #2a2a2a;
+  color: var(--fg);
   line-height: 1.4;
   margin: 0;
   word-spacing: -0.03em;
@@ -692,7 +651,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   content: "—";
   position: absolute;
   left: 0;
-  color: #4f7942;
+  color: var(--cv-green);
 }
 
 .cv-item .skill-category {
@@ -701,7 +660,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
 
 .cv-item .skill-category strong {
   font-family: "EB Garamond", Georgia, serif;
-  color: #1a1a1a;
+  color: var(--fg);
   display: inline;
   font-weight: 700;
 }
@@ -725,7 +684,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   left: 0;
   width: 50%;
   height: 1px;
-  background: #b0a090;
+  background: var(--bg4);
 }
 
 /* Education */
@@ -935,9 +894,4 @@ body.dark-mode .theme-toggle__moon {
 }
 body.dark-mode .theme-toggle__sun {
   display: block;
-}
-
-/* CV is always light */
-body:has(.page-cv:not(.grid--hidden)) .theme-toggle {
-  display: none;
 }
