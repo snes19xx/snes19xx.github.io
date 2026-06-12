@@ -64,7 +64,7 @@ const portfolioItems = [
     title:
       "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
     desc: "A study showing GradCafe data is biased and weak at predicting admissions.",
-    tags: ["Python"],
+    tags: ["Python SQL"],
     image: "images/gradcafe.png",
     link: "gradcafe_analysis/web.html",
   },
