@@ -12,18 +12,19 @@ if (localStorage.getItem("theme") === "dark") {
 
 const portfolioItems = [
   {
-    title: "Toronto Urban Heat Island Explorer",
-    desc: "Interactive explorer for Toronto's urban heat islands.",
-    tags: ["Python", "JavaScript"],
-    image: "UH_exp/tb.png",
-    link: "UH_exp/index.htm",
-  },
-  {
     title: "three.lab",
     desc: "A browser based three.js tool for viewing and making edits to 3D models and textures.",
     tags: ["JavaScript"],
     video: "images/three.mp4",
     link: "https://snes19xx.github.io/three.lab/",
+    featured: true,
+  },
+  {
+    title: "Toronto Urban Heat Island Explorer",
+    desc: "Interactive explorer for Toronto's urban heat islands.",
+    tags: ["Python", "JavaScript"],
+    image: "UH_exp/tb.png",
+    link: "UH_exp/index.htm",
   },
   {
     title: "Earth in Hues",
@@ -90,6 +91,7 @@ function generateProjectsGrid() {
     const gridItem = document.createElement("div");
     gridItem.className = "grid__item";
     if (item.video) gridItem.classList.add("has-video");
+    if (item.featured) gridItem.classList.add("grid__item--feature");
 
     let mediaElement;
     if (item.video) {
