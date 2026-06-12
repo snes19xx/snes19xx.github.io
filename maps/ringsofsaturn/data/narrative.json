@@ -1,0 +1,138 @@
+[
+  {
+    "triggerId": "chap-0",
+    "center": [1.2974, 52.6309],
+    "zoom": 11,
+    "bearing": 0,
+    "pitch": 45,
+    "title": "Norwich",
+    "chapterLabel": "Chapter I, The Hospital",
+    "location": "52.6309\u00b0 N, 1.2974\u00b0 E",
+    "content": [
+      "In August 1992, when the dog days were drawing to an end, I set out to walk the county of Suffolk, in the hope of dispelling the emptiness that takes hold of me whenever I have completed a long stint of work.",
+      "A year to the day after I began my tour, I was taken into hospital in Norwich in a state of almost total immobility. It was then that I began in my thoughts to write these pages."
+    ]
+  },
+  {
+    "triggerId": "chap-1",
+    "center": [1.6667, 52.515],
+    "zoom": 12,
+    "bearing": 10,
+    "pitch": 50,
+    "title": "Somerleyton",
+    "chapterLabel": "Chapter II, Somerleyton Hall",
+    "location": "52.5150\u00b0 N, 1.6667\u00b0 E",
+    "content": [
+      "I took the train to Somerleyton. The estate was built in the 19th century by Sir Morton Peto, an entrepreneur who laid railway lines across the globe. Now it was a place of silent decay.",
+      "The maze at Somerleyton, once a marvel, was now wildly overgrown. Wandering through it, I felt that I was treading an invisible labyrinthine path from which there was no exit."
+    ]
+  },
+  {
+    "triggerId": "chap-2",
+    "center": [1.7507, 52.4745],
+    "zoom": 13,
+    "bearing": 20,
+    "pitch": 40,
+    "title": "Lowestoft",
+    "chapterLabel": "Chapter III, Lowestoft Beach",
+    "location": "52.4745\u00b0 N, 1.7507\u00b0 E",
+    "content": [
+      "Lowestoft was a town defined by its fading maritime glory. Down on the beach, I saw a few solitary fishermen standing motionless by the grey sea, looking like the last survivors of a doomed species.",
+      "The sea brings everything back, but it also grinds everything to dust. I watched the waves turning the stones over and over, an endless, mindless labor."
+    ]
+  },
+  {
+    "triggerId": "chap-3",
+    "center": [1.699, 52.385],
+    "zoom": 12.5,
+    "bearing": 15,
+    "pitch": 55,
+    "title": "Covehithe",
+    "chapterLabel": "Chapter IV, The Crumbling Edge",
+    "location": "52.3850\u00b0 N, 1.6990\u00b0 E",
+    "content": [
+      "Walking south toward Covehithe, the path continually vanished into the abyss. The cliffs here consist of loose sand and clay, yielding yard by yard to the winter storms.",
+      "Entire forests lay uprooted on the beach, their white, bleached roots tangled like the bones of prehistoric leviathans."
+    ]
+  },
+  {
+    "triggerId": "chap-4",
+    "center": [1.6763, 52.3274],
+    "zoom": 13,
+    "bearing": 0,
+    "pitch": 45,
+    "title": "Southwold",
+    "chapterLabel": "Chapter V, Southwold",
+    "location": "52.3274\u00b0 N, 1.6763\u00b0 E",
+    "content": [
+      "Southwold has the feel of an outpost at the end of the world. The town consists of a few dozen Victorian villas, a pier stretching into the grey water, and all around it the vast flatness of the marshes in which one loses all sense of time."
+    ]
+  },
+  {
+    "triggerId": "chap-5",
+    "center": [1.596, 52.319],
+    "zoom": 13.5,
+    "bearing": -15,
+    "pitch": 50,
+    "title": "Blythburgh",
+    "chapterLabel": "Chapter VI, The Marshes",
+    "location": "52.3190\u00b0 N, 1.5960\u00b0 E",
+    "content": [
+      "The great church of the Holy Trinity at Blythburgh floats above the marshes like a ship becalmed. The physical world here feels provisional, as if it might be withdrawn at any moment by the tide."
+    ]
+  },
+  {
+    "triggerId": "chap-6",
+    "center": [1.6282, 52.274],
+    "zoom": 14,
+    "bearing": 20,
+    "pitch": 60,
+    "title": "Dunwich",
+    "chapterLabel": "Chapter VII, The Sunken City",
+    "location": "52.2740\u00b0 N, 1.6282\u00b0 E",
+    "content": [
+      "Dunwich, which was once a thriving medieval port, is now nothing but a handful of houses and the ruins of a Franciscan friary. The sea has swallowed the churches, the graveyards, and the guilds.",
+      "It is said that on quiet nights you can still hear the drowned bells tolling beneath the sea. I listened, standing in the last light, but heard only the undertow."
+    ]
+  },
+  {
+    "triggerId": "chap-7",
+    "center": [1.618, 52.215],
+    "zoom": 13,
+    "bearing": 15,
+    "pitch": 45,
+    "title": "Sizewell",
+    "chapterLabel": "Chapter VIII, Sizewell B",
+    "location": "52.2150\u00b0 N, 1.6180\u00b0 E",
+    "content": [
+      "I stood on the shingle bank and looked out across the reed beds to where the great white dome of Sizewell B nuclear station rose against the darkening sky like a stranded moon, or the compound eye of an insect.",
+      "Nature has reclaimed the concrete. The pagodas stand half-collapsed against the sky, monuments to the tendency of all human endeavour to generate in the end only rubble and emptiness."
+    ]
+  },
+  {
+    "triggerId": "chap-8",
+    "center": [1.5996, 52.1548],
+    "zoom": 13.5,
+    "bearing": -5,
+    "pitch": 40,
+    "title": "Aldeburgh",
+    "chapterLabel": "Chapter IX, Aldeburgh",
+    "location": "52.1548\u00b0 N, 1.5996\u00b0 E",
+    "content": [
+      "The Moot Hall, which once stood at the centre of a prosperous town, is now only a few yards from the water\u2019s edge. One more generation and it will be gone."
+    ]
+  },
+  {
+    "triggerId": "chap-9",
+    "center": [1.542, 52.094],
+    "zoom": 13,
+    "bearing": -20,
+    "pitch": 45,
+    "title": "Orford",
+    "chapterLabel": "Chapter X, Orford",
+    "location": "52.0940\u00b0 N, 1.5420\u00b0 E",
+    "content": [
+      "It was perhaps the stillness of the East Anglian landscape that first compelled me to stay, a flatness so absolute that it offers no resistance to the mind, allowing one’s thoughts to drift unimpeded toward that final, desolate horizon where all history begins to blur. In those final days, as I passed through the silent woods of Ditchingham, I found myself thinking again of the silk growers of the past and the meticulous, almost ritualistic cruelty required to harvest their pale treasure. To watch the silkworm is to watch a life devoted entirely to its own extraction; the creature is eventually plunged into boiling water so that its thread might remain unbroken, a process that mirrors the way our own lives are unwound by the machinery of time. Like the 'Musaeum Clausum' of Sir Thomas Browne, which contained only those objects that have been lost or never existed, our records of the past are merely the 'rings' of a vanished planet—the fine, shimmering debris left behind after the fire has gone out. "
+    ]
+  }
+]

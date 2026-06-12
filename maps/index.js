@@ -274,7 +274,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight" && !lbIsInt) navigate(1);
 });
 
-["intPreview1", "intPreview2"].forEach((id, idx) => {
+["intPreview1", "intPreview2", "intPreview3"].forEach((id, idx) => {
   const el = document.getElementById(id);
   if (!el) return;
   const src = el.dataset.src;

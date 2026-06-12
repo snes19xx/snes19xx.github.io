@@ -19,6 +19,13 @@ const portfolioItems = [
     link: "UH_exp/index.htm",
   },
   {
+    title: "three.lab",
+    desc: "A browser based three.js tool for viewing and making edits to 3D models and textures.",
+    tags: ["JavaScript"],
+    video: "images/three.mp4",
+    link: "https://snes19xx.github.io/three.lab/",
+  },
+  {
     title: "Earth in Hues",
     desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
     tags: ["Python", "D3.js"],
