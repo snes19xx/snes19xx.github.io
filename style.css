@@ -396,6 +396,14 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
   aspect-ratio: 1/1;
 }
 
+.grid__item.has-video .grid__img {
+  opacity: 1;
+}
+
+.grid__item.has-video::before {
+  display: none;
+}
+
 .grid__link {
   display: block;
   position: relative;

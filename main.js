@@ -16,6 +16,7 @@ const portfolioItems = [
     desc: "A browser based three.js tool for viewing and making edits to 3D models and textures.",
     tags: ["JavaScript"],
     video: "images/three.mp4",
+    poster: "images/three_poster.webp",
     link: "https://snes19xx.github.io/three.lab/",
     featured: true,
   },
@@ -23,35 +24,35 @@ const portfolioItems = [
     title: "Toronto Urban Heat Island Explorer",
     desc: "Interactive explorer for Toronto's urban heat islands.",
     tags: ["Python", "JavaScript"],
-    image: "UH_exp/tb.png",
+    image: "UH_exp/tb.webp",
     link: "UH_exp/index.htm",
   },
   {
     title: "Earth in Hues",
     desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
     tags: ["Python", "D3.js"],
-    image: "images/tb_eart.png",
+    image: "images/tb_eart.webp",
     link: "earth_hues/index.html",
   },
   {
     title: "Re-Zoning the Yard",
     desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto",
     tags: ["ArcGIS"],
-    image: "images/story.png",
+    image: "images/story.webp",
     link: "https://arcg.is/zOG1P",
   },
   {
     title: "Improving the 510 Spadina Streetcar",
     desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route",
     tags: ["Python"],
-    image: "images/510.jpg",
+    image: "images/510.webp",
     link: "https://github.com/snes19xx/510-SPADINA-MODEL",
   },
   {
     title: "MAPS",
     desc: "Maps I made on my spare time and as part of my courses at the University of Toronto",
     tags: ["ArcGIS", "Python", "JavaScript"],
-    image: "images/maps.png",
+    image: "images/maps.webp",
     link: "maps/index.html",
   },
   {
@@ -59,6 +60,7 @@ const portfolioItems = [
     desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations",
     tags: ["D3.js"],
     video: "images/5.mp4",
+    poster: "images/5_poster.webp",
     link: "https://observablehq.com/d/ec14d0aa25e9f007",
   },
   {
@@ -66,14 +68,14 @@ const portfolioItems = [
       "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
     desc: "A study showing GradCafe data is biased and weak at predicting admissions.",
     tags: ["Python", "SQL"],
-    image: "images/gradcafe.png",
+    image: "images/gradcafe.webp",
     link: "gradcafe_analysis/web.html",
   },
   {
     title: "Critical Analysis of the Kensington Market HCD Plan",
     desc: "Research Presentation I gave as part of my fourth year course GGR482 at the University of Toronto",
     tags: ["presentation"],
-    image: "images/thumbnail.png",
+    image: "images/thumbnail.webp",
     link: "images/slides/slides.html",
   },
 ];
@@ -96,7 +98,7 @@ function generateProjectsGrid() {
     let mediaElement;
     if (item.video) {
       mediaElement = `
-                    <video class="grid__img" autoplay loop muted playsinline preload="metadata"
+                    <video class="grid__img" autoplay loop muted playsinline preload="metadata" poster="${item.poster}"
                            onloadeddata="this.classList.add('loaded')">
                       <source src="${item.video}" type="video/mp4">
                     </video>`;
