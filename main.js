@@ -46,7 +46,7 @@ const portfolioItems = [
     desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route",
     tags: ["Python"],
     image: "images/510.webp",
-    link: "https://github.com/snes19xx/510-SPADINA-MODEL",
+    link: "https://snes19xx.github.io/510-SPADINA-MODEL",
   },
   {
     title: "MAPS",
