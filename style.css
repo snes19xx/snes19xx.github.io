@@ -53,19 +53,19 @@ body.dark-mode {
 }
 @font-face {
   font-family: "CMUnti";
-  src: url("gradcafe_analysis/fonts/cmunti.woff2") format("woff2");
+  src: url("fonts/cmunti.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Computer Modern";
-  src: url("gradcafe_analysis/fonts/cmunrm.woff2") format("woff2");
+  src: url("fonts/cmunrm.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "CMU Sans Serif";
-  src: url("gradcafe_analysis/fonts/cmunss.woff2");
+  src: url("fonts/cmunss.woff2");
   font-weight: normal;
   font-style: normal;
 }

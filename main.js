@@ -32,7 +32,7 @@ const portfolioItems = [
     desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
     tags: ["Python", "D3.js"],
     image: "images/tb_eart.webp",
-    link: "earth_hues/index.html",
+    link: "https://snes19xx.github.io/earth-in-hues/",
   },
   {
     title: "Re-Zoning the Yard",
@@ -53,7 +53,7 @@ const portfolioItems = [
     desc: "Maps I made on my spare time and as part of my courses at the University of Toronto",
     tags: ["ArcGIS", "Python", "JavaScript"],
     image: "images/maps.webp",
-    link: "maps/index.html",
+    link: "https://snes19xx.github.io/maps/",
   },
   {
     title: "Better Geophysics",
@@ -69,7 +69,7 @@ const portfolioItems = [
     desc: "A study showing GradCafe data is biased and weak at predicting admissions.",
     tags: ["Python", "SQL"],
     image: "images/gradcafe.webp",
-    link: "gradcafe_analysis/web.html",
+    link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
   },
   {
     title: "Critical Analysis of the Kensington Market HCD Plan",
