@@ -1,0 +1,497 @@
+[
+  {
+    "title": "The Emigrants",
+    "creator": "W.G. Sebald",
+    "year": 2025,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/3.webp"
+  },
+  {
+    "title": "The Rings of Saturn",
+    "creator": "W.G. Sebald",
+    "year": 2025,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/2.webp"
+  },
+  {
+    "title": "Too Much of Life",
+    "creator": "Clarice Lispector",
+    "year": 2025,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 5,
+    "cover": "tb/1.webp"
+  },
+  {
+    "title": "The Hour of the Star",
+    "creator": "Clarice Lispector",
+    "year": 2025,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/4.webp"
+  },
+  {
+    "title": "Vertigo",
+    "creator": "W.G. Sebald",
+    "year": 2025,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 5,
+    "cover": "tb/5.webp"
+  },
+  {
+    "title": "The Encyclopedia of the Dead",
+    "creator": "Danilo Kiš",
+    "year": 2024,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/6.webp"
+  },
+  {
+    "title": "Dubliners",
+    "creator": "James Joyce",
+    "year": 2024,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/7.webp"
+  },
+  {
+    "title": "The Whalestoe Letters",
+    "creator": "Mark Z. Danielewski",
+    "year": 2024,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/8.webp"
+  },
+  {
+    "title": "Persona 3 Reload",
+    "creator": "Atlus",
+    "year": 2024,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 2,
+    "cover": "tb/aa.webp"
+  },
+  {
+    "title": "Final Fantasy VII Rebirth",
+    "creator": "Square Enix",
+    "year": 2024,
+    "type": "Game",
+    "status": "Unfinished",
+    "rating": 2,
+    "cover": "tb/a.webp"
+  },
+  {
+    "title": "Stellar Blade",
+    "creator": "Shift Up",
+    "year": 2024,
+    "type": "Game",
+    "status": "Unfinished",
+    "rating": 3.5,
+    "cover": "tb/b.webp"
+  },
+  {
+    "title": "Letters to Milena",
+    "creator": "Franz Kafka",
+    "year": 2023,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/9.webp"
+  },
+  {
+    "title": "Let the Great World Spin",
+    "creator": "Colum McCann",
+    "year": 2023,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 2.5,
+    "cover": "tb/11.webp"
+  },
+  {
+    "title": "A Million Little Pieces",
+    "creator": "James Frey",
+    "year": 2023,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/12.webp"
+  },
+  {
+    "title": "The Color of Law",
+    "creator": "Richard Rothstein",
+    "year": 2023,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/13.webp"
+  },
+  {
+    "title": "Diaries",
+    "creator": "Franz Kafka",
+    "year": 2023,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": 4,
+    "cover": "tb/10.webp"
+  },
+  {
+    "title": "Katamari Damacy Reroll",
+    "creator": "Bandai Namco",
+    "year": 2023,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/c.webp"
+  },
+  {
+    "title": "Resident Evil 4 Remake",
+    "creator": "Capcom",
+    "year": 2023,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/g.webp"
+  },
+  {
+    "title": "The Legend of Zelda: Tears of the Kingdom",
+    "creator": "Nintendo",
+    "year": 2023,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/d.webp"
+  },
+  {
+    "title": "Final Fantasy XVI",
+    "creator": "Square Enix",
+    "year": 2023,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/e.webp"
+  },
+  {
+    "title": "Final Fantasy IX",
+    "creator": "Square Enix",
+    "year": 2023,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 5,
+    "cover": "tb/f.webp"
+  },
+  {
+    "title": "Letters to a Young Poet",
+    "creator": "Rainer Maria Rilke",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/14.webp"
+  },
+  {
+    "title": "Kafka on the Shore",
+    "creator": "Haruki Murakami",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/15.webp"
+  },
+  {
+    "title": "After the Quake",
+    "creator": "Haruki Murakami",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/16.webp"
+  },
+  {
+    "title": "Men Without Women",
+    "creator": "Haruki Murakami",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/17.webp"
+  },
+  {
+    "title": "Hard-Boiled Wonderland and the End of the World",
+    "creator": "Haruki Murakami",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 5,
+    "cover": "tb/18.webp"
+  },
+  {
+    "title": "The Complete Cosmicomics",
+    "creator": "Italo Calvino",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/19.webp"
+  },
+  {
+    "title": "The Sons",
+    "creator": "Franz Kafka",
+    "year": 2022,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/22.webp"
+  },
+  {
+    "title": "The Complete Stories",
+    "creator": "Clarice Lispector",
+    "year": 2022,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": 4,
+    "cover": "tb/20.webp"
+  },
+  {
+    "title": "The Complete Stories",
+    "creator": "Franz Kafka",
+    "year": 2022,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": 4.5,
+    "cover": "tb/21.webp"
+  },
+  {
+    "title": "God of War Ragnarök",
+    "creator": "Santa Monica Studio",
+    "year": 2022,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/h.webp"
+  },
+  {
+    "title": "Bayonetta 3",
+    "creator": "PlatinumGames",
+    "year": 2022,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/i.webp"
+  },
+  {
+    "title": "Persona 5 Royal",
+    "creator": "Atlus",
+    "year": 2022,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/j.webp"
+  },
+  {
+    "title": "Shin Megami Tensei V",
+    "creator": "Atlus",
+    "year": 2022,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/smt.webp"
+  },
+  {
+    "title": "Kirby & the Forgotten Land",
+    "creator": "HAL Laboratory",
+    "year": 2022,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/l.webp"
+  },
+  {
+    "title": "Pokémon Legends: Arceus",
+    "creator": "Game Freak",
+    "year": 2022,
+    "type": "Game",
+    "status": "Dropped",
+    "rating": 2.5,
+    "cover": "tb/pla.webp"
+  },
+  {
+    "title": "Pokémon Shining Pearl",
+    "creator": "ILCA",
+    "year": 2022,
+    "type": "Game",
+    "status": "Dropped",
+    "rating": 2,
+    "cover": "tb/sp.webp"
+  },
+  {
+    "title": "Sonic Colors Ultimate",
+    "creator": "Blind Squirrel",
+    "year": 2022,
+    "type": "Game",
+    "status": "Dropped",
+    "rating": 2,
+    "cover": "tb/sonic.webp"
+  },
+  {
+    "title": "Soul Hackers 2",
+    "creator": "Atlus",
+    "year": 2022,
+    "type": "Game",
+    "status": "Dropped",
+    "rating": 3,
+    "cover": "tb/k.webp"
+  },
+  {
+    "title": "And the Mountains Echoed",
+    "creator": "Khaled Hosseini",
+    "year": 2021,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/24.webp"
+  },
+  {
+    "title": "Norwegian Wood",
+    "creator": "Haruki Murakami",
+    "year": 2021,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3,
+    "cover": "tb/25.webp"
+  },
+  {
+    "title": "The Castle",
+    "creator": "Franz Kafka",
+    "year": 2021,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 5,
+    "cover": "tb/26.webp"
+  },
+  {
+    "title": "The Order of Time",
+    "creator": "Carlo Rovelli",
+    "year": 2021,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/28.webp"
+  },
+  {
+    "title": "The Log from the Sea of Cortez",
+    "creator": "John Steinbeck",
+    "year": 2021,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/30.webp"
+  },
+  {
+    "title": "Selected Stories",
+    "creator": "Virginia Woolf",
+    "year": 2021,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": 3.5,
+    "cover": "tb/27.webp"
+  },
+  {
+    "title": "Tropic of Cancer",
+    "creator": "Henry Miller",
+    "year": 2021,
+    "type": "Book",
+    "status": "Dropped",
+    "rating": 2,
+    "cover": "tb/29.webp"
+  },
+  {
+    "title": "Fire Emblem: Three Houses",
+    "creator": "Intelligent Systems",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/fe3h.webp"
+  },
+  {
+    "title": "Pokémon Sword",
+    "creator": "Game Freak",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 2,
+    "cover": "tb/pk1.webp"
+  },
+  {
+    "title": "New Pokémon Snap",
+    "creator": "Bandai Namco",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/pk2.webp"
+  },
+  {
+    "title": "Catherine: Full Body",
+    "creator": "Atlus",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/cat.webp"
+  },
+  {
+    "title": "Final Fantasy XV",
+    "creator": "Square Enix",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 2.5,
+    "cover": "tb/ff.webp"
+  },
+  {
+    "title": "Gravity Rush 2",
+    "creator": "Japan Studio",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4.5,
+    "cover": "tb/gr.webp"
+  },
+  {
+    "title": "Final Fantasy VII Remake",
+    "creator": "Square Enix",
+    "year": 2021,
+    "type": "Game",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/vii.webp"
+  },
+  {
+    "title": "The Saturn System Through the Eyes of Cassini",
+    "creator": "NASA",
+    "year": 2026,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 4,
+    "cover": "tb/31.webp"
+  },
+  {
+    "title": "A Breath of Life",
+    "creator": "Clarice Lispector",
+    "year": 2026,
+    "type": "Book",
+    "status": "Finished",
+    "rating": 3.5,
+    "cover": "tb/32.webp"
+  }
+]

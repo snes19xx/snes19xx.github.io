@@ -24,8 +24,8 @@ const portfolioItems = [
     title: "Toronto Urban Heat Island Explorer",
     desc: "Interactive explorer for Toronto's urban heat islands.",
     tags: ["Python", "JavaScript"],
-    image: "UH_exp/tb.webp",
-    link: "UH_exp/index.htm",
+    image: "images/tb_uh.webp",
+    link: "https://snes19xx.github.io/Toronto_urbanheatislands",
   },
   {
     title: "Earth in Hues",

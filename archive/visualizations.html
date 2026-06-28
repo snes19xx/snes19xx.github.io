@@ -211,6 +211,22 @@
         stroke: var(--surface);
         stroke-width: 2px;
         cursor: pointer;
+        transition: opacity 0.6s ease;
+      }
+
+      .creator-label {
+        font-family: "Inter", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 500;
+        fill: var(--text-main);
+        pointer-events: none;
+      }
+      .creator-count {
+        font-family: "Inter", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 600;
+        fill: var(--text-muted);
+        pointer-events: none;
       }
 
       .axis-label {
@@ -256,7 +272,9 @@
       <button class="active" data-mode="year">Timeline</button>
       <button data-mode="type">By Medium</button>
       <button data-mode="status">By Status</button>
+      <button data-mode="creator">By Author</button>
       <button data-mode="rating">By Stars</button>
+      <button data-mode="distribution">Distribution</button>
       <button data-mode="scatter">Stars × Year</button>
     </div>
 
