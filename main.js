@@ -30,21 +30,14 @@ const portfolioItems = [
   {
     title: "Earth in Hues",
     desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
-    tags: ["Python", "D3.js"],
+    tags: ["Python", "JavaScript"],
     image: "images/tb_eart.webp",
     link: "https://snes19xx.github.io/earth-in-hues/",
   },
   {
-    title: "Re-Zoning the Yard",
-    desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto",
-    tags: ["ArcGIS"],
-    image: "images/story.webp",
-    link: "https://arcg.is/zOG1P",
-  },
-  {
     title: "Improving the 510 Spadina Streetcar",
     desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route",
-    tags: ["Python"],
+    tags: ["Python", "JavaScript"],
     image: "images/510.webp",
     link: "https://snes19xx.github.io/510-SPADINA-MODEL",
   },
@@ -58,7 +51,7 @@ const portfolioItems = [
   {
     title: "Better Geophysics",
     desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations",
-    tags: ["D3.js"],
+    tags: ["JavaScript"],
     video: "images/5.mp4",
     poster: "images/5_poster.webp",
     link: "https://observablehq.com/d/ec14d0aa25e9f007",
@@ -70,6 +63,13 @@ const portfolioItems = [
     tags: ["Python", "SQL"],
     image: "images/gradcafe.webp",
     link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
+  },
+  {
+    title: "Re-Zoning the Yard",
+    desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto",
+    tags: ["ArcGIS"],
+    image: "images/story.webp",
+    link: "https://arcg.is/zOG1P",
   },
   {
     title: "Critical Analysis of the Kensington Market HCD Plan",
