@@ -500,7 +500,7 @@
     "year": 2026,
     "type": "Book",
     "status": "Unfinished",
-    "rating": null,
+    "rating": 4.5,
     "cover": "tb/33.webp"
   }
 ]
