@@ -493,5 +493,14 @@
     "status": "Finished",
     "rating": 3.5,
     "cover": "tb/32.webp"
+  },
+  {
+    "title": "Água Viva",
+    "creator": "Clarice Lispector",
+    "year": 2026,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": null,
+    "cover": "tb/33.webp"
   }
 ]
