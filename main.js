@@ -82,6 +82,20 @@ const portfolioItems = [
 
 let currentPage = "page-projects";
 let gradeVizGenerated = false;
+let d3Promise = null;
+
+function loadD3() {
+  if (!d3Promise) {
+    d3Promise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+  return d3Promise;
+}
 
 function generateProjectsGrid() {
   const grid = document.querySelector(".page-projects");
@@ -154,8 +168,8 @@ function animateCVSections() {
     easing: "easeOutQuad",
     complete: () => {
       if (!gradeVizGenerated) {
-        generateGradeViz();
         gradeVizGenerated = true;
+        loadD3().then(generateGradeViz);
       }
     },
   });
@@ -456,8 +470,7 @@ function animateSocialIcons() {
   });
 }
 
-window.addEventListener("load", () => {
-  document.body.classList.remove("loading");
+document.addEventListener("DOMContentLoaded", () => {
   generateProjectsGrid();
   animateSocialIcons();
 

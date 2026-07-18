@@ -85,39 +85,6 @@ body {
     color 0.4s ease;
 }
 
-.js .loading::before,
-.js .loading::after {
-  content: "";
-  position: fixed;
-  z-index: 1000;
-}
-
-.loading::before {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--bg0);
-}
-
-.loading::after {
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  border: 8px solid var(--bg2);
-  border-bottom-color: var(--green);
-  border-radius: 50%;
-  animation: animLoader 0.8s linear infinite forwards;
-}
-
-@keyframes animLoader {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .hidden {
   position: absolute;
   overflow: hidden;
