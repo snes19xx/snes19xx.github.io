@@ -126,6 +126,12 @@ main {
   flex: 1;
 }
 
+@media screen and (min-width: 801px) {
+  body:has(.page-projects:not(.grid--hidden)) .my-header {
+    padding: 2em 2em 1.25em;
+  }
+}
+
 .page-about:not(.grid--hidden) ~ header .my-header__title,
 body:has(.page-about:not(.grid--hidden)) .my-header__title,
 .page-about:not(.grid--hidden) ~ header .my-header::before,
@@ -300,7 +306,18 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
   .page-projects {
     grid-template-columns: repeat(
       4,
-      min((100vh - 160px) / 3, (100% - 48px) / 4)
+      min((100vh - 120px) / 3, (100% - 48px) / 4)
+    );
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+@media screen and (min-width: 801px) and (max-width: 1199px) {
+  .page-projects {
+    grid-template-columns: repeat(
+      3,
+      min((100vh - 136px) / 4, (100% - 32px) / 3)
     );
     justify-content: center;
     gap: 16px;
@@ -453,13 +470,19 @@ body.dark-mode .grid__item:hover .grid__img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   opacity: 0;
   transition:
     opacity 0.4s ease,
     backdrop-filter 0.4s ease;
-  padding: 7cqi;
+  padding: 6cqi;
   z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.grid__overlay::-webkit-scrollbar {
+  display: none;
 }
 
 .grid__item:hover .grid__overlay {
@@ -469,8 +492,10 @@ body.dark-mode .grid__item:hover .grid__img {
 
 .grid__title {
   font-family: Georgia, serif;
-  font-size: clamp(0.75rem, 6.8cqi, 1.5rem);
+  font-size: calc(clamp(0.8rem, 6.4cqi, 1.5rem) * var(--fit, 1));
   font-weight: 500;
+  flex-shrink: 0;
+  margin-top: auto;
   margin-bottom: 0.45em;
   color: var(--fg);
   text-align: center;
@@ -488,10 +513,11 @@ body.dark-mode .grid__item:hover .grid__img {
 }
 
 .grid__description {
-  font-size: clamp(0.6rem, 4.6cqi, 1.05rem);
+  font-size: calc(clamp(0.72rem, 4.8cqi, 1.05rem) * var(--fit, 1));
   color: var(--grey2);
   line-height: 1.45;
   text-align: center;
+  flex-shrink: 0;
   margin-bottom: 0.4em;
   max-width: 100%;
   transform: translateY(10px);
@@ -507,7 +533,9 @@ body.dark-mode .grid__item:hover .grid__img {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
+  flex-shrink: 0;
   margin-top: auto;
+  padding-top: 0.5em;
 }
 
 .grid__tag {
@@ -515,7 +543,7 @@ body.dark-mode .grid__item:hover .grid__img {
   color: var(--grey1);
   padding: 0.3em 1em;
   border-radius: 4px;
-  font-size: clamp(0.6rem, 4.6cqi, 0.95rem);
+  font-size: calc(clamp(0.62rem, 3.8cqi, 0.9rem) * var(--fit, 1));
   font-weight: 600;
   border: 1px solid var(--grey0);
   cursor: default;
@@ -544,13 +572,13 @@ body.dark-mode .grid__item:hover .grid__img {
 }
 
 .grid__item--feature .grid__title {
-  font-size: clamp(1rem, 5.3cqi, 2.2rem);
+  font-size: calc(clamp(1rem, 5.3cqi, 2rem) * var(--fit, 1));
 }
 .grid__item--feature .grid__description {
-  font-size: clamp(0.7rem, 3.1cqi, 1.3rem);
+  font-size: calc(clamp(0.78rem, 3.2cqi, 1.2rem) * var(--fit, 1));
 }
 .grid__item--feature .grid__tag {
-  font-size: clamp(0.65rem, 2.7cqi, 1rem);
+  font-size: calc(clamp(0.65rem, 2.5cqi, 0.95rem) * var(--fit, 1));
 }
 
 /* CV page header title override */
@@ -728,6 +756,9 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2em;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 180px);
 }
 
 .page-about ~ .my-header .social-links,
@@ -763,7 +794,7 @@ body:has(.page-about:not(.grid--hidden)) .social-links {
 }
 
 .credits-section {
-  margin-top: 3em;
+  margin-top: auto;
   padding: 2em 0;
   border-top: 1px solid var(--bg3);
   text-align: center;

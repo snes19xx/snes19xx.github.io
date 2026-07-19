@@ -13,16 +13,16 @@ if (localStorage.getItem("theme") === "dark") {
 const portfolioItems = [
   {
     title: "three.lab",
-    desc: "A browser based three.js tool for viewing and making edits to 3D models and textures.",
+    desc: "A zero-install, browser-based 3D workspace built with Three.js for fast model inspection, texture mapping, and geometry editing. It features a lighting and material testing environment that exports straight to React Three Fiber code, alongside an editor tab for mesh simplification, multi-axis cropping, and part isolation.",
     tags: ["JavaScript"],
-    video: "images/three.mp4",
+    video: "images/three.webm",
     poster: "images/three_poster.webp",
     link: "https://snes19xx.github.io/three.lab/",
     featured: true,
   },
   {
     title: "Toronto Urban Heat Island Explorer",
-    desc: "Interactive explorer for Toronto's urban heat islands.",
+    desc: "Interactive explorer for Toronto's urban heat islands, mapping which parts of the city run hottest and how heat varies across neighbourhoods.",
     tags: ["Python", "JavaScript"],
     image: "images/tb_uh.webp",
     link: "https://snes19xx.github.io/Toronto_urbanheatislands",
@@ -35,45 +35,45 @@ const portfolioItems = [
     link: "https://snes19xx.github.io/earth-in-hues/",
   },
   {
+    title: "Atlas of Canadian Wildfires",
+    desc: "An interactive atlas built from the Canadian National Fire Database showcasing the spatial distribution and temporal trends of wildfires across Canada, 1959–2025.",
+    tags: ["Python", "JavaScript"],
+    video: "images/tb_cawf.mp4",
+    poster: "images/5_poster.webp",
+    link: "https://snes19xx.github.io/canadian-wildfires-atlas/",
+  },
+  {
     title: "Improving the 510 Spadina Streetcar",
-    desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route",
+    desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route, alone and in combination.",
     tags: ["Python", "JavaScript"],
     image: "images/510.webp",
     link: "https://snes19xx.github.io/510-SPADINA-MODEL",
   },
   {
     title: "MAPS",
-    desc: "Maps I made on my spare time and as part of my courses at the University of Toronto",
+    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto. A running collection of cartography experiments across tools, styles, and subjects.",
     tags: ["ArcGIS", "Python", "JavaScript"],
     image: "images/maps.webp",
     link: "https://snes19xx.github.io/maps/",
   },
   {
-    title: "Better Geophysics",
-    desc: "Better Geophysics is an interactive project that transforms raw, irregular geophysical survey data into clear, modern, and scientifically accurate visualizations",
-    tags: ["JavaScript"],
-    video: "images/5.mp4",
-    poster: "images/5_poster.webp",
-    link: "https://observablehq.com/d/ec14d0aa25e9f007",
-  },
-  {
     title:
       "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
-    desc: "A study showing GradCafe data is biased and weak at predicting admissions.",
+    desc: "A study showing GradCafe data is biased and weak at predicting admissions. I look at who self-reports and how far the data can be trusted.",
     tags: ["Python", "SQL"],
     image: "images/gradcafe.webp",
     link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
   },
   {
     title: "Re-Zoning the Yard",
-    desc: "An ArcGIS storymaps project showing potential for small scale urban gardening in Toronto",
+    desc: "An ArcGIS StoryMaps project on the potential for small scale urban gardening in Toronto and where it could realistically take root.",
     tags: ["ArcGIS"],
     image: "images/story.webp",
     link: "https://arcg.is/zOG1P",
   },
   {
     title: "Critical Analysis of the Kensington Market HCD Plan",
-    desc: "Research Presentation I gave as part of my fourth year course GGR482 at the University of Toronto",
+    desc: "A critical analysis of the Kensington Market Heritage Conservation District Plan. Presented as part of my fourth year course GGR482 at the University of Toronto.",
     tags: ["presentation"],
     image: "images/thumbnail.webp",
     link: "images/slides/slides.html",
@@ -143,7 +143,29 @@ function generateProjectsGrid() {
   setTimeout(() => animateProjectsGrid(), 100);
 }
 
+function fitOverlayText() {
+  document
+    .querySelectorAll(".page-projects .grid__overlay")
+    .forEach((overlay) => {
+      let fit = 1;
+      overlay.style.setProperty("--fit", fit);
+      while (fit > 0.7 && overlay.scrollHeight > overlay.clientHeight + 1) {
+        fit -= 0.05;
+        overlay.style.setProperty("--fit", fit.toFixed(2));
+      }
+    });
+}
+
+let fitResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(fitResizeTimer);
+  fitResizeTimer = setTimeout(() => {
+    if (currentPage === "page-projects") fitOverlayText();
+  }, 150);
+});
+
 function animateProjectsGrid() {
+  fitOverlayText();
   const items = document.querySelectorAll(".page-projects .grid__item");
   anime.set(items, { opacity: 0, scale: 0.8 });
   anime({
@@ -473,6 +495,7 @@ function animateSocialIcons() {
 document.addEventListener("DOMContentLoaded", () => {
   generateProjectsGrid();
   animateSocialIcons();
+  document.fonts.ready.then(fitOverlayText);
 
   // theme toggle
   document
