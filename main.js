@@ -51,7 +51,7 @@ const portfolioItems = [
   },
   {
     title: "MAPS",
-    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto. A running collection of cartography experiments across tools, styles, and subjects.",
+    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto.",
     tags: ["ArcGIS", "Python", "JavaScript"],
     image: "images/maps.webp",
     link: "https://snes19xx.github.io/maps/",
