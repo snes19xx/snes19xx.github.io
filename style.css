@@ -56,18 +56,21 @@ body.dark-mode {
   src: url("fonts/cmunti.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Computer Modern";
   src: url("fonts/cmunrm.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "CMU Sans Serif";
   src: url("fonts/cmunss.woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 body {
@@ -476,9 +479,12 @@ body.dark-mode .grid__item:hover .grid__img {
     backdrop-filter 0.4s ease;
   padding: 6cqi;
   z-index: 2;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow-y: hidden;
   scrollbar-width: none;
+}
+
+.grid__item:hover .grid__overlay {
+  overflow-y: auto;
 }
 
 .grid__overlay::-webkit-scrollbar {

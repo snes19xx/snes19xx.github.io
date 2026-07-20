@@ -103,7 +103,7 @@ function generateProjectsGrid() {
   const existingItems = grid.querySelectorAll(".grid__item");
   if (existingItems.length > 0) return;
 
-  portfolioItems.forEach((item) => {
+  portfolioItems.forEach((item, index) => {
     const gridItem = document.createElement("div");
     gridItem.className = "grid__item";
     if (item.video) gridItem.classList.add("has-video");
@@ -112,16 +112,17 @@ function generateProjectsGrid() {
     let mediaElement;
     if (item.video) {
       mediaElement = `
-                    <video class="grid__img" autoplay loop muted playsinline preload="metadata" poster="${item.poster}"
-                           onloadeddata="this.classList.add('loaded')">
-                      <source src="${item.video}" type="video/mp4">
-                    </video>`;
+                    <video class="grid__img" loop muted playsinline preload="none" poster="${item.poster}"
+                           data-src="${item.video}"></video>`;
     } else {
+      // First cards are above the fold: lazy-loading them only delays LCP
+      const aboveFold = index < 4;
       mediaElement = `
                     <img src="${item.image}"
                          alt="${item.title}"
                          class="grid__img"
-                         loading="lazy"
+                         loading="${aboveFold ? "eager" : "lazy"}"
+                         ${aboveFold ? 'fetchpriority="high"' : ""}
                          decoding="async"
                          onload="this.classList.add('loaded')">`;
     }
@@ -140,7 +141,45 @@ function generateProjectsGrid() {
     grid.appendChild(gridItem);
   });
 
+  initLazyVideos();
   setTimeout(() => animateProjectsGrid(), 100);
+}
+
+function initLazyVideos() {
+  const videos = document.querySelectorAll("video[data-src]");
+  if (!videos.length) return;
+
+  const loadVideo = (video) => {
+    const src = video.dataset.src;
+    delete video.dataset.src;
+    const source = document.createElement("source");
+    source.src = src;
+    source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
+    video.appendChild(source);
+    video.addEventListener("loadeddata", () => video.classList.add("loaded"), {
+      once: true,
+    });
+    video.load();
+    video.play().catch(() => {});
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    videos.forEach(loadVideo);
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          loadVideo(entry.target);
+        }
+      });
+    },
+    { rootMargin: "300px" },
+  );
+  videos.forEach((video) => observer.observe(video));
 }
 
 function fitOverlayText() {
@@ -415,6 +454,10 @@ function generateGradeViz() {
 function animateAboutPage() {
   const profileImg = document.querySelector(".about-profile-image");
   const intro = document.querySelector(".about-intro");
+  if (profileImg.dataset.src) {
+    profileImg.src = profileImg.dataset.src;
+    delete profileImg.dataset.src;
+  }
   anime.set(profileImg, { opacity: 0, scale: 0.8 });
   anime.set(intro, { opacity: 0, translateY: 20 });
 
