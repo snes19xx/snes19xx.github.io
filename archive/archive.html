@@ -62,32 +62,50 @@
       }
 
       .nav__viz {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
         display: inline-flex;
         align-items: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
         text-decoration: none;
-        color: var(--surface);
-        background-color: var(--text-main);
-        padding: 0.5rem 1rem;
+        color: var(--text-main);
+        background-color: var(--surface);
+        padding: 0.55rem 1.15rem;
+        border: 1px solid var(--line-color);
         border-radius: 4px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 600;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
+        box-shadow: 0 1px 2px rgba(41, 37, 36, 0.04);
         transition:
+          color 0.2s ease,
           background-color 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
           transform 0.2s ease;
       }
       .nav__viz:hover {
-        background-color: var(--text-muted);
+        color: var(--surface);
+        background-color: var(--text-main);
+        border-color: var(--text-main);
+        box-shadow: 0 6px 14px -4px rgba(41, 37, 36, 0.28);
         transform: translateY(-2px);
+      }
+      .nav__viz:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(41, 37, 36, 0.15);
+      }
+      .nav__viz:focus-visible {
+        outline: 2px solid var(--star-fill-bottom);
+        outline-offset: 3px;
       }
 
       header {
         text-align: center;
         margin-bottom: 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
       h1 {
         font-size: 2.2rem;
@@ -190,6 +208,13 @@
       .card:hover {
         transform: translate3d(0, -2px, 0);
         box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.04);
+      }
+
+      /* While anime drives inline transforms, the CSS transition above would
+         re-interpolate every frame and smear the motion. */
+      .is-revealing {
+        transition: none !important;
+        will-change: opacity, transform;
       }
 
       .cover {
@@ -330,10 +355,6 @@
           top: 1.5rem;
           left: 1.5rem;
         }
-        .nav__viz {
-          top: 1.5rem;
-          right: 1.5rem;
-        }
         .grid {
           width: 100%;
         }
@@ -354,17 +375,18 @@
   </head>
   <body>
     <a href="../index.html" class="nav__back">← Back</a>
-    <a href="visualizations.html" class="nav__viz">Data Trends →</a>
 
     <header>
       <h1>Archive</h1>
       <div class="subtitle">
         An ongoing log of books and video games I started in 2021
       </div>
+      <a href="visualizations.html" class="nav__viz">Data Trends</a>
     </header>
 
     <div class="timeline" id="timeline"></div>
 
+    <script src="../anime.min.js"></script>
     <script>
       // --- Stars ---
       let _uid = 0;
@@ -552,9 +574,89 @@
         });
       }
 
+      // --- Animation ---
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const EASE = "cubicBezier(0.16, 1, 0.3, 1)";
+      const DISTANCE = 10;
+
+      function hold(els) {
+        els.forEach((el) => el.classList.add("is-revealing"));
+        anime.set(els, { opacity: 0, translateY: DISTANCE });
+        return els;
+      }
+
+      function reveal(els, { duration, stagger, start = 0 }) {
+        anime({
+          targets: els,
+          opacity: [0, 1],
+          translateY: [DISTANCE, 0],
+          duration,
+          delay: anime.stagger(stagger, { start }),
+          easing: EASE,
+          complete: () => {
+            els.forEach((el) => {
+              el.style.transform = "";
+              el.style.opacity = "";
+              el.classList.remove("is-revealing");
+            });
+          },
+        });
+      }
+
+      function holdTimeline() {
+        document.querySelectorAll(".year-section").forEach((s) => {
+          hold([
+            s.querySelector(".year-label"),
+            ...s.querySelectorAll(".card"),
+          ]);
+        });
+      }
+
+      function animateTimeline() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              observer.unobserve(entry.target);
+              reveal([entry.target.querySelector(".year-label")], {
+                duration: 700,
+                stagger: 0,
+              });
+              reveal([...entry.target.querySelectorAll(".card")], {
+                duration: 800,
+                stagger: 55,
+                start: 90,
+              });
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.01 },
+        );
+        document
+          .querySelectorAll(".year-section")
+          .forEach((s) => observer.observe(s));
+      }
+
+      if (!reduceMotion) {
+        const header = hold([
+          document.querySelector("h1"),
+          document.querySelector(".subtitle"),
+          document.querySelector(".nav__viz"),
+        ]);
+        document.fonts.ready.then(() =>
+          reveal(header, { duration: 900, stagger: 90 }),
+        );
+      }
+
       fetch("data.json")
         .then((r) => r.json())
-        .then(render)
+        .then((data) => {
+          render(data);
+          if (reduceMotion) return;
+          holdTimeline();
+          document.fonts.ready.then(animateTimeline);
+        })
         .catch((err) => {
           console.error("Failed to load archive data:", err);
           document.getElementById("timeline").innerHTML =
