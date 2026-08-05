@@ -713,9 +713,21 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 50%;
+  width: 100%;
   height: 1px;
   background: var(--bg4);
+}
+
+.cv-item--incoming {
+  margin-bottom: 1.25em;
+}
+
+.cv-item--incoming .date em {
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.86em;
+  color: var(--cv-green);
 }
 
 /* Education */
@@ -730,7 +742,7 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
 .academics-viz {
   float: right;
   width: 420px;
-  margin: -2.2em 0 0 2em;
+  margin: 4.4em 0 0 2em;
   clear: right;
 }
 
