@@ -13,7 +13,7 @@ if (localStorage.getItem("theme") === "dark") {
 const portfolioItems = [
   {
     title: "three.lab",
-    desc: "A zero-install, browser-based 3D workspace built with Three.js for fast model inspection, texture mapping, and geometry editing. It features a lighting and material testing environment that exports straight to React Three Fiber code, alongside an editor tab for mesh simplification, multi-axis cropping, and part isolation.",
+    desc: "Browser-based 3D toolkit built with Three.js for model inspection, OpenStreetMap city extraction, and geometry editing. Renders true hidden-line vector art, exports straight to React Three Fiber code, and simplifies, crops, or isolates parts on demand.",
     tags: ["JavaScript"],
     video: "images/three.webm",
     poster: "images/three_poster.webp",

@@ -121,7 +121,7 @@ function buildStars(rating) {
 }
 
 // --- Card rendering from data.json ---
-function buildCard(item) {
+function buildCard(item, index) {
   const card = document.createElement("div");
   card.className = `card ${item.type.toLowerCase()}`;
   card.dataset.rating = item.rating;
@@ -131,8 +131,15 @@ function buildCard(item) {
   const img = document.createElement("img");
   img.src = item.cover;
   img.alt = "";
-  img.loading = "lazy";
+  img.width = 50;
+  img.height = 75;
   img.decoding = "async";
+  if (index < 8) {
+    img.loading = "eager";
+    img.fetchPriority = "high";
+  } else {
+    img.loading = "lazy";
+  }
   cover.appendChild(img);
 
   const info = document.createElement("div");
@@ -164,6 +171,8 @@ function buildCard(item) {
 function render(data) {
   const timeline = document.getElementById("timeline");
   const years = [...new Set(data.map((d) => d.year))].sort((a, b) => b - a);
+  const frag = document.createDocumentFragment();
+  let index = 0;
   years.forEach((year) => {
     const section = document.createElement("div");
     section.className = "year-section";
@@ -174,41 +183,43 @@ function render(data) {
     grid.className = "grid";
     data
       .filter((d) => d.year === year)
-      .forEach((item) => grid.appendChild(buildCard(item)));
+      .forEach((item) => grid.appendChild(buildCard(item, index++)));
     section.append(label, grid);
-    timeline.appendChild(section);
+    frag.appendChild(section);
   });
+  timeline.appendChild(frag);
 }
 
 // --- Animation ---
 const reduceMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
-const EASE = "cubicBezier(0.16, 1, 0.3, 1)";
-const DISTANCE = 10;
+const DURATION = 560;
+const STAGGER = 45;
 
 function hold(els) {
-  els.forEach((el) => el.classList.add("is-revealing"));
-  anime.set(els, { opacity: 0, translateY: DISTANCE });
+  els.forEach((el) => el.classList.add("reveal"));
   return els;
 }
 
-function reveal(els, { duration, stagger, start = 0 }) {
-  anime({
-    targets: els,
-    opacity: [0, 1],
-    translateY: [DISTANCE, 0],
-    duration,
-    delay: anime.stagger(stagger, { start }),
-    easing: EASE,
-    complete: () => {
+function reveal(els, start = 0) {
+  els.forEach((el, i) => {
+    el.style.setProperty("--reveal-delay", `${start + i * STAGGER}ms`);
+  });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      els.forEach((el) => el.classList.add("reveal-in"));
+    });
+  });
+  setTimeout(
+    () => {
       els.forEach((el) => {
-        el.style.transform = "";
-        el.style.opacity = "";
-        el.classList.remove("is-revealing");
+        el.classList.remove("reveal", "reveal-in");
+        el.style.removeProperty("--reveal-delay");
       });
     },
-  });
+    start + (els.length - 1) * STAGGER + DURATION + 120,
+  );
 }
 
 function holdTimeline() {
@@ -223,15 +234,8 @@ function animateTimeline() {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         observer.unobserve(entry.target);
-        reveal([entry.target.querySelector(".year-label")], {
-          duration: 700,
-          stagger: 0,
-        });
-        reveal([...entry.target.querySelectorAll(".card")], {
-          duration: 800,
-          stagger: 55,
-          start: 90,
-        });
+        reveal([entry.target.querySelector(".year-label")]);
+        reveal([...entry.target.querySelectorAll(".card")], 80);
       });
     },
     { rootMargin: "0px 0px -12% 0px", threshold: 0.01 },
@@ -241,15 +245,20 @@ function animateTimeline() {
     .forEach((s) => observer.observe(s));
 }
 
+function fontsSettled() {
+  return Promise.race([
+    document.fonts.ready,
+    new Promise((resolve) => setTimeout(resolve, 1200)),
+  ]);
+}
+
 if (!reduceMotion) {
   const header = hold([
     document.querySelector("h1"),
     document.querySelector(".subtitle"),
     document.querySelector(".nav__viz"),
   ]);
-  document.fonts.ready.then(() =>
-    reveal(header, { duration: 900, stagger: 90 }),
-  );
+  fontsSettled().then(() => reveal(header, 60));
 }
 
 fetch("data.json")
@@ -258,7 +267,7 @@ fetch("data.json")
     render(data);
     if (reduceMotion) return;
     holdTimeline();
-    document.fonts.ready.then(animateTimeline);
+    fontsSettled().then(animateTimeline);
   })
   .catch((err) => {
     console.error("Failed to load archive data:", err);

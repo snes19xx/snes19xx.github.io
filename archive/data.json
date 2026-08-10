@@ -502,5 +502,14 @@
     "status": "Unfinished",
     "rating": 4.5,
     "cover": "tb/33.webp"
+  },
+  {
+    "title": "Soviet Science Fiction",
+    "creator": "Various",
+    "year": 2026,
+    "type": "Book",
+    "status": "Unfinished",
+    "rating": 3.5,
+    "cover": "tb/34.webp"
   }
 ]

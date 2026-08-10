@@ -4,9 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+    />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap");
-
       :root {
         --bg-color: #fdfbf7;
         --surface: #ffffff;
@@ -67,10 +71,10 @@
         gap: 0.5rem;
         margin-top: 1.5rem;
         text-decoration: none;
-        color: #f0fdf9;
+        color: #fdf0f5;
         background-color: #4f7942;
         padding: 0.55rem 1.15rem;
-        border: 1px solid #2a4023;
+        border: none;
         border-radius: 4px;
         font-size: 0.7rem;
         font-weight: 600;
@@ -198,9 +202,7 @@
         display: flex;
         gap: 1rem;
         align-items: flex-start;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        -webkit-font-smoothing: subpixel-antialiased;
+        contain: layout style;
         transition:
           transform 0.2s ease,
           box-shadow 0.2s ease;
@@ -210,11 +212,21 @@
         box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.04);
       }
 
-      /* While anime drives inline transforms, the CSS transition above would
-         re-interpolate every frame and smear the motion. */
-      .is-revealing {
-        transition: none !important;
+      .reveal {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0);
         will-change: opacity, transform;
+      }
+      .reveal.card:hover {
+        transform: translate3d(0, 16px, 0);
+      }
+      .reveal-in,
+      .reveal-in.card:hover {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition:
+          opacity 560ms cubic-bezier(0.33, 1, 0.68, 1) var(--reveal-delay, 0ms),
+          transform 560ms cubic-bezier(0.33, 1, 0.68, 1) var(--reveal-delay, 0ms);
       }
 
       .cover {
@@ -245,8 +257,6 @@
         border-radius: 3px;
         position: relative;
         z-index: 1;
-        backface-visibility: hidden;
-        transform: translateZ(0);
       }
 
       .info {
@@ -386,7 +396,6 @@
 
     <div class="timeline" id="timeline"></div>
 
-    <script src="../anime.min.js"></script>
     <script src="archive.js"></script>
   </body>
 </html>
