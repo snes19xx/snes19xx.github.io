@@ -82,6 +82,40 @@
         position: relative;
       }
 
+      .legend {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        width: 100%;
+        max-width: 1200px;
+        margin: 1.2rem auto 0;
+      }
+      .legend__item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+      .legend__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .legend__dot.finished {
+        background-color: var(--status-finished);
+      }
+      .legend__dot.unfinished {
+        background-color: var(--status-unfinished);
+      }
+      .legend__dot.dropped {
+        background-color: var(--status-dropped);
+      }
+
       button {
         background: var(--surface);
         border: 1px solid var(--line-color);
@@ -280,6 +314,19 @@
 
     <div id="viz-container">
       <div id="tooltip" class="tooltip"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <span class="legend__item"
+        ><span class="legend__dot finished"></span>Finished</span
+      >
+      <span class="legend__item"
+        ><span class="legend__dot unfinished"></span>Unfinished</span
+      >
+      <span class="legend__item"
+        ><span class="legend__dot dropped"></span>Dropped</span
+      >
     </div>
 
     <script src="visualizations.js"></script>

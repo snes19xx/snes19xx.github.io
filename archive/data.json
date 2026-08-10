@@ -473,7 +473,7 @@
     "year": 2021,
     "type": "Game",
     "status": "Finished",
-    "rating": 4,
+    "rating": 3.5,
     "cover": "tb/vii.webp"
   },
   {
@@ -511,5 +511,14 @@
     "status": "Unfinished",
     "rating": 3.5,
     "cover": "tb/34.webp"
+  },
+  {
+    "title": "Final Fantasy VI",
+    "creator": "Square Enix",
+    "year": 2026,
+    "type": "Game",
+    "status": "Unfinished",
+    "rating": 4.5,
+    "cover": "tb/ffvi.webp"
   }
 ]
