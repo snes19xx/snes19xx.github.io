@@ -84,6 +84,9 @@
           d="M12 21.411c-5.197 0-9.411-4.214-9.411-9.411 0-5.197 4.214-9.411 9.411-9.411 5.197 0 9.411 4.214 9.411 9.411 0 5.197-4.214 9.411-9.411 9.411zm0-15.688c-3.465 0-6.277 2.812-6.277 6.277s2.812 6.277 6.277 6.277 6.277-2.812 6.277-6.277-2.812-6.277-6.277-6.277zM12 24C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12z"
         />
       </symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+      </symbol>
     </svg>
     <main>
       <header class="my-header">
@@ -167,39 +170,58 @@
 
         <div class="grid page-cv grid--hidden" data-nosnippet>
           <div class="cv-container">
+            <div class="cv-toolbar">
+              <a class="cv-download" href="assets/cv.pdf" download>
+                <svg><use xlink:href="#icon-download"></use></svg>
+                Download CV
+              </a>
+            </div>
+            <div class="cv-section">
+              <h2>Research Interests</h2>
+              <div class="cv-item">
+                <p>
+                  Statistical and machine learning approaches to urban spatial
+                  data — how cities can be modeled, predicted, and understood
+                  through geographic and earth-systems data at fine spatial
+                  scale. My focus is on problems where the spatial
+                  relationships between observations are fundamental to how
+                  the data should be modeled, explored and interpreted.
+                </p>
+              </div>
+            </div>
+
             <div class="cv-section cv-section--education">
               <h2>Education</h2>
-              <div class="education-row">
-                <div class="academics-viz" id="grade-viz"></div>
-                <div class="education-text">
-                  <div class="cv-item cv-item--incoming">
-                    <h3>University of Toronto, Faculty of Arts and Science</h3>
-                    <p class="position">
-                      Master of Science, Department of Geography and Planning
-                    </p>
-                    <span class="date"><em>Incoming</em> · September 2026</span>
-                  </div>
-                  <div class="cv-item">
-                    <h3>University of Toronto, Faculty of Arts and Science</h3>
-                    <p class="position">
-                      HBSc. in Geography, Earth and Data Sciences
-                    </p>
-                    <span class="date">2026 · with High Distinctions</span>
-                    <ul>
-                      <li>GPA: 3.92/4.0 · Dean's List Scholar</li>
-                      <li>
-                        Nicholas Wemyss Undergraduate Explorers Fund Award
-                      </li>
-                      <li>
-                        John Horner Undergraduate Scholarship in Geography
-                      </li>
-                      <li>
-                        University of Toronto Research Excellence Award (UTEA)
-                      </li>
-                      <li>Undergraduate Computer Applications Award</li>
-                    </ul>
-                  </div>
+              <div class="cv-item cv-item--incoming">
+                <div class="cv-item__head">
+                  <h3>University of Toronto, Faculty of Arts and Science</h3>
+                  <span class="date"><em>Incoming</em> · September 2026</span>
                 </div>
+                <p class="position">
+                  Master of Science, Department of Geography and Planning
+                </p>
+              </div>
+              <div class="cv-item">
+                <div class="cv-item__head">
+                  <h3>University of Toronto, Faculty of Arts and Science</h3>
+                  <span class="date">2026 · with High Distinctions</span>
+                </div>
+                <p class="position">
+                  HBSc. in Geography, Earth and Data Sciences
+                </p>
+                <ul>
+                  <li>GPA: 3.92/4.0 · Dean's List Scholar</li>
+                  <li>
+                    Nicholas Wemyss Undergraduate Explorers Fund Award
+                  </li>
+                  <li>
+                    John Horner Undergraduate Scholarship in Geography
+                  </li>
+                  <li>
+                    University of Toronto Research Excellence Award (UTEA)
+                  </li>
+                  <li>Undergraduate Computer Applications Award</li>
+                </ul>
               </div>
             </div>
 
@@ -207,9 +229,11 @@
               <h2>Experience</h2>
 
               <div class="cv-item">
-                <h3>City of Toronto, Planning Research and Analytics</h3>
+                <div class="cv-item__head">
+                  <h3>City of Toronto, Planning Research and Analytics</h3>
+                  <span class="date">May 2026 - Present</span>
+                </div>
                 <p class="position">Research Assistant</p>
-                <span class="date">May 2026 - Present</span>
                 <ul>
                   <li>
                     Conducting field data collection and verifing the accuracy
@@ -231,11 +255,13 @@
               </div>
 
               <div class="cv-item">
-                <h3>
-                  University of Toronto, Department of Geography &amp; Planning
-                </h3>
+                <div class="cv-item__head">
+                  <h3>
+                    University of Toronto, Department of Geography &amp; Planning
+                  </h3>
+                  <span class="date">January 2026 – Present</span>
+                </div>
                 <p class="position">Research Assistant</p>
-                <span class="date">January 2026 – Present</span>
                 <ul>
                   <li>
                     Supporting the primary research mandate through exploratory
@@ -255,33 +281,36 @@
                   </li>
                 </ul>
               </div>
-            </div>
-            <div class="cv-item">
-              <h3>Web Developer</h3>
-              <p class="position">Independent Contractor</p>
-              <span class="date">2019 – Present</span>
-              <ul>
-                <li>
-                  Architected and deployed 15+ full-stack web applications using
-                  MERN/MEAN stacks (MongoDB, Express, React/Angular, Node.js)
-                  for small-to-medium enterprises.
-                </li>
-                <li>
-                  Optimized front-end performance by migrating legacy CSS to
-                  scss and implementing Alpine.js for lightweight state
-                  management, reducing bundle sizes significantly and improving
-                  Lighthouse scores.
-                </li>
-                <li>
-                  Integrated secure payment gateways (Stripe, PayPal) and
-                  third-party REST APIs.
-                </li>
-                <li>
-                  Managed end-to-end project lifecycles, negotiating contract
-                  scopes, setting technical roadmaps, and delivering 100% of
-                  client projects on or ahead of schedule.
-                </li>
-              </ul>
+
+              <div class="cv-item">
+                <div class="cv-item__head">
+                  <h3>Web Developer</h3>
+                  <span class="date">2019 – Present</span>
+                </div>
+                <p class="position">Independent Contractor</p>
+                <ul>
+                  <li>
+                    Architected and deployed 15+ full-stack web applications using
+                    MERN/MEAN stacks (MongoDB, Express, React/Angular, Node.js)
+                    for small-to-medium enterprises.
+                  </li>
+                  <li>
+                    Optimized front-end performance by migrating legacy CSS to
+                    scss and implementing Alpine.js for lightweight state
+                    management, reducing bundle sizes significantly and improving
+                    Lighthouse scores.
+                  </li>
+                  <li>
+                    Integrated secure payment gateways (Stripe, PayPal) and
+                    third-party REST APIs.
+                  </li>
+                  <li>
+                    Managed end-to-end project lifecycles, negotiating contract
+                    scopes, setting technical roadmaps, and delivering 100% of
+                    client projects on or ahead of schedule.
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div class="cv-section">
@@ -327,6 +356,8 @@
               data-src="images/about.webp"
               alt="Sandesh Bhandari"
               class="about-profile-image"
+              width="800"
+              height="600"
             />
             <p class="about-intro">
               I map cities, analyze earth systems, and write code to automate

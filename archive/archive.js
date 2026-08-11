@@ -129,7 +129,6 @@ function buildCard(item, index) {
   const cover = document.createElement("div");
   cover.className = "cover";
   const img = document.createElement("img");
-  img.src = item.cover;
   img.alt = "";
   img.width = 50;
   img.height = 75;
@@ -140,6 +139,10 @@ function buildCard(item, index) {
   } else {
     img.loading = "lazy";
   }
+  img.addEventListener("load", () => img.classList.add("loaded"), {
+    once: true,
+  });
+  img.src = item.cover;
   cover.appendChild(img);
 
   const info = document.createElement("div");

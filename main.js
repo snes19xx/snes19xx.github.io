@@ -81,21 +81,6 @@ const portfolioItems = [
 ];
 
 let currentPage = "page-projects";
-let gradeVizGenerated = false;
-let d3Promise = null;
-
-function loadD3() {
-  if (!d3Promise) {
-    d3Promise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js";
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-  return d3Promise;
-}
 
 function generateProjectsGrid() {
   const grid = document.querySelector(".page-projects");
@@ -227,247 +212,33 @@ function animateCVSections() {
     duration: 200,
     delay: anime.stagger(100),
     easing: "easeOutQuad",
-    complete: () => {
-      if (!gradeVizGenerated) {
-        gradeVizGenerated = true;
-        loadD3().then(generateGradeViz);
-      }
-    },
   });
-}
-
-function generateGradeViz() {
-  const grades = [
-    94, 90, 77, 95, 88, 93, 83, 96, 92, 76, 87, 85, 90, 86, 92, 95, 87, 86, 87,
-    90, 94, 82, 88, 82, 86, 92, 86, 90, 94, 81, 85, 95, 80, 90, 85, 88, 98, 80,
-    95, 88,
-  ];
-
-  const container = document.getElementById("grade-viz");
-
-  const tooltipDiv = document.createElement("div");
-  tooltipDiv.id = "grade-viz-tooltip";
-  tooltipDiv.style.cssText =
-    "position:absolute;background:var(--bg0);border:1px solid var(--bg3);" +
-    "padding:4px 8px;border-radius:4px;font-size:11px;font-family:\'JetBrains Mono\',monospace;" +
-    "color:var(--fg);pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:10;";
-  container.style.position = "relative";
-  container.appendChild(tooltipDiv);
-
-  const W = 400;
-  const H = 240;
-  const m = { top: 36, right: 20, bottom: 12, left: 30 };
-  const iW = W - m.left - m.right;
-  const iH = H - m.top - m.bottom;
-
-  const yBaseline = 70;
-  const yMax = 100;
-
-  function getGradeColor(grade) {
-    if (grade >= 90) return "#3a5a30";
-    if (grade >= 85) return "#2b6cb0";
-    if (grade >= 82) return "#d69e2e";
-    return "#9b2c2c";
-  }
-
-  const svg = d3
-    .select("#grade-viz")
-    .append("svg")
-    .attr("width", W)
-    .attr("height", H)
-    .attr("viewBox", [0, 0, W, H])
-    .style("max-width", "100%")
-    .style("height", "auto")
-    .style("font-family", '"EB Garamond", Georgia, serif');
-
-  const defs = svg.append("defs");
-  const gradient = defs
-    .append("linearGradient")
-    .attr("id", "area-gradient")
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "0%")
-    .attr("y2", "100%");
-  gradient
-    .append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#9BAD8C")
-    .attr("stop-opacity", 0.3);
-  gradient
-    .append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "#879cae")
-    .attr("stop-opacity", 0);
-
-  svg
-    .append("text")
-    .attr("x", W / 2)
-    .attr("y", 30)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "12px")
-    .attr("letter-spacing", "0.5px")
-    .attr("fill", "var(--fg)")
-    .text("Undergraduate Grades");
-
-  const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
-
-  const xScale = d3
-    .scalePoint()
-    .domain(grades.map((_, i) => i + 1))
-    .range([0, iW])
-    .padding(0.2);
-
-  const yScale = d3
-    .scaleLinear()
-    .domain([yBaseline, yMax])
-    .nice()
-    .range([iH, 0]);
-
-  yScale.ticks(4).forEach((t) => {
-    if (t < yBaseline) return;
-    g.append("line")
-      .attr("x1", 0)
-      .attr("x2", iW)
-      .attr("y1", yScale(t))
-      .attr("y2", yScale(t))
-      .attr("stroke", "var(--bg3)")
-      .attr("stroke-width", 0.5);
-    g.append("text")
-      .attr("x", -6)
-      .attr("y", yScale(t))
-      .attr("text-anchor", "end")
-      .attr("dominant-baseline", "middle")
-      .attr("font-size", "9px")
-      .attr("fill", "var(--grey2)")
-      .attr("font-family", "system-ui, sans-serif")
-      .text(t);
-  });
-
-  const areaGen = d3
-    .area()
-    .x((_, i) => xScale(i + 1))
-    .y0(iH)
-    .y1((d) => yScale(d))
-    .curve(d3.curveMonotoneX);
-
-  g.append("path")
-    .datum(grades)
-    .attr("fill", "url(#area-gradient)")
-    .attr("opacity", 0)
-    .attr("d", areaGen)
-    .transition()
-    .duration(2000)
-    .attr("opacity", 1);
-
-  const lineGen = d3
-    .line()
-    .x((_, i) => xScale(i + 1))
-    .y((d) => yScale(d))
-    .curve(d3.curveMonotoneX);
-
-  const path = g
-    .append("path")
-    .datum(grades)
-    .attr("fill", "none")
-    .attr("stroke", "#879cae")
-    .attr("stroke-width", 1)
-    .attr("stroke-opacity", 0.8)
-    .attr("d", lineGen);
-
-  const totalLength = path.node().getTotalLength();
-  path
-    .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
-    .attr("stroke-dashoffset", totalLength)
-    .transition()
-    .duration(2000)
-    .ease(d3.easeLinear)
-    .attr("stroke-dashoffset", 0);
-
-  const tooltip = d3.select("#grade-viz-tooltip");
-
-  g.selectAll(".dot")
-    .data(grades)
-    .enter()
-    .append("circle")
-    .attr("class", "dot")
-    .attr("cx", (_, i) => xScale(i + 1))
-    .attr("cy", (d) => yScale(d))
-    .attr("r", 2.5)
-    .attr("fill", (d) => getGradeColor(d))
-    .attr("stroke", "var(--bg0)")
-    .attr("stroke-width", 0.5)
-    .attr("opacity", 0)
-    .attr("pointer-events", "none")
-    .transition()
-    .delay((_, i) => (i / (grades.length - 1)) * 2000)
-    .duration(300)
-    .attr("opacity", 1);
-
-  const points = grades.map((d, i) => [xScale(i + 1), yScale(d)]);
-  const delaunay = d3.Delaunay.from(points);
-  const voronoi = delaunay.voronoi([0, 0, iW, iH]);
-
-  g.selectAll(".voronoi-cell")
-    .data(grades)
-    .enter()
-    .append("path")
-    .attr("class", "voronoi-cell")
-    .attr("d", (_, i) => voronoi.renderCell(i))
-    .attr("fill", "transparent")
-    .attr("cursor", "pointer")
-    .on("mouseover", function (event, d) {
-      const i = g.selectAll(".voronoi-cell").nodes().indexOf(this);
-      d3.selectAll(".dot")
-        .filter((_, j) => j === i)
-        .attr("r", 5)
-        .attr("stroke", "var(--fg)");
-      const containerRect = document
-        .getElementById("grade-viz")
-        .getBoundingClientRect();
-      let leftPos = event.pageX - containerRect.left + 10;
-      let topPos = event.pageY - containerRect.top - 30;
-      if (leftPos > W - 80) leftPos = event.pageX - containerRect.left - 60;
-      tooltip.transition().duration(100).style("opacity", 1);
-      tooltip
-        .html(`<strong style="color:${getGradeColor(d)}">${d}</strong>`)
-        .style("left", leftPos + "px")
-        .style("top", topPos + "px");
-    })
-    .on("mouseout", function () {
-      const i = g.selectAll(".voronoi-cell").nodes().indexOf(this);
-      d3.selectAll(".dot")
-        .filter((_, j) => j === i)
-        .attr("r", 2.5)
-        .attr("stroke", "var(--bg0)");
-      tooltip.transition().duration(200).style("opacity", 0);
-    });
-
-  g.append("line")
-    .attr("x1", 0)
-    .attr("x2", iW)
-    .attr("y1", iH)
-    .attr("y2", iH)
-    .attr("stroke", "var(--bg3)")
-    .attr("stroke-width", 1);
 }
 
 function animateAboutPage() {
   const profileImg = document.querySelector(".about-profile-image");
   const intro = document.querySelector(".about-intro");
-  if (profileImg.dataset.src) {
-    profileImg.src = profileImg.dataset.src;
-    delete profileImg.dataset.src;
-  }
   anime.set(profileImg, { opacity: 0, scale: 0.8 });
   anime.set(intro, { opacity: 0, translateY: 20 });
 
-  anime({
-    targets: profileImg,
-    opacity: [0, 1],
-    scale: [0.8, 1],
-    duration: 800,
-    easing: "easeOutQuad",
-  });
+  const runProfileAnim = () =>
+    anime({
+      targets: profileImg,
+      opacity: [0, 1],
+      scale: [0.8, 1],
+      duration: 800,
+      easing: "easeOutQuad",
+    });
+
+  if (profileImg.dataset.src) {
+    profileImg.addEventListener("load", runProfileAnim, { once: true });
+    profileImg.src = profileImg.dataset.src;
+    delete profileImg.dataset.src;
+  } else if (profileImg.complete) {
+    runProfileAnim();
+  } else {
+    profileImg.addEventListener("load", runProfileAnim, { once: true });
+  }
 
   anime({
     targets: intro,

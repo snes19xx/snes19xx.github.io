@@ -609,6 +609,51 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   line-height: 1.35;
 }
 
+.cv-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.2em;
+}
+
+.cv-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--bg4);
+  border-radius: 4px;
+  background: var(--bg0);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 0.85em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cv-download svg {
+  width: 15px;
+  height: 15px;
+  fill: var(--fg);
+  transition: fill 0.2s ease;
+}
+
+.cv-download:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 12%, var(--bg0));
+  transform: translateY(-2px);
+}
+
+.cv-download:hover svg {
+  fill: var(--green);
+}
+
 .cv-section {
   margin-bottom: 1.6em;
   opacity: 0;
@@ -631,19 +676,26 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   margin-bottom: 1.1em;
 }
 
+.cv-item__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+}
+
 .cv-item h3 {
   font-family: "EB Garamond", Georgia, serif;
   font-size: 1.05em;
   font-weight: 700;
   color: var(--fg);
-  margin: 0 0 0.1em 0;
+  margin: 0;
 }
 
 .cv-item .position {
   font-family: "CMUnti", Georgia, serif;
   font-size: 0.97em;
   color: var(--cv-green);
-  margin: 0 0 0.1em 0;
+  margin: 0 0 0.35em 0;
   font-style: regular;
 }
 
@@ -651,8 +703,8 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   font-family: "EB Garamond", Georgia, serif;
   color: var(--cv-blue);
   font-size: 0.93em;
-  margin-bottom: 0.4em;
-  display: block;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .cv-item p,
@@ -725,44 +777,8 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
 .cv-item--incoming .date em {
   font-style: normal;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   font-size: 0.86em;
   color: var(--cv-green);
-}
-
-/* Education */
-.education-row {
-  display: block;
-}
-
-.education-text {
-  display: block;
-}
-
-.academics-viz {
-  float: right;
-  width: 420px;
-  margin: 4.4em 0 0 2em;
-  clear: right;
-}
-
-/* Hide the grade viz on small/phone screens */
-@media screen and (max-width: 800px) {
-  .academics-viz {
-    display: none;
-  }
-}
-
-.academics-viz svg {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.education-row::after {
-  content: "";
-  display: table;
-  clear: both;
 }
 
 .cv-section--education {
@@ -867,6 +883,21 @@ body:has(.page-about:not(.grid--hidden)) .social-links {
   .about-profile-image {
     width: 100%;
     max-width: 300px;
+  }
+  .cv-container {
+    padding: 1.2em 1em 3em 1em;
+  }
+  .cv-toolbar {
+    justify-content: center;
+  }
+  .cv-download {
+    width: 100%;
+    justify-content: center;
+  }
+  .cv-item__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15em;
   }
 }
 
