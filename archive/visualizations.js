@@ -31,7 +31,7 @@ function init(RAW) {
 
   // Radii shrink on phones
   let BUBBLE_R, SCATTER_R;
-  const isNarrow = () => W < 700;
+  const isNarrow = () => W < 780;
   function setRadii() {
     const s = Math.min(1, W / 900);
     BUBBLE_R = Math.max(6.5, +(13 * s).toFixed(1));
@@ -349,24 +349,20 @@ function init(RAW) {
     });
 
     const positions = {};
-    const r = narrow ? 6 : 10;
-
-    // Panel calculations
-    const leftPaneW = narrow ? W : W * 0.45;
-    const rightPaneX = narrow ? 0 : W * 0.45;
-
-    // Left pane Grid
-    const cx = leftPaneW / 2;
-    const cy = narrow ? 160 : H / 2;
 
     const cols = Math.ceil(Math.sqrt(sortedData.length));
     const rows = Math.ceil(sortedData.length / cols);
-    const step = narrow ? 20 : 34;
+
+    const leftPaneW = narrow ? W : W * 0.45;
+    const step = narrow
+      ? Math.max(12, Math.min(26, (W - 40) / cols))
+      : Math.min(34, (leftPaneW - 48) / cols);
+    const r = narrow ? Math.max(4, step * 0.3) : Math.max(6, step * 0.3);
 
     const gridW = (cols - 1) * step;
     const gridH = (rows - 1) * step;
-    const startX = cx - gridW / 2;
-    const startY = cy - gridH / 2;
+    const startX = leftPaneW / 2 - gridW / 2;
+    const startY = narrow ? 24 + r : H / 2 - gridH / 2;
 
     sortedData.forEach((d, i) => {
       positions[d._id] = {
@@ -375,44 +371,44 @@ function init(RAW) {
       };
     });
 
-    // Right pane
-    let corners;
+    const valPx = narrow ? Math.min(46, W * 0.13) : 68;
+    const unitPx = narrow ? 10 : 12;
+
+    let corners, height;
     if (narrow) {
-      const startTextY = cy + gridH / 2 + 70;
-      const col1 = 30;
-      const col2 = W / 2 + 10;
+      const gap = 14;
+      const colW = (W - gap) / 2;
+      const rowGap = valPx * 2.2;
+      const top = startY + gridH + valPx + 40;
       corners = [
-        { x: col1, y: startTextY, align: "start" },
-        { x: col2, y: startTextY, align: "start" },
-        { x: col1, y: startTextY + 140, align: "start" },
-        { x: col2, y: startTextY + 140, align: "start" },
+        { x: 0, y: top, w: colW },
+        { x: colW + gap, y: top, w: colW },
+        { x: 0, y: top + rowGap, w: colW },
+        { x: colW + gap, y: top + rowGap, w: colW },
       ];
+      height = top + rowGap + valPx * 0.7 + 20;
     } else {
-      const startTextY = cy - 70;
-      const startTextY2 = cy + 130;
-      const col1 = rightPaneX + 60;
-      const col2 = W - 180;
+      const paneX = W * 0.45;
+      const gap = 28;
+      const colW = (W - paneX - 48 - gap - 24) / 2;
+      const col1 = paneX + 48;
+      const col2 = col1 + colW + gap;
+      const top = H / 2 - 70;
       corners = [
-        { x: col1, y: startTextY, align: "start" },
-        { x: col2, y: startTextY, align: "end" },
-        { x: col1, y: startTextY2, align: "start" },
-        { x: col2, y: startTextY2, align: "end" },
+        { x: col1, y: top, w: colW },
+        { x: col2, y: top, w: colW },
+        { x: col1, y: top + 200, w: colW },
+        { x: col2, y: top + 200, w: colW },
       ];
+      height = H;
     }
 
-    return {
-      positions,
-      r,
-      corners,
-      narrow,
-      leftPaneW,
-      height: narrow ? H + 200 : H,
-    };
+    return { positions, r, corners, narrow, leftPaneW, valPx, unitPx, height };
   }
 
   function drawSummary() {
     const layout = summaryLayout();
-    const { corners, narrow, leftPaneW } = layout;
+    const { corners, narrow, leftPaneW, valPx, unitPx } = layout;
 
     const count = (fn) => data.filter(fn).length;
     const finished = count((d) => d.status === "Finished");
@@ -435,72 +431,56 @@ function init(RAW) {
     const valStyle = {
       "font-family": '"Inter", sans-serif',
       "font-weight": "200",
-      "font-size": narrow ? "3rem" : "4.5rem",
+      "font-size": valPx + "px",
       fill: "var(--text-main)",
       "letter-spacing": "-0.04em",
     };
     const unitStyle = {
       "font-family": '"Inter", sans-serif',
       "font-weight": "600",
-      "font-size": narrow ? "0.65rem" : "0.75rem",
+      "font-size": unitPx + "px",
       fill: "var(--text-muted)",
       "letter-spacing": "0.15em",
       "text-transform": "uppercase",
     };
 
-    const drawText = (val, unit, x, y, align, delay) => {
+    const fitText = (sel, maxW, px) => {
+      const len = sel.node().getComputedTextLength();
+      if (len > maxW && len > 0) sel.style("font-size", (px * maxW) / len + "px");
+    };
+
+    const drawText = (val, unit, cell, delay) => {
       const t = g
         .append("text")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("text-anchor", align);
+        .attr("x", cell.x)
+        .attr("y", cell.y)
+        .attr("text-anchor", "start");
       Object.entries(valStyle).forEach(([k, v]) => t.style(k, v));
       t.text(val);
+      fitText(t, cell.w, valPx);
       fade(t, delay);
 
       const u = g
         .append("text")
-        .attr("x", x)
-        .attr("y", y + (narrow ? 22 : 32))
-        .attr("text-anchor", align);
+        .attr("x", cell.x)
+        .attr("y", cell.y + valPx * 0.45)
+        .attr("text-anchor", "start");
       Object.entries(unitStyle).forEach(([k, v]) => u.style(k, v));
       u.text(unit);
+      fitText(u, cell.w, unitPx);
       fade(u, delay + 150);
     };
 
     // 4 big stats
-    drawText(
-      data.length,
-      "Total Entries",
-      corners[0].x,
-      corners[0].y,
-      corners[0].align,
-      100,
-    );
+    drawText(data.length, "Total Entries", corners[0], 100);
     drawText(
       Math.round((finished / data.length) * 100) + "%",
       "Finished",
-      corners[1].x,
-      corners[1].y,
-      corners[1].align,
+      corners[1],
       200,
     );
-    drawText(
-      avg,
-      "Avg Rating",
-      corners[2].x,
-      corners[2].y,
-      corners[2].align,
-      300,
-    );
-    drawText(
-      `${books} / ${games}`,
-      "Books / Games",
-      corners[3].x,
-      corners[3].y,
-      corners[3].align,
-      400,
-    );
+    drawText(avg, "Avg Rating", corners[2], 300);
+    drawText(`${books} / ${games}`, "Books / Games", corners[3], 400);
 
     if (!narrow) {
       const line = axisLayer
