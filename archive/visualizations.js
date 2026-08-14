@@ -165,7 +165,7 @@ function init(RAW) {
       nodeEls.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
     });
 
-  // --- Scatter: precise beeswarm positions ---
+  // --- Scatter---
   function scatterPositions() {
     const step = SCATTER_R * 2 + 3;
 
@@ -177,19 +177,12 @@ function init(RAW) {
       buckets[key].push(d);
     });
 
-    // Max half-spread for a given year column (how far dots fan out from center)
     function maxHalfSpread(yr) {
       const groups = Object.values(buckets).filter((g) => g[0].year === yr);
       return groups.length
         ? Math.max(...groups.map((g) => ((g.length - 1) / 2) * step))
         : 0;
     }
-
-    // Correct geometry:
-    // Left label sits at fixed x = LABEL_X, text-anchor end.
-    // 2021 column center = pL. Leftmost dot LEFT edge = pL - hs2021 - SCATTER_R.
-    // We need: LABEL_X < pL - hs2021 - SCATTER_R
-    // => pL = LABEL_X + hs2021 + SCATTER_R + gap
     const LABEL_X = 38;
     const gap = 10;
     const LEGEND_W = isNarrow() ? 0 : 108; // width of legend block
@@ -201,10 +194,6 @@ function init(RAW) {
       .sort((a, b) => a - b)
       .slice(-1)[0];
     const pL = LABEL_X + maxHalfSpread(firstYr) + SCATTER_R + gap;
-    // 2025 column center = W - pR. Rightmost dot RIGHT edge = W - pR + hs2025 + SCATTER_R.
-    // Legend starts at W - pR + hs2025 + SCATTER_R + gap.
-    // pR must ensure legend fits: W - pR + hs2025 + SCATTER_R + gap + LEGEND_W <= W
-    // => pR >= hs2025 + SCATTER_R + gap + LEGEND_W
     const hs_last = maxHalfSpread(lastYr);
     const pR = hs_last + SCATTER_R + gap + LEGEND_W;
     const pT = 65;
@@ -311,7 +300,7 @@ function init(RAW) {
     return { positions, rows: rowMeta, r, xStart };
   }
 
-  // --- Distribution: rating histogram built from stacked dots ---
+  // --- Distribution ---
   function distributionPositions() {
     const r = SCATTER_R;
     const pL = 40,
@@ -346,285 +335,185 @@ function init(RAW) {
     return { positions, xS, bins, baseline, r, pL };
   }
 
-  // Summary waffle plus panels
+  // --- Summary ---
+  const SUM_ORDER = ["Finished", "Unfinished", "Dropped"];
+  const MEDIUM_COLORS = { Book: "#3d5a80", Game: "#9c6644" };
+
   function summaryLayout() {
     const narrow = isNarrow();
-    const M = 6;
-    const gutter = 56;
-    const cols = narrow ? 10 : 7;
-    const rows = Math.ceil(data.length / cols);
-    const headY = narrow ? 40 : 46;
 
-    let step, r, gridY, capY, colX, colW, colY, colPitch, height, dividerX;
+    // Sort data for color clustering in the grid
+    const sortedData = [...data].sort((a, b) => {
+      if (a.status !== b.status) return a.status.localeCompare(b.status);
+      return b.rating - a.rating;
+    });
 
-    if (narrow) {
-      step = (W - 2 * M) / cols;
-      r = Math.max(3.5, Math.min(step * 0.34, 16));
-      gridY = headY + 66 + r;
-      capY = gridY + (rows - 1) * step + r + 26;
-      colX = M + 10;
-      colW = W - colX - M - 10;
-      colY = capY + 58;
-      colPitch = 132;
-      height = colY + 2 * colPitch + 132;
-      dividerX = 0;
-    } else {
-      colY = headY;
-      colPitch = (H - colY - 40) / 3;
-      capY = colY + 2 * colPitch + 112;
-      const gridTop = headY + 62;
-      step = (capY - 26 - gridTop) / (rows - 1 + 0.68);
-      r = Math.min(step * 0.34, 18);
-      gridY = gridTop + r;
-      const leftW = (cols - 1) * step + 2 * r;
-      dividerX = M + leftW + gutter / 2;
-      colX = M + leftW + gutter;
-      colW = Math.min(W - colX - M, 760);
-      height = H;
-    }
-
-    const gridX = M + r;
-    const sorted = ["Finished", "Unfinished", "Dropped"].flatMap((s) =>
-      data.filter((d) => d.status === s),
-    );
     const positions = {};
-    sorted.forEach((d, i) => {
+    const r = narrow ? 6 : 10;
+
+    // Panel calculations
+    const leftPaneW = narrow ? W : W * 0.45;
+    const rightPaneX = narrow ? 0 : W * 0.45;
+
+    // Left pane Grid
+    const cx = leftPaneW / 2;
+    const cy = narrow ? 160 : H / 2;
+
+    const cols = Math.ceil(Math.sqrt(sortedData.length));
+    const rows = Math.ceil(sortedData.length / cols);
+    const step = narrow ? 20 : 34;
+
+    const gridW = (cols - 1) * step;
+    const gridH = (rows - 1) * step;
+    const startX = cx - gridW / 2;
+    const startY = cy - gridH / 2;
+
+    sortedData.forEach((d, i) => {
       positions[d._id] = {
-        x: gridX + (i % cols) * step,
-        y: gridY + Math.floor(i / cols) * step,
+        x: startX + (i % cols) * step,
+        y: startY + Math.floor(i / cols) * step,
       };
     });
+
+    // Right pane
+    let corners;
+    if (narrow) {
+      const startTextY = cy + gridH / 2 + 70;
+      const col1 = 30;
+      const col2 = W / 2 + 10;
+      corners = [
+        { x: col1, y: startTextY, align: "start" },
+        { x: col2, y: startTextY, align: "start" },
+        { x: col1, y: startTextY + 140, align: "start" },
+        { x: col2, y: startTextY + 140, align: "start" },
+      ];
+    } else {
+      const startTextY = cy - 70;
+      const startTextY2 = cy + 130;
+      const col1 = rightPaneX + 60;
+      const col2 = W - 180;
+      corners = [
+        { x: col1, y: startTextY, align: "start" },
+        { x: col2, y: startTextY, align: "end" },
+        { x: col1, y: startTextY2, align: "start" },
+        { x: col2, y: startTextY2, align: "end" },
+      ];
+    }
 
     return {
       positions,
       r,
-      gridX,
-      headY,
-      capY,
-      colX,
-      colW,
-      colY,
-      colPitch,
-      height,
+      corners,
       narrow,
-      dividerX,
+      leftPaneW,
+      height: narrow ? H + 200 : H,
     };
   }
 
   function drawSummary() {
-    const {
-      r,
-      gridX,
-      headY,
-      capY,
-      colX,
-      colW,
-      colY,
-      colPitch,
-      height,
-      narrow,
-      dividerX,
-    } = summaryLayout();
+    const layout = summaryLayout();
+    const { corners, narrow, leftPaneW } = layout;
 
     const count = (fn) => data.filter(fn).length;
     const finished = count((d) => d.status === "Finished");
     const books = count((d) => d.type === "Book");
     const games = data.length - books;
+    const avg = d3.mean(data, (d) => d.rating).toFixed(1);
 
     const fade = (g, delay) =>
       g
         .attr("opacity", 0)
         .transition()
-        .duration(500)
+        .duration(1200)
         .delay(delay)
+        .ease(d3.easeCubicOut)
         .attr("opacity", 1);
 
-    if (!narrow) {
-      fade(
-        axisLayer
-          .append("line")
-          .attr("x1", dividerX)
-          .attr("x2", dividerX)
-          .attr("y1", 26)
-          .attr("y2", height - 26)
-          .attr("stroke", "var(--line-color)")
-          .attr("stroke-width", 1),
-        350,
-      );
-    }
+    const g = axisLayer.append("g");
 
-    const head = axisLayer.append("g");
-    head
-      .append("text")
-      .attr("class", "axis-label")
-      .attr("x", gridX - r)
-      .attr("y", headY)
-      .text("in the archive");
-    head
-      .append("text")
-      .attr("class", "stat-value")
-      .attr("x", gridX - r)
-      .attr("y", headY + 32)
-      .text(`${data.length} entries`);
-    head
-      .append("text")
-      .attr("class", "stat-note")
-      .attr("x", gridX - r)
-      .attr("y", capY)
-      .text(`${Math.round((finished / data.length) * 100)}% completion rate`);
-    fade(head, 100);
-
-    const panel = (i, label, value) => {
-      const y = colY + i * colPitch;
-      const g = axisLayer.append("g");
-      g.append("text")
-        .attr("class", "axis-label")
-        .attr("x", colX)
-        .attr("y", y)
-        .text(label);
-      g.append("text")
-        .attr("class", "stat-value")
-        .attr("x", colX)
-        .attr("y", y + 30)
-        .text(value);
-      fade(g, 250 + i * 130);
-      return { g, y };
+    // Very large text
+    const valStyle = {
+      "font-family": '"Inter", sans-serif',
+      "font-weight": "200",
+      "font-size": narrow ? "3rem" : "4.5rem",
+      fill: "var(--text-main)",
+      "letter-spacing": "-0.04em",
+    };
+    const unitStyle = {
+      "font-family": '"Inter", sans-serif',
+      "font-weight": "600",
+      "font-size": narrow ? "0.65rem" : "0.75rem",
+      fill: "var(--text-muted)",
+      "letter-spacing": "0.15em",
+      "text-transform": "uppercase",
     };
 
-    const split = panel(0, "books vs. games", `${books} / ${games}`);
-    const barY = split.y + 50;
-    const bookW = ((colW - 3) * books) / data.length;
-    [
-      [colX, bookW, 0.8],
-      [colX + bookW + 3, colW - bookW - 3, 0.18],
-    ].forEach(([x, w, op]) => {
-      split.g
-        .append("rect")
-        .attr("x", x)
-        .attr("y", barY)
-        .attr("width", 0)
-        .attr("height", 5)
-        .attr("fill", "var(--text-main)")
-        .attr("fill-opacity", op)
-        .transition()
-        .duration(700)
-        .delay(450)
-        .ease(d3.easeCubicOut)
-        .attr("width", Math.max(0, w));
-    });
-    split.g
-      .append("text")
-      .attr("class", "stat-note")
-      .attr("x", colX)
-      .attr("y", barY + 20)
-      .text("books");
-    split.g
-      .append("text")
-      .attr("class", "stat-note")
-      .attr("x", colX + colW)
-      .attr("y", barY + 20)
-      .attr("text-anchor", "end")
-      .text("games");
-
-    const avg = d3.mean(data, (d) => d.rating);
-    const rating = panel(1, "average rating", avg.toFixed(1) + "★");
-    const rY = rating.y + 62;
-    const rS = d3
-      .scaleLinear()
-      .domain([2, 5])
-      .range([colX, colX + colW]);
-    rating.g
-      .append("line")
-      .attr("x1", colX)
-      .attr("x2", colX + colW)
-      .attr("y1", rY)
-      .attr("y2", rY)
-      .attr("stroke", "var(--line-color)")
-      .attr("stroke-width", 1);
-    [
-      [2, "start"],
-      [5, "end"],
-    ].forEach(([t, anchor]) => {
-      rating.g
+    const drawText = (val, unit, x, y, align, delay) => {
+      const t = g
         .append("text")
-        .attr("class", "stat-note")
-        .attr("x", rS(t))
-        .attr("y", rY + 18)
-        .attr("text-anchor", anchor)
-        .text(t + ".0");
-    });
-    rating.g
-      .append("line")
-      .attr("x1", rS(avg))
-      .attr("x2", rS(avg))
-      .attr("y1", rY - 8)
-      .attr("y2", rY + 8)
-      .attr("stroke", "var(--text-main)")
-      .attr("stroke-width", 1.5);
-    ["Book", "Game"].forEach((type) => {
-      const m = d3.mean(
-        data.filter((d) => d.type === type),
-        (d) => d.rating,
-      );
-      rating.g
+        .attr("x", x)
+        .attr("y", y)
+        .attr("text-anchor", align);
+      Object.entries(valStyle).forEach(([k, v]) => t.style(k, v));
+      t.text(val);
+      fade(t, delay);
+
+      const u = g
+        .append("text")
+        .attr("x", x)
+        .attr("y", y + (narrow ? 22 : 32))
+        .attr("text-anchor", align);
+      Object.entries(unitStyle).forEach(([k, v]) => u.style(k, v));
+      u.text(unit);
+      fade(u, delay + 150);
+    };
+
+    // 4 big stats
+    drawText(
+      data.length,
+      "Total Entries",
+      corners[0].x,
+      corners[0].y,
+      corners[0].align,
+      100,
+    );
+    drawText(
+      Math.round((finished / data.length) * 100) + "%",
+      "Finished",
+      corners[1].x,
+      corners[1].y,
+      corners[1].align,
+      200,
+    );
+    drawText(
+      avg,
+      "Avg Rating",
+      corners[2].x,
+      corners[2].y,
+      corners[2].align,
+      300,
+    );
+    drawText(
+      `${books} / ${games}`,
+      "Books / Games",
+      corners[3].x,
+      corners[3].y,
+      corners[3].align,
+      400,
+    );
+
+    if (!narrow) {
+      const line = axisLayer
         .append("line")
-        .attr("x1", rS(m))
-        .attr("x2", rS(m))
-        .attr("y1", rY - 4)
-        .attr("y2", rY + 4)
-        .attr("stroke", "var(--text-muted)")
-        .attr("stroke-width", 1);
-      rating.g
-        .append("text")
-        .attr("class", "stat-note")
-        .attr("x", rS(m))
-        .attr("y", rY - 12)
-        .attr("text-anchor", "middle")
-        .text(`${type.toLowerCase()}s ${m.toFixed(1)}`);
-    });
-
-    const years = [...new Set(data.map((d) => d.year))].sort((a, b) => a - b);
-    const perYear = years.map((y) => count((d) => d.year === y));
-    const peak = Math.max(...perYear);
-    const busiest = years[perYear.indexOf(peak)];
-    const pace = panel(2, "busiest year", busiest);
-    const baseY = pace.y + 96;
-    const pitch = colW / years.length;
-    const bw = Math.min(56, pitch * 0.66);
-    const bS = d3.scaleLinear().domain([0, peak]).range([0, 46]);
-    years.forEach((yr, i) => {
-      const x = colX + i * pitch + (pitch - bw) / 2;
-      const h = bS(perYear[i]);
-      pace.g
-        .append("rect")
-        .attr("x", x)
-        .attr("y", baseY)
-        .attr("width", bw)
-        .attr("height", 0)
-        .attr("rx", 2)
-        .attr("fill", "var(--text-main)")
-        .attr("fill-opacity", yr === busiest ? 0.8 : 0.22)
-        .transition()
-        .duration(600)
-        .delay(600 + i * 60)
-        .ease(d3.easeCubicOut)
-        .attr("y", baseY - h)
-        .attr("height", h);
-      pace.g
-        .append("text")
-        .attr("class", "stat-note")
-        .attr("x", x + bw / 2)
-        .attr("y", baseY - h - 7)
-        .attr("text-anchor", "middle")
-        .text(perYear[i]);
-      pace.g
-        .append("text")
-        .attr("class", "stat-note")
-        .attr("x", x + bw / 2)
-        .attr("y", baseY + 16)
-        .attr("text-anchor", "middle")
-        .text(yr);
-    });
+        .attr("x1", leftPaneW)
+        .attr("x2", leftPaneW)
+        .attr("y1", Math.max(40, H * 0.15))
+        .attr("y2", Math.min(H - 40, H * 0.85))
+        .attr("stroke", "var(--line-color)")
+        .attr("stroke-dasharray", "4 6")
+        .attr("opacity", 0);
+      fade(line, 500);
+    }
   }
 
   // --- Draw axis decorations ---
@@ -716,7 +605,7 @@ function init(RAW) {
 
       // Trend lines per type
       ["Book", "Game"].forEach((type) => {
-        const col = type === "Book" ? "#D906BD" : "#6366f1";
+        const col = type === "Book" ? "#3d5a80" : "#9c6644";
         const pts = years
           .map((yr) => {
             const g = data.filter((d) => d.type === type && d.year === yr);
@@ -748,8 +637,8 @@ function init(RAW) {
 
       // Legend
       [
-        ["Books", "#D906BD"],
-        ["Games", "#6366f1"],
+        ["Books", "#3d5a80"],
+        ["Games", "#9c6644"],
       ].forEach(([lbl, col], i) => {
         const narrow = isNarrow();
         const lgX = narrow ? pL : W - pR + hs_last + SCATTER_R + gap;
@@ -771,7 +660,7 @@ function init(RAW) {
         g.transition().duration(500).delay(500).attr("opacity", 1);
       });
     } else if (mode === "rating") {
-      // Two swim-lanes — NO vertical lines
+      // Two swim-lanes
       const pL = Math.round(W * 0.07),
         pR = Math.round(W * 0.04);
       const xS = d3
@@ -918,7 +807,7 @@ function init(RAW) {
     }
   }
 
-  // sync so switching back to a force mode doesn't have dots flying back to the center
+  // sync
   function setExact(positions, radius, { stagger = 0, duration = 800 } = {}) {
     sim.stop();
     nodeEls.interrupt();
