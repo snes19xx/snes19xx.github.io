@@ -28,12 +28,13 @@ const portfolioItems = [
     link: "https://snes19xx.github.io/Toronto_urbanheatislands",
   },
   {
-    title: "Earth in Hues",
-    desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
+    title: "Vancouver Night Sky",
+    desc: "Interactive map of sky brightness across southwestern BC. Shows Bortle class, naked-eye limiting magnitude, visible object count, and more.",
     tags: ["Python", "JavaScript"],
-    image: "images/tb_eart.webp",
-    link: "https://snes19xx.github.io/earth-in-hues/",
+    video: "images/van.webm",
+    link: "https://snes19xx.github.io/vancouver-night-sky/",
   },
+
   {
     title: "Atlas of Canadian Wildfires",
     desc: "An interactive atlas built from the Canadian National Fire Database showcasing the spatial distribution and temporal trends of wildfires across Canada, 1959–2025.",
@@ -50,6 +51,13 @@ const portfolioItems = [
     link: "https://snes19xx.github.io/510-SPADINA-MODEL",
   },
   {
+    title: "Earth in Hues",
+    desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
+    tags: ["Python", "JavaScript"],
+    image: "images/tb_eart.webp",
+    link: "https://snes19xx.github.io/earth-in-hues/",
+  },
+  {
     title: "MAPS",
     desc: "Maps I made in my spare time and as part of my courses at the University of Toronto.",
     tags: ["ArcGIS", "Python", "JavaScript"],
@@ -63,13 +71,6 @@ const portfolioItems = [
     tags: ["Python", "SQL"],
     image: "images/gradcafe.webp",
     link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
-  },
-  {
-    title: "Re-Zoning the Yard",
-    desc: "An ArcGIS StoryMaps project on the potential for small scale urban gardening in Toronto and where it could realistically take root.",
-    tags: ["ArcGIS"],
-    image: "images/story.webp",
-    link: "https://arcg.is/zOG1P",
   },
   {
     title: "Critical Analysis of the Kensington Market HCD Plan",
@@ -173,8 +174,8 @@ function fitOverlayText() {
     .forEach((overlay) => {
       let fit = 1;
       overlay.style.setProperty("--fit", fit);
-      while (fit > 0.7 && overlay.scrollHeight > overlay.clientHeight + 1) {
-        fit -= 0.05;
+      while (fit > 0.6 && overlay.scrollHeight > overlay.clientHeight + 1) {
+        fit -= 0.02;
         overlay.style.setProperty("--fit", fit.toFixed(2));
       }
     });
