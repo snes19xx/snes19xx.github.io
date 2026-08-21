@@ -1,171 +1,114 @@
-document.documentElement.className = "js";
-
-// default is light mode
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark-mode");
-}
-
-(function () {
-  const projectsRadio = document.getElementById("control-projects");
-  if (projectsRadio) projectsRadio.checked = true;
-})();
-
-const portfolioItems = [
-  {
-    title: "three.lab",
-    desc: "Browser-based 3D toolkit built with Three.js for model inspection, OpenStreetMap city extraction, and geometry editing. Renders true hidden-line vector art, exports straight to React Three Fiber code, and simplifies, crops, or isolates parts on demand.",
-    tags: ["JavaScript"],
-    video: "images/three.webm",
-    poster: "images/three_poster.webp",
-    link: "https://snes19xx.github.io/three.lab/",
-    featured: true,
-  },
-  {
-    title: "Toronto Urban Heat Island Explorer",
-    desc: "Interactive explorer for Toronto's urban heat islands, mapping which parts of the city run hottest and how heat varies across neighbourhoods.",
-    tags: ["Python", "JavaScript"],
-    image: "images/tb_uh.webp",
-    link: "https://snes19xx.github.io/Toronto_urbanheatislands",
-  },
-  {
-    title: "Vancouver Night Sky",
-    desc: "Interactive map of sky brightness across southwestern BC. Shows Bortle class, naked-eye limiting magnitude, visible object count, and more.",
-    tags: ["Python", "JavaScript"],
-    video: "images/van.webm",
-    link: "https://snes19xx.github.io/vancouver-night-sky/",
-  },
-
-  {
-    title: "Atlas of Canadian Wildfires",
-    desc: "An interactive atlas built from the Canadian National Fire Database showcasing the spatial distribution and temporal trends of wildfires across Canada, 1959–2025.",
-    tags: ["Python", "JavaScript"],
-    video: "images/tb_cawf.mp4",
-    poster: "images/5_poster.webp",
-    link: "https://snes19xx.github.io/canadian-wildfires-atlas/",
-  },
-  {
-    title: "Improving the 510 Spadina Streetcar",
-    desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route, alone and in combination.",
-    tags: ["Python", "JavaScript"],
-    image: "images/510.webp",
-    link: "https://snes19xx.github.io/510-SPADINA-MODEL",
-  },
-  {
-    title: "Earth in Hues",
-    desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
-    tags: ["Python", "JavaScript"],
-    image: "images/tb_eart.webp",
-    link: "https://snes19xx.github.io/earth-in-hues/",
-  },
-  {
-    title: "MAPS",
-    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto.",
-    tags: ["ArcGIS", "Python", "JavaScript"],
-    image: "images/maps.webp",
-    link: "https://snes19xx.github.io/maps/",
-  },
-  {
-    title:
-      "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
-    desc: "A study showing GradCafe data is biased and weak at predicting admissions. I look at who self-reports and how far the data can be trusted.",
-    tags: ["Python", "SQL"],
-    image: "images/gradcafe.webp",
-    link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
-  },
-  {
-    title: "Critical Analysis of the Kensington Market HCD Plan",
-    desc: "A critical analysis of the Kensington Market Heritage Conservation District Plan. Presented as part of my fourth year course GGR482 at the University of Toronto.",
-    tags: ["presentation"],
-    image: "images/thumbnail.webp",
-    link: "images/slides/slides.html",
-  },
-];
-
 let currentPage = "page-projects";
 
-function generateProjectsGrid() {
-  const grid = document.querySelector(".page-projects");
-  if (!grid) return;
-  const existingItems = grid.querySelectorAll(".grid__item");
-  if (existingItems.length > 0) return;
+const projectsRadio = document.getElementById("control-projects");
+if (projectsRadio) projectsRadio.checked = true;
 
-  portfolioItems.forEach((item, index) => {
-    const gridItem = document.createElement("div");
-    gridItem.className = "grid__item";
-    if (item.video) gridItem.classList.add("has-video");
-    if (item.featured) gridItem.classList.add("grid__item--feature");
+function whenIdle(fn) {
+  if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 2000 });
+  else setTimeout(fn, 200);
+}
 
-    let mediaElement;
-    if (item.video) {
-      mediaElement = `
-                    <video class="grid__img" loop muted playsinline preload="none" poster="${item.poster}"
-                           data-src="${item.video}"></video>`;
-    } else {
-      // First cards are above the fold: lazy-loading them only delays LCP
-      const aboveFold = index < 4;
-      mediaElement = `
-                    <img src="${item.image}"
-                         alt="${item.title}"
-                         class="grid__img"
-                         loading="${aboveFold ? "eager" : "lazy"}"
-                         ${aboveFold ? 'fetchpriority="high"' : ""}
-                         decoding="async"
-                         onload="this.classList.add('loaded')">`;
-    }
+let animePromise;
+function loadAnime() {
+  if (!animePromise) {
+    animePromise = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "anime.min.js";
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  return animePromise;
+}
 
-    gridItem.innerHTML = `
-                  <a href="${item.link}" class="grid__link">
-                    ${mediaElement}
-                    <div class="grid__overlay">
-                      <h3 class="grid__title">${item.title}</h3>
-                      <p class="grid__description">${item.desc}</p>
-                      <div class="grid__tags">
-                        ${item.tags.map((tag) => `<span class="grid__tag">${tag}</span>`).join("")}
-                      </div>
-                    </div>
-                  </a>`;
-    grid.appendChild(gridItem);
-  });
-
-  initLazyVideos();
-  setTimeout(() => animateProjectsGrid(), 100);
+let cvFontsRequested = false;
+function loadCVFonts() {
+  if (cvFontsRequested) return;
+  cvFontsRequested = true;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "fonts-cv.css";
+  document.head.appendChild(link);
 }
 
 function initLazyVideos() {
   const videos = document.querySelectorAll("video[data-src]");
   if (!videos.length) return;
 
-  const loadVideo = (video) => {
+  const queue = [];
+  let draining = false;
+
+  const attach = (video) => {
     const src = video.dataset.src;
     delete video.dataset.src;
-    const source = document.createElement("source");
-    source.src = src;
-    source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
-    video.appendChild(source);
-    video.addEventListener("loadeddata", () => video.classList.add("loaded"), {
-      once: true,
+    return new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      video.addEventListener(
+        "loadeddata",
+        () => {
+          video.classList.add("loaded");
+          finish();
+        },
+        { once: true },
+      );
+      video.addEventListener("error", finish, { once: true });
+      setTimeout(finish, 1200);
+
+      const source = document.createElement("source");
+      source.src = src;
+      source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
+      video.appendChild(source);
+      video.load();
+      video.play().catch(() => {});
     });
-    video.load();
-    video.play().catch(() => {});
+  };
+
+  async function drain() {
+    if (draining) return;
+    draining = true;
+    while (queue.length) await attach(queue.shift());
+    draining = false;
+  }
+
+  const enqueue = (video) => {
+    if (!video.dataset.src) return;
+    queue.push(video);
+    drain();
   };
 
   if (!("IntersectionObserver" in window)) {
-    videos.forEach(loadVideo);
+    videos.forEach(enqueue);
     return;
   }
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const video = entry.target;
         if (entry.isIntersecting) {
-          observer.unobserve(entry.target);
-          loadVideo(entry.target);
+          if (video.dataset.src) enqueue(video);
+          else video.play().catch(() => {});
+        } else if (!video.paused) {
+          video.pause();
         }
       });
     },
     { rootMargin: "300px" },
   );
   videos.forEach((video) => observer.observe(video));
+}
+
+function startVideos() {
+  const c = navigator.connection;
+  if (c && (c.saveData || /2g/.test(c.effectiveType || ""))) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  initLazyVideos();
 }
 
 function fitOverlayText() {
@@ -190,17 +133,13 @@ window.addEventListener("resize", () => {
 });
 
 function animateProjectsGrid() {
+  const grid = document.querySelector(".page-projects");
+  if (!grid) return;
+  const items = grid.querySelectorAll(".grid__item");
+  items.forEach((el) => (el.style.animation = "none"));
+  void grid.offsetWidth;
+  items.forEach((el) => (el.style.animation = ""));
   fitOverlayText();
-  const items = document.querySelectorAll(".page-projects .grid__item");
-  anime.set(items, { opacity: 0, scale: 0.8 });
-  anime({
-    targets: items,
-    opacity: [0, 1],
-    scale: [0.8, 1],
-    duration: 600,
-    delay: anime.stagger(60, { grid: [4, 3], from: "center" }),
-    easing: "spring(1, 80, 10, 0)",
-  });
 }
 
 function animateCVSections() {
@@ -251,80 +190,88 @@ function animateAboutPage() {
   });
 }
 
+function revealPage(newPage) {
+  setTimeout(() => {
+    if (newPage === "page-projects") animateProjectsGrid();
+    else if (newPage === "page-cv") animateCVSections();
+    else if (newPage === "page-about") animateAboutPage();
+  }, 50);
+}
+
+function switchPageInstantly(newPage) {
+  const oldPageEl = document.querySelector(`.${currentPage}`);
+  const newPageEl = document.querySelector(`.${newPage}`);
+  if (oldPageEl) oldPageEl.classList.add("grid--hidden");
+  if (newPageEl) newPageEl.classList.remove("grid--hidden");
+  currentPage = newPage;
+}
+
 document.querySelectorAll(".control__radio").forEach((radio) => {
-  radio.addEventListener("change", function () {
-    if (this.checked) {
-      const newPage = this.value;
-      const oldPageEl = document.querySelector(`.${currentPage}`);
-      const newPageEl = document.querySelector(`.${newPage}`);
+  radio.addEventListener("change", async function () {
+    if (!this.checked) return;
+    const newPage = this.value;
+    if (newPage !== "page-projects") loadCVFonts();
 
-      anime({
-        targets: oldPageEl,
-        scale: [1, 0.95],
-        opacity: [1, 0],
-        rotateX: [0, -10],
-        duration: 260,
-        easing: "easeInCubic",
-        complete: () => {
-          if (oldPageEl) oldPageEl.classList.add("grid--hidden");
-          if (newPageEl) newPageEl.classList.remove("grid--hidden");
-
-          anime({
-            targets: newPageEl,
-            scale: [1.05, 1],
-            opacity: [0, 1],
-            rotateX: [10, 0],
-            duration: 375,
-            easing: "easeOutExpo",
-            complete: () => {
-              currentPage = newPage;
-              setTimeout(() => {
-                if (newPage === "page-projects") {
-                  animateProjectsGrid();
-                } else if (newPage === "page-cv") {
-                  animateCVSections();
-                } else if (newPage === "page-about") {
-                  animateAboutPage();
-                }
-              }, 50);
-            },
-          });
-        },
-      });
+    try {
+      await loadAnime();
+    } catch (e) {
+      switchPageInstantly(newPage);
+      return;
     }
+
+    const oldPageEl = document.querySelector(`.${currentPage}`);
+    const newPageEl = document.querySelector(`.${newPage}`);
+
+    anime({
+      targets: oldPageEl,
+      scale: [1, 0.95],
+      opacity: [1, 0],
+      rotateX: [0, -10],
+      duration: 260,
+      easing: "easeInCubic",
+      complete: () => {
+        if (oldPageEl) oldPageEl.classList.add("grid--hidden");
+        if (newPageEl) newPageEl.classList.remove("grid--hidden");
+
+        anime({
+          targets: newPageEl,
+          scale: [1.05, 1],
+          opacity: [0, 1],
+          rotateX: [10, 0],
+          duration: 375,
+          easing: "easeOutExpo",
+          complete: () => {
+            currentPage = newPage;
+            revealPage(newPage);
+          },
+        });
+      },
+    });
   });
 });
 
-function animateSocialIcons() {
-  const icons = document.querySelectorAll(".social-icon");
-  anime({
-    targets: icons,
-    opacity: [0, 1],
-    translateX: [20, 0],
-    duration: 800,
-    delay: anime.stagger(150, { start: 600 }),
-    easing: "easeOutCubic",
+const nav = document.querySelector(".control--grids");
+if (nav) {
+  nav.addEventListener("pointerenter", () => loadAnime().catch(() => {}), {
+    once: true,
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  generateProjectsGrid();
-  animateSocialIcons();
-  document.fonts.ready.then(fitOverlayText);
+const themeToggle = document.getElementById("theme-toggle");
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const dark = document.documentElement.classList.toggle("dark-mode");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch (e) {}
+  });
+}
 
-  // theme toggle
-  document
-    .getElementById("theme-toggle")
-    .addEventListener("click", function () {
-      document.body.classList.toggle("dark-mode");
-      localStorage.setItem(
-        "theme",
-        document.body.classList.contains("dark-mode") ? "dark" : "light",
-      );
-    });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-      // no modal
-    }
+window.addEventListener("load", () => {
+  whenIdle(() => {
+    document.fonts.ready.then(fitOverlayText);
+    startVideos();
+    loadCVFonts();
+    loadAnime().catch(() => {});
   });
 });

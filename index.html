@@ -1,8 +1,14 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        if (localStorage.getItem("theme") === "dark")
+          document.documentElement.classList.add("dark-mode");
+      } catch (e) {}
+    </script>
 
     <title>Sandesh Bhandari - Portfolio</title>
     <meta name="title" content="Sandesh Bhandari - Portfolio" />
@@ -41,31 +47,1075 @@
       }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=EB+Garamond:wght@400;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="fonts/jetbrains-mono-latin.woff2"
+      crossorigin
     />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
-    <link rel="stylesheet" href="style.css" />
     <link
       rel="preload"
       as="image"
       href="images/three_poster.webp"
       fetchpriority="high"
     />
-    <link rel="preload" as="image" href="images/tb_uh.webp" />
-    <link rel="preload" as="image" href="images/tb_eart.webp" />
-    <script src="anime.min.js" defer></script>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
+
+    <style>
+      /* light mode */
+      :root {
+        --bg0: #fdfbf7;
+        --bg1: #ede8de;
+        --bg2: #e3ddd0;
+        --bg3: #d0c9ba;
+        --bg4: #bfb8a8;
+        --fg: #2d353b;
+        --red: #c94040;
+        --orange: #c07040;
+        --yellow: #a08030;
+        --green: #4f7942;
+        --aqua: #3a7a65;
+        --mist: #e8f1ed;
+        --blue: #3a7080;
+        --purple: #8050a0;
+        --grey0: #7a8478;
+        --grey1: #4a5048;
+        --grey2: #706868;
+        /* cv section colors */
+        --cv-green: #3a5a30;
+        --cv-blue: #354656;
+      }
+
+      /* dark mode */
+      :root.dark-mode {
+        --bg0: #1a1a1c;
+        --bg1: #343f44;
+        --bg2: #3d484d;
+        --bg3: #475258;
+        --bg4: #4f585e;
+        --fg: #ece6dc;
+        --red: #e67e80;
+        --orange: #e69875;
+        --yellow: #dbbc7f;
+        --green: #a7c080;
+        --aqua: #83c092;
+        --mist: #4c4f4e;
+        --blue: #7fbbb3;
+        --purple: #d699b6;
+        --grey0: #7a8478;
+        --grey1: #859289;
+        --grey2: #9da9a0;
+        /* cv section dark mode colors */
+        --cv-green: #a8c080cf;
+        --cv-blue: #7fa3bbc7;
+      }
+
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/jetbrains-mono-latin.woff2") format("woff2");
+        font-weight: 100 800;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--grey1);
+        background: var(--bg0);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+      }
+
+      .hidden {
+        position: absolute;
+        overflow: hidden;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+      }
+
+      a {
+        text-decoration: none;
+        color: var(--fg);
+        outline: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover,
+      a:focus {
+        color: var(--green);
+      }
+
+      main {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .my-header {
+        position: relative;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 3em 2em 2em;
+        order: 1;
+        transition: background 0.4s ease;
+      }
+
+      .my-header::before {
+        content: "";
+        flex: 1;
+      }
+
+      @media screen and (min-width: 801px) {
+        body:has(.page-projects:not(.grid--hidden)) .my-header {
+          padding: 2em 2em 1.25em;
+        }
+      }
+
+      .page-about:not(.grid--hidden) ~ header .my-header__title,
+      body:has(.page-about:not(.grid--hidden)) .my-header__title,
+      .page-about:not(.grid--hidden) ~ header .my-header::before,
+      body:has(.page-about:not(.grid--hidden)) .my-header::before {
+        display: none;
+      }
+
+      .my-header__title {
+        flex: 0 1 auto;
+        font-size: 1.2em;
+        font-weight: 500;
+        margin: 0;
+        text-align: center;
+        text-indent: 199px;
+        color: var(--fg);
+        letter-spacing: 0.5px;
+        transition: color 0.4s ease;
+      }
+
+      /* Remove text-indent on small/phone screens */
+      @media screen and (max-width: 768px) {
+        .my-header__title {
+          text-indent: 0;
+        }
+      }
+
+      .social-links {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1em;
+        z-index: 101;
+      }
+
+      .social-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: icon-in 0.8s cubic-bezier(0.33, 1, 0.68, 1) backwards;
+      }
+
+      @keyframes icon-in {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+      }
+
+      .social-icon:nth-child(1) {
+        animation-delay: 0.6s;
+      }
+      .social-icon:nth-child(2) {
+        animation-delay: 0.75s;
+      }
+      .social-icon:nth-child(3) {
+        animation-delay: 0.9s;
+      }
+
+      .social-icon:hover {
+        transform: translateY(-3px);
+      }
+
+      .social-icon svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--grey1);
+        transition: fill 0.3s ease;
+      }
+
+      .social-icon:hover svg {
+        fill: var(--green);
+      }
+
+      .octo-arm {
+        transform-origin: 130px 106px;
+      }
+
+      .social-icon:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+      }
+
+      @keyframes octocat-wave {
+        0%,
+        100% {
+          transform: rotate(0);
+        }
+        20%,
+        60% {
+          transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+          transform: rotate(10deg);
+        }
+      }
+
+      .content--side {
+        position: relative;
+        z-index: 100;
+        width: 15vw;
+        min-width: 130px;
+        max-height: 100vh;
+        padding: 0 1em;
+        order: 2;
+        transition: background 0.4s ease;
+      }
+
+      .content--center {
+        flex: 1;
+        max-width: calc(100vw - 130px);
+        order: 3;
+        padding: 0 2em;
+        transition: background 0.4s ease;
+      }
+
+      .control--grids {
+        margin: 0 0 2.5em;
+        text-align: right;
+      }
+
+      .control__title {
+        font-size: 0.85em;
+        display: block;
+        width: 100%;
+        margin: 0 0 1em;
+        color: var(--green);
+        transition: color 0.4s ease;
+      }
+
+      .control__item {
+        position: relative;
+        display: block;
+        margin: 0 0 0.5em;
+      }
+
+      .control__radio {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        opacity: 0;
+      }
+
+      .control__label {
+        white-space: nowrap;
+        display: block;
+        padding: 0.5em;
+        color: var(--grey1);
+        transition:
+          color 0.3s ease,
+          background 0.3s ease;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .control__radio:checked + .control__label {
+        color: var(--bg0);
+        background: var(--green);
+        box-shadow: 0 4px 12px rgba(168, 192, 128, 0.03);
+      }
+
+      .control__radio:not(:checked):hover + .control__label {
+        color: var(--fg);
+        background: var(--bg2);
+      }
+
+      .grid {
+        position: relative;
+        z-index: 2;
+        transition:
+          opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%;
+      }
+
+      .page-projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-auto-flow: dense;
+        gap: 25px;
+        margin: 0 auto;
+        max-width: 1200px;
+      }
+
+      @media screen and (min-width: 1200px) {
+        .page-projects {
+          grid-template-columns: repeat(
+            4,
+            min((100vh - 120px) / 3, (100% - 48px) / 4)
+          );
+          justify-content: center;
+          gap: 16px;
+        }
+      }
+
+      @media screen and (min-width: 801px) and (max-width: 1199px) {
+        .page-projects {
+          grid-template-columns: repeat(
+            3,
+            min((100vh - 136px) / 4, (100% - 32px) / 3)
+          );
+          justify-content: center;
+          gap: 16px;
+        }
+      }
+
+      .grid__item--feature {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      .page-cv,
+      .page-about {
+        display: block;
+      }
+
+      .grid--hidden {
+        position: fixed !important;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .grid__item {
+        position: relative;
+        container-type: inline-size;
+        overflow: hidden;
+        opacity: 1;
+        animation: item-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+        aspect-ratio: 1 / 1;
+        border-radius: 6px;
+
+        background-clip: padding-box;
+        transform-style: preserve-3d;
+
+        transition:
+          transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.4s ease,
+          border-color 0.3s ease;
+        background: var(--bg1);
+        border: 1px solid var(--bg3);
+        box-shadow:
+          0 4px 6px rgba(0, 0, 0, 0.1),
+          0 2px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      @keyframes item-in {
+        from {
+          opacity: 0;
+          transform: scale(0.92);
+        }
+      }
+
+      .grid__item:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+      .grid__item:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+      .grid__item:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+      .grid__item:nth-child(5) {
+        animation-delay: 0.16s;
+      }
+      .grid__item:nth-child(6) {
+        animation-delay: 0.2s;
+      }
+      .grid__item:nth-child(7) {
+        animation-delay: 0.24s;
+      }
+      .grid__item:nth-child(8) {
+        animation-delay: 0.28s;
+      }
+      .grid__item:nth-child(9) {
+        animation-delay: 0.32s;
+      }
+
+      .grid__item:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow:
+          0 20px 30px rgba(0, 0, 0, 0.3),
+          0 10px 10px rgba(0, 0, 0, 0.2);
+        border-color: var(--bg4);
+      }
+
+      .grid__item.has-video {
+        aspect-ratio: 1/1;
+      }
+
+      .grid__item.has-video .grid__img {
+        opacity: 1;
+      }
+
+      .grid__item.has-video::before {
+        display: none;
+      }
+
+      .grid__link {
+        display: block;
+        position: relative;
+        height: 100%;
+      }
+
+      .grid__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition:
+          transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+          filter 0.3s ease,
+          opacity 0.5s ease;
+        opacity: 0;
+        filter: saturate(0.85);
+      }
+
+      /* dark mode thumbnail filter */
+      .dark-mode .grid__img {
+        filter: hue-rotate(-5deg) saturate(0.8) brightness(0.79) contrast(0.9);
+      }
+
+      .grid__img.loaded {
+        opacity: 1;
+      }
+
+      .grid__item:hover .grid__img {
+        transform: scale(1.08);
+        filter: brightness(0.88) contrast(1.05) saturate(0.95);
+      }
+
+      .dark-mode .grid__item:hover .grid__img {
+        filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95)
+          contrast(1.05);
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -1000px 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
+      }
+
+      .grid__item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(167, 192, 128, 0.1) 50%,
+          transparent 100%
+        );
+        background-size: 1000px 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .grid__item:not(:has(.grid__img.loaded))::before {
+        opacity: 1;
+        animation: shimmer 2s infinite;
+      }
+
+      .grid__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--bg0) 0%, var(--mist) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transition:
+          opacity 0.4s ease,
+          backdrop-filter 0.4s ease;
+        padding: 4cqi;
+        z-index: 2;
+        overflow-y: hidden;
+        scrollbar-width: none;
+      }
+
+      .grid__item:hover .grid__overlay {
+        overflow-y: auto;
+      }
+
+      .grid__overlay::-webkit-scrollbar {
+        display: none;
+      }
+
+      .grid__item:hover .grid__overlay {
+        opacity: 1;
+        backdrop-filter: blur(12px);
+      }
+
+      .grid__title {
+        font-family: Georgia, serif;
+        font-size: calc(clamp(0.85rem, 7cqi, 1.6rem) * var(--fit, 1));
+        font-weight: 500;
+        flex-shrink: 0;
+        margin-top: auto;
+        margin-bottom: 0.35em;
+        color: var(--fg);
+        text-align: center;
+        line-height: 1.25;
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        transform: translateY(10px);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .grid__item:hover .grid__title {
+        transform: translateY(0);
+        color: var(--fg);
+      }
+
+      .grid__description {
+        font-size: calc(clamp(0.8rem, 5.9cqi, 1.25rem) * var(--fit, 1));
+        color: var(--grey2);
+        line-height: 1.38;
+        text-align: center;
+        flex-shrink: 0;
+        margin-bottom: 0.3em;
+        max-width: 100%;
+        transform: translateY(10px);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+      }
+
+      .grid__item:hover .grid__description {
+        transform: translateY(0);
+      }
+
+      .grid__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: auto;
+        padding-top: 0.4em;
+      }
+
+      .grid__tag {
+        background: transparent;
+        color: var(--grey1);
+        padding: 0.25em 0.8em;
+        border-radius: 4px;
+        font-size: calc(clamp(0.66rem, 4.1cqi, 0.95rem) * var(--fit, 1));
+        font-weight: 600;
+        border: 1px solid var(--grey0);
+        cursor: default;
+        user-select: none;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .grid__item .grid__tag:hover {
+        color: var(--aqua);
+        border-color: var(--aqua);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px #83c0922b;
+      }
+
+      .grid__tag:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      .grid__tag:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .grid__tag:nth-child(3) {
+        transition-delay: 0.2s;
+      }
+      .grid__tag:nth-child(4) {
+        transition-delay: 0.25s;
+      }
+
+      .grid__item--feature .grid__title {
+        font-size: calc(clamp(1rem, 5.3cqi, 2rem) * var(--fit, 1));
+        line-height: 1.3;
+        margin-bottom: 0.45em;
+      }
+      .grid__item--feature .grid__description {
+        font-size: calc(clamp(0.78rem, 3.2cqi, 1.2rem) * var(--fit, 1));
+        line-height: 1.45;
+        margin-bottom: 0.4em;
+      }
+      .grid__item--feature .grid__tag {
+        font-size: calc(clamp(0.65rem, 2.5cqi, 0.95rem) * var(--fit, 1));
+        padding: 0.3em 1em;
+      }
+      .grid__item--feature .grid__overlay {
+        padding: 6cqi;
+      }
+      .grid__item--feature .grid__tags {
+        gap: 8px;
+        padding-top: 0.5em;
+      }
+
+      /* CV page header title override */
+      body:has(.page-cv:not(.grid--hidden)) .my-header__title {
+        color: var(--fg);
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 1.7em;
+        font-weight: 400;
+        letter-spacing: 0.03em;
+        padding-top: 0.4em;
+        text-indent: 0;
+      }
+
+      /* CV Page */
+      .cv-container {
+        max-width: 1020px;
+        margin: 0 auto;
+        padding: 1.2em 2em 3em 2em;
+        color: var(--fg);
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 17.83px; /* 16.5px + 1pt; all CV text scales from here via em */
+        line-height: 1.35;
+      }
+
+      .cv-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.2em;
+      }
+
+      .cv-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.5em 1.1em;
+        border-radius: 4px;
+        background: var(--bg0);
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 0.85em;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--fg);
+        text-decoration: none;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          background 0.2s ease,
+          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .cv-download svg {
+        width: 15px;
+        height: 15px;
+        fill: var(--fg);
+        transition: fill 0.2s ease;
+      }
+
+      .cv-download:hover {
+        border-color: var(--green);
+        color: var(--green);
+        background: color-mix(in srgb, var(--green) 12%, var(--bg0));
+        transform: translateY(-2px);
+      }
+
+      .cv-download:hover svg {
+        fill: var(--green);
+      }
+
+      .cv-section {
+        margin-bottom: 1.6em;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .cv-section h2 {
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 1.25em;
+        font-weight: 700;
+        color: var(--fg);
+        margin-top: 0;
+        margin-bottom: 0.45em;
+        padding-bottom: 0.25em;
+        border-bottom: 1px solid var(--bg4);
+        letter-spacing: 0.015em;
+      }
+
+      .cv-item {
+        margin-bottom: 1.1em;
+      }
+
+      .cv-item__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1em;
+      }
+
+      .cv-item h3 {
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 1.05em;
+        font-weight: 700;
+        color: var(--fg);
+        margin: 0;
+      }
+
+      .cv-item .position {
+        font-family: "CMUnti", Georgia, serif;
+        font-size: 0.97em;
+        color: var(--cv-green);
+        margin: 0 0 0.35em 0;
+        font-style: regular;
+      }
+
+      .cv-item .date {
+        font-family: "EB Garamond", Georgia, serif;
+        color: var(--cv-blue);
+        font-size: 0.93em;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .cv-item p,
+      .cv-item ul {
+        font-family: "Computer Modern", "EB Garamond", Georgia, serif;
+        color: var(--fg);
+        line-height: 1.4;
+        margin: 0;
+        word-spacing: -0.03em;
+      }
+
+      .cv-item ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 0.2em;
+      }
+
+      .cv-item ul li {
+        margin-bottom: 0.18em;
+        padding-left: 1.4em;
+        position: relative;
+        font-size: 0.91em;
+        letter-spacing: 0.01em;
+      }
+
+      .cv-item ul li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--cv-green);
+      }
+
+      .cv-item .skill-category {
+        margin-bottom: 0.5em;
+      }
+
+      .cv-item .skill-category strong {
+        font-family: "EB Garamond", Georgia, serif;
+        color: var(--fg);
+        display: inline;
+        font-weight: 700;
+      }
+
+      .cv-item .skill-category p {
+        display: inline;
+        margin-left: 0.3em;
+      }
+
+      .cv-section--education h2 {
+        border-bottom: none;
+        position: relative;
+        padding-bottom: 0.25em;
+      }
+
+      .cv-section--education h2::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--bg4);
+      }
+
+      .cv-item--incoming {
+        margin-bottom: 1.25em;
+      }
+
+      .cv-item--incoming .date em {
+        font-style: normal;
+        letter-spacing: 0.06em;
+        font-size: 0.86em;
+        color: var(--cv-green);
+      }
+
+      .cv-section--education {
+        margin-bottom: -0.25em;
+      }
+
+      /* About Page */
+      .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2em;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 180px);
+      }
+
+      .page-about ~ .my-header .social-links,
+      body:has(.page-about:not(.grid--hidden)) .social-links {
+        justify-content: right;
+      }
+
+      .about-profile-image {
+        display: block;
+        margin: 0 auto 2em;
+        width: 400px;
+        height: auto;
+        border-radius: 4px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.3),
+          0 5px 15px rgba(0, 0, 0, 0.2);
+        filter: sepia(0.2) hue-rotate(-5deg) saturate(0.8) brightness(0.9)
+          contrast(1.1);
+      }
+
+      .about-intro {
+        font-family: "Computer Modern";
+        font-size: 1.2em;
+        line-height: 1.8;
+        color: var(--fg);
+        margin-bottom: 3em;
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .credits-section {
+        margin-top: auto;
+        padding: 2em 0;
+        border-top: 1px solid var(--bg3);
+        text-align: center;
+      }
+
+      .copyright {
+        color: var(--grey0);
+        margin-top: 1em;
+      }
+
+      .favorites-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      @media screen and (max-width: 50em) {
+        main {
+          display: block;
+        }
+        .my-header {
+          padding: 1em;
+          flex-direction: column;
+          justify-content: center;
+          gap: 1.5em;
+        }
+        .my-header::before {
+          display: none;
+        }
+        .social-links {
+          margin-top: 0;
+          justify-content: center;
+          flex: none;
+        }
+        .content--side {
+          width: 100%;
+        }
+        .content--center {
+          max-width: 100vw;
+          padding: 0 1em;
+        }
+        .control--grids {
+          margin: 0 0 1em;
+          text-align: left;
+        }
+        .page-projects {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 15px;
+        }
+        .about-profile-image {
+          width: 100%;
+          max-width: 300px;
+        }
+        .cv-container {
+          padding: 1.2em 1em 3em 1em;
+        }
+        .cv-toolbar {
+          justify-content: center;
+        }
+        .cv-download {
+          width: 100%;
+          justify-content: center;
+        }
+        .cv-item__head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.15em;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .content--side {
+          position: sticky;
+          top: 0;
+          background: var(--bg0);
+          z-index: 1000;
+          padding: 1em;
+        }
+        .social-links {
+          justify-content: center;
+          margin: 1em 0;
+        }
+        .page-projects {
+          grid-template-columns: 1fr;
+        }
+        .grid__item--feature {
+          grid-column: auto;
+          grid-row: auto;
+        }
+      }
+
+      /* theme toggle button */
+      .theme-toggle {
+        position: fixed;
+        bottom: 1.5em;
+        right: 1.5em;
+        z-index: 9999;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.3s ease;
+        box-shadow: none;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.12);
+        border-color: var(--green);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-toggle svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: var(--grey1);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke 0.3s ease;
+      }
+
+      .theme-toggle:hover svg {
+        stroke: var(--green);
+      }
+
+      .theme-toggle__sun {
+        display: none;
+      }
+
+      .dark-mode .theme-toggle__moon {
+        display: none;
+      }
+      .dark-mode .theme-toggle__sun {
+        display: block;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .grid__item,
+        .social-icon,
+        .grid__item:not(:has(.grid__img.loaded))::before {
+          animation: none;
+        }
+      }
+    </style>
+    <noscript>
+      <style>
+        .grid__img {
+          opacity: 1;
+        }
+        .grid__item::before {
+          display: none;
+        }
+      </style>
+    </noscript>
+
     <script src="main.js" defer></script>
     <meta
       name="google-site-verification"
       content="Zz6XYpD4CwJwdj28BoNRx35v8chxVCQ1_DvyZxXvYi0"
     />
   </head>
-  <body class="js">
+  <body>
     <svg class="hidden">
       <symbol id="icon-github" viewBox="0 0 24 24">
         <path
@@ -166,7 +1216,273 @@
       </div>
 
       <div class="content content--center">
-        <div class="grid page-projects"></div>
+        <div class="grid page-projects">
+          <div class="grid__item grid__item--feature has-video">
+            <a href="https://snes19xx.github.io/three.lab/" class="grid__link">
+              <video
+                class="grid__img"
+                loop
+                muted
+                playsinline
+                preload="none"
+                poster="images/three_poster.webp"
+                data-src="images/three.webm"
+              ></video>
+              <div class="grid__overlay">
+                <h3 class="grid__title">three.lab</h3>
+                <p class="grid__description">
+                  Browser-based 3D toolkit built with Three.js for model
+                  inspection, OpenStreetMap city extraction, and geometry
+                  editing. Renders true hidden-line vector art, exports straight
+                  to React Three Fiber code, and simplifies, crops, or isolates
+                  parts on demand.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a
+              href="https://snes19xx.github.io/Toronto_urbanheatislands"
+              class="grid__link"
+            >
+              <img
+                src="images/tb_uh.webp"
+                alt="Toronto Urban Heat Island Explorer"
+                class="grid__img"
+                width="699"
+                height="700"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">Toronto Urban Heat Island Explorer</h3>
+                <p class="grid__description">
+                  Interactive explorer for Toronto's urban heat islands, mapping
+                  which parts of the city run hottest and how heat varies across
+                  neighbourhoods.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item has-video">
+            <a
+              href="https://snes19xx.github.io/vancouver-night-sky/"
+              class="grid__link"
+            >
+              <video
+                class="grid__img"
+                loop
+                muted
+                playsinline
+                preload="none"
+                poster="images/van_poster.webp"
+                data-src="images/van.webm"
+              ></video>
+              <div class="grid__overlay">
+                <h3 class="grid__title">Vancouver Night Sky</h3>
+                <p class="grid__description">
+                  Interactive map of sky brightness across southwestern BC.
+                  Shows Bortle class, naked-eye limiting magnitude, visible
+                  object count, and more.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item has-video">
+            <a
+              href="https://snes19xx.github.io/canadian-wildfires-atlas/"
+              class="grid__link"
+            >
+              <video
+                class="grid__img"
+                loop
+                muted
+                playsinline
+                preload="none"
+                poster="images/5_poster.webp"
+                data-src="images/tb_cawf.mp4"
+              ></video>
+              <div class="grid__overlay">
+                <h3 class="grid__title">Atlas of Canadian Wildfires</h3>
+                <p class="grid__description">
+                  An interactive atlas built from the Canadian National Fire
+                  Database showcasing the spatial distribution and temporal
+                  trends of wildfires across Canada, 1959–2025.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a
+              href="https://snes19xx.github.io/510-SPADINA-MODEL"
+              class="grid__link"
+            >
+              <img
+                src="images/510.webp"
+                alt="Improving the 510 Spadina Streetcar"
+                class="grid__img"
+                width="2000"
+                height="2000"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">
+                  Improving the 510 Spadina Streetcar
+                </h3>
+                <p class="grid__description">
+                  Simulation model to quantify the cumulative impact of
+                  improvements on Toronto's 510 Spadina Streetcar route, alone
+                  and in combination.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a
+              href="https://snes19xx.github.io/earth-in-hues/"
+              class="grid__link"
+            >
+              <img
+                src="images/tb_eart.webp"
+                alt="Earth in Hues"
+                class="grid__img"
+                width="640"
+                height="640"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">Earth in Hues</h3>
+                <p class="grid__description">
+                  A geospatial project for computing area-weighted mean spectral
+                  signatures across land cover categories using satellite
+                  imagery, elevation data, and land classification rasters.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a href="https://snes19xx.github.io/maps/" class="grid__link">
+              <img
+                src="images/maps.webp"
+                alt="MAPS"
+                class="grid__img"
+                width="697"
+                height="696"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">MAPS</h3>
+                <p class="grid__description">
+                  Maps I made in my spare time and as part of my courses at the
+                  University of Toronto.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">ArcGIS</span>
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">JavaScript</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a
+              href="https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/"
+              class="grid__link"
+            >
+              <img
+                src="images/gradcafe.webp"
+                alt="Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits"
+                class="grid__img"
+                width="700"
+                height="700"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">
+                  Crowdsourced Graduate Admissions Data: Patterns, Biases, and
+                  Predictive Limits
+                </h3>
+                <p class="grid__description">
+                  A study showing GradCafe data is biased and weak at predicting
+                  admissions. I look at who self-reports and how far the data
+                  can be trusted.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">Python</span>
+                  <span class="grid__tag">SQL</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="grid__item">
+            <a href="images/slides/slides.html" class="grid__link">
+              <img
+                src="images/thumbnail.webp"
+                alt="Critical Analysis of the Kensington Market HCD Plan"
+                class="grid__img"
+                width="700"
+                height="700"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+              />
+              <div class="grid__overlay">
+                <h3 class="grid__title">
+                  Critical Analysis of the Kensington Market HCD Plan
+                </h3>
+                <p class="grid__description">
+                  A critical analysis of the Kensington Market Heritage
+                  Conservation District Plan. Presented as part of my fourth
+                  year course GGR482 at the University of Toronto.
+                </p>
+                <div class="grid__tags">
+                  <span class="grid__tag">presentation</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
 
         <div class="grid page-cv grid--hidden" data-nosnippet>
           <div class="cv-container">
