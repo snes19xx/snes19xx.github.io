@@ -1,10 +1,3 @@
-document.documentElement.className = "js";
-
-// default is light mode
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark-mode");
-}
-
 (function () {
   const projectsRadio = document.getElementById("control-projects");
   if (projectsRadio) projectsRadio.checked = true;
@@ -31,7 +24,7 @@ const portfolioItems = [
     title: "Vancouver Night Sky",
     desc: "Interactive map of sky brightness across southwestern BC. Shows Bortle class, naked-eye limiting magnitude, visible object count, and more.",
     tags: ["Python", "JavaScript"],
-    video: "images/van.webm",
+    image: "images/van.webp",
     link: "https://snes19xx.github.io/vancouver-night-sky/",
   },
 
@@ -97,11 +90,12 @@ function generateProjectsGrid() {
 
     let mediaElement;
     if (item.video) {
+      const poster = item.poster ? ` poster="${item.poster}"` : "";
       mediaElement = `
-                    <video class="grid__img" loop muted playsinline preload="none" poster="${item.poster}"
+                    <video class="grid__img" loop muted playsinline preload="none"${poster}
                            data-src="${item.video}"></video>`;
     } else {
-      // First cards are above the fold: lazy-loading them only delays LCP
+      // load eagerly
       const aboveFold = index < 4;
       mediaElement = `
                     <img src="${item.image}"
@@ -128,15 +122,15 @@ function generateProjectsGrid() {
   });
 
   initLazyVideos();
-  setTimeout(() => animateProjectsGrid(), 100);
 }
 
 function initLazyVideos() {
   const videos = document.querySelectorAll("video[data-src]");
   if (!videos.length) return;
 
-  const loadVideo = (video) => {
+  const attach = (video) => {
     const src = video.dataset.src;
+    if (!src) return;
     delete video.dataset.src;
     const source = document.createElement("source");
     source.src = src;
@@ -149,36 +143,42 @@ function initLazyVideos() {
     video.play().catch(() => {});
   };
 
-  if (!("IntersectionObserver" in window)) {
-    videos.forEach(loadVideo);
-    return;
-  }
+  videos.forEach((video) => {
+    const card = video.closest(".grid__item") || video;
+    const onDemand = () => attach(video);
+    ["pointerenter", "focusin", "touchstart"].forEach((evt) =>
+      card.addEventListener(evt, onDemand, { once: true, passive: true }),
+    );
+  });
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          observer.unobserve(entry.target);
-          loadVideo(entry.target);
-        }
-      });
-    },
-    { rootMargin: "300px" },
-  );
-  videos.forEach((video) => observer.observe(video));
+  // Attach all at once
+  const startAll = () => videos.forEach(attach);
+  if (document.readyState === "complete") startAll();
+  else window.addEventListener("load", startAll, { once: true });
 }
 
 function fitOverlayText() {
-  document
-    .querySelectorAll(".page-projects .grid__overlay")
-    .forEach((overlay) => {
-      let fit = 1;
-      overlay.style.setProperty("--fit", fit);
-      while (fit > 0.6 && overlay.scrollHeight > overlay.clientHeight + 1) {
-        fit -= 0.02;
-        overlay.style.setProperty("--fit", fit.toFixed(2));
-      }
-    });
+  const overlays = document.querySelectorAll(".page-projects .grid__overlay");
+  if (!overlays.length) return;
+
+  overlays.forEach((o) => o.style.setProperty("--fit", "1"));
+
+  const overflowing = [];
+  overlays.forEach((o) => {
+    if (o.scrollHeight > o.clientHeight + 1) overflowing.push(o);
+  });
+
+  overflowing.forEach((o) => {
+    let lo = 0.6;
+    let hi = 1;
+    for (let i = 0; i < 5; i++) {
+      const mid = (lo + hi) / 2;
+      o.style.setProperty("--fit", mid.toFixed(2));
+      if (o.scrollHeight > o.clientHeight + 1) hi = mid;
+      else lo = mid;
+    }
+    o.style.setProperty("--fit", lo.toFixed(2));
+  });
 }
 
 let fitResizeTimer;
@@ -251,6 +251,15 @@ function animateAboutPage() {
   });
 }
 
+function loadCVFonts() {
+  if (document.getElementById("cv-fonts")) return;
+  const link = document.createElement("link");
+  link.id = "cv-fonts";
+  link.rel = "stylesheet";
+  link.href = "fonts-cv.css";
+  document.head.appendChild(link);
+}
+
 document.querySelectorAll(".control__radio").forEach((radio) => {
   radio.addEventListener("change", function () {
     if (this.checked) {
@@ -267,6 +276,7 @@ document.querySelectorAll(".control__radio").forEach((radio) => {
         easing: "easeInCubic",
         complete: () => {
           if (oldPageEl) oldPageEl.classList.add("grid--hidden");
+          if (newPage === "page-cv") loadCVFonts();
           if (newPageEl) newPageEl.classList.remove("grid--hidden");
 
           anime({
@@ -316,10 +326,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("theme-toggle")
     .addEventListener("click", function () {
-      document.body.classList.toggle("dark-mode");
+      document.documentElement.classList.toggle("dark-mode");
       localStorage.setItem(
         "theme",
-        document.body.classList.contains("dark-mode") ? "dark" : "light",
+        document.documentElement.classList.contains("dark-mode")
+          ? "dark"
+          : "light",
       );
     });
   document.addEventListener("keydown", function (e) {

@@ -23,7 +23,7 @@
 }
 
 /* dark mode */
-body.dark-mode {
+html.dark-mode body {
   --bg0: #1a1a1c;
   --bg1: #343f44;
   --bg2: #3d484d;
@@ -52,23 +52,16 @@ body.dark-mode {
   box-sizing: border-box;
 }
 @font-face {
-  font-family: "CMUnti";
-  src: url("fonts/cmunti.woff2") format("woff2");
-  font-weight: normal;
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono-latin.woff2") format("woff2");
+  font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Computer Modern";
-  src: url("fonts/cmunrm.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "CMU Sans Serif";
-  src: url("fonts/cmunss.woff2");
-  font-weight: normal;
+  font-family: "EB Garamond";
+  src: url("fonts/eb-garamond-latin.woff2") format("woff2");
+  font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
@@ -338,6 +331,7 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
 }
 
 .grid--hidden {
+  content-visibility: hidden;
   position: fixed !important;
   z-index: 1;
   top: 0;
@@ -352,8 +346,6 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
   position: relative;
   container-type: inline-size;
   overflow: hidden;
-  opacity: 0;
-  transform: scale(0.8);
   aspect-ratio: 1 / 1;
   border-radius: 6px;
 
@@ -411,7 +403,7 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
 }
 
 /* dark mode thumbnail filter */
-body.dark-mode .grid__img {
+html.dark-mode .grid__img {
   filter: hue-rotate(-5deg) saturate(0.8) brightness(0.79) contrast(0.9);
 }
 
@@ -424,7 +416,7 @@ body.dark-mode .grid__img {
   filter: brightness(0.88) contrast(1.05) saturate(0.95);
 }
 
-body.dark-mode .grid__item:hover .grid__img {
+html.dark-mode .grid__item:hover .grid__img {
   filter: sepia(0.2) hue-rotate(-3deg) saturate(0.9) brightness(0.95)
     contrast(1.05);
 }
@@ -981,9 +973,9 @@ body:has(.page-about:not(.grid--hidden)) .social-links {
   display: none;
 }
 
-body.dark-mode .theme-toggle__moon {
+html.dark-mode .theme-toggle__moon {
   display: none;
 }
-body.dark-mode .theme-toggle__sun {
+html.dark-mode .theme-toggle__sun {
   display: block;
 }
