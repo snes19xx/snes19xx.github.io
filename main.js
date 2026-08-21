@@ -132,15 +132,26 @@ function initLazyVideos() {
     const src = video.dataset.src;
     if (!src) return;
     delete video.dataset.src;
-    const source = document.createElement("source");
-    source.src = src;
-    source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
-    video.appendChild(source);
-    video.addEventListener("loadeddata", () => video.classList.add("loaded"), {
-      once: true,
-    });
-    video.load();
-    video.play().catch(() => {});
+
+    const stream = () => {
+      const source = document.createElement("source");
+      source.src = src;
+      source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
+      video.preload = "auto";
+      video.appendChild(source);
+      video.load();
+      video.play().catch(() => {});
+    };
+
+    // Poster holds until fully downloaded
+    fetch(src)
+      .then((r) => (r.ok ? r.blob() : Promise.reject(r.status)))
+      .then((blob) => {
+        video.src = URL.createObjectURL(blob);
+        video.classList.add("loaded");
+        video.play().catch(() => {});
+      })
+      .catch(stream);
   };
 
   videos.forEach((video) => {
