@@ -36,54 +36,36 @@ function initLazyVideos() {
   const videos = document.querySelectorAll("video[data-src]");
   if (!videos.length) return;
 
-  const queue = [];
-  let draining = false;
+  const offscreen = new Set();
+
+  const play = (video) => {
+    if (offscreen.has(video)) return;
+    video.play().catch(() => {});
+  };
 
   const attach = (video) => {
     const src = video.dataset.src;
+    if (!src) return;
     delete video.dataset.src;
-    return new Promise((resolve) => {
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        resolve();
-      };
-      video.addEventListener(
-        "loadeddata",
-        () => {
-          video.classList.add("loaded");
-          finish();
-        },
-        { once: true },
-      );
-      video.addEventListener("error", finish, { once: true });
-      setTimeout(finish, 1200);
+    video.addEventListener(
+      "loadeddata",
+      () => video.classList.add("loaded"),
+      { once: true },
+    );
+    // prefer a smooth start
+    video.addEventListener("canplaythrough", () => play(video), { once: true });
+    setTimeout(() => play(video), 3000);
 
-      const source = document.createElement("source");
-      source.src = src;
-      source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
-      video.appendChild(source);
-      video.load();
-      video.play().catch(() => {});
-    });
-  };
-
-  async function drain() {
-    if (draining) return;
-    draining = true;
-    while (queue.length) await attach(queue.shift());
-    draining = false;
-  }
-
-  const enqueue = (video) => {
-    if (!video.dataset.src) return;
-    queue.push(video);
-    drain();
+    const source = document.createElement("source");
+    source.src = src;
+    source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
+    video.preload = "auto";
+    video.appendChild(source);
+    video.load();
   };
 
   if (!("IntersectionObserver" in window)) {
-    videos.forEach(enqueue);
+    videos.forEach(attach);
     return;
   }
 
@@ -92,14 +74,16 @@ function initLazyVideos() {
       entries.forEach((entry) => {
         const video = entry.target;
         if (entry.isIntersecting) {
-          if (video.dataset.src) enqueue(video);
-          else video.play().catch(() => {});
-        } else if (!video.paused) {
-          video.pause();
+          offscreen.delete(video);
+          if (video.dataset.src) attach(video);
+          else play(video);
+        } else {
+          offscreen.add(video);
+          if (!video.paused) video.pause();
         }
       });
     },
-    { rootMargin: "300px" },
+    { rootMargin: "200px" },
   );
   videos.forEach((video) => observer.observe(video));
 }
@@ -268,9 +252,9 @@ if (themeToggle) {
 }
 
 window.addEventListener("load", () => {
+  startVideos();
   whenIdle(() => {
     document.fonts.ready.then(fitOverlayText);
-    startVideos();
     loadCVFonts();
     loadAnime().catch(() => {});
   });
