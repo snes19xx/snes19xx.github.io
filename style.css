@@ -773,17 +773,6 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   background: var(--bg4);
 }
 
-.cv-item--incoming {
-  margin-bottom: 1.25em;
-}
-
-.cv-item--incoming .date em {
-  font-style: normal;
-  letter-spacing: 0.06em;
-  font-size: 0.86em;
-  color: var(--cv-green);
-}
-
 .cv-section--education {
   margin-bottom: -0.25em;
 }
