@@ -14,35 +14,21 @@ const portfolioItems = [
     featured: true,
   },
   {
+    title: "Cassini",
+    desc: "3D web application that follows NASA's Cassini spacecraft through the Saturn system, ending with the Grand Finale atmospheric disintegration on September 15, 2017.",
+    tags: ["Typescript"],
+    image: "images/cassini_poster.webp",
+    video: "images/cassini.mp4",
+    link: "https://snes19xx.github.io/Cassini/",
+  },
+  {
     title: "Toronto Urban Heat Island Explorer",
     desc: "Interactive explorer for Toronto's urban heat islands, mapping which parts of the city run hottest and how heat varies across neighbourhoods.",
     tags: ["Python", "JavaScript"],
     image: "images/tb_uh.webp",
     link: "https://snes19xx.github.io/Toronto_urbanheatislands",
   },
-  {
-    title: "Vancouver Night Sky",
-    desc: "Interactive map of sky brightness across southwestern BC. Shows Bortle class, naked-eye limiting magnitude, visible object count, and more.",
-    tags: ["Python", "JavaScript"],
-    image: "images/van.webp",
-    link: "https://snes19xx.github.io/vancouver-night-sky/",
-  },
 
-  {
-    title: "Atlas of Canadian Wildfires",
-    desc: "An interactive atlas built from the Canadian National Fire Database showcasing the spatial distribution and temporal trends of wildfires across Canada, 1959–2025.",
-    tags: ["Python", "JavaScript"],
-    video: "images/tb_cawf.mp4",
-    poster: "images/5_poster.webp",
-    link: "https://snes19xx.github.io/canadian-wildfires-atlas/",
-  },
-  {
-    title: "Improving the 510 Spadina Streetcar",
-    desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route, alone and in combination.",
-    tags: ["Python", "JavaScript"],
-    image: "images/510.webp",
-    link: "https://snes19xx.github.io/510-SPADINA-MODEL",
-  },
   {
     title: "Earth in Hues",
     desc: "A geospatial project for computing area-weighted mean spectral signatures across land cover categories using satellite imagery, elevation data, and land classification rasters.",
@@ -50,12 +36,29 @@ const portfolioItems = [
     image: "images/tb_eart.webp",
     link: "https://snes19xx.github.io/earth-in-hues/",
   },
+
   {
-    title: "MAPS",
-    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto.",
-    tags: ["ArcGIS", "Python", "JavaScript"],
-    image: "images/maps.webp",
-    link: "https://snes19xx.github.io/maps/",
+    title: "Atlas of Canadian Wildfires",
+    desc: "An interactive atlas built from the Canadian National Fire Database showcasing the spatial distribution and temporal trends of wildfires across Canada, 1959–2025.",
+    tags: ["Python", "JavaScript"],
+    image: "images/5_poster.webp",
+    link: "https://snes19xx.github.io/canadian-wildfires-atlas/",
+  },
+
+  {
+    title: "Improving the 510 Spadina Streetcar",
+    desc: "Simulation model to quantify the cumulative impact of improvements on Toronto's 510 Spadina Streetcar route, alone and in combination.",
+    tags: ["Python", "JavaScript"],
+    image: "images/510.webp",
+    link: "https://snes19xx.github.io/510-SPADINA-MODEL",
+  },
+
+  {
+    title: "Vancouver Night Sky",
+    desc: "Interactive map of sky brightness across southwestern BC. Shows Bortle class, naked-eye limiting magnitude, visible object count, and more.",
+    tags: ["Python", "JavaScript"],
+    image: "images/van.webp",
+    link: "https://snes19xx.github.io/vancouver-night-sky/",
   },
   {
     title:
@@ -66,11 +69,11 @@ const portfolioItems = [
     link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
   },
   {
-    title: "Critical Analysis of the Kensington Market HCD Plan",
-    desc: "A critical analysis of the Kensington Market Heritage Conservation District Plan. Presented as part of my fourth year course GGR482 at the University of Toronto.",
-    tags: ["presentation"],
-    image: "images/thumbnail.webp",
-    link: "images/slides/slides.html",
+    title: "MAPS",
+    desc: "Maps I made in my spare time and as part of my courses at the University of Toronto.",
+    tags: ["ArcGIS", "Python", "JavaScript"],
+    image: "images/maps.webp",
+    link: "https://snes19xx.github.io/maps/",
   },
 ];
 
