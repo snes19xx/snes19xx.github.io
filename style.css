@@ -5,6 +5,7 @@
   --bg2: #e3ddd0;
   --bg3: #d0c9ba;
   --bg4: #bfb8a8;
+  --bg5: #d1d6d2;
   --fg: #2d353b;
   --red: #c94040;
   --orange: #c07040;
@@ -357,7 +358,7 @@ body:has(.page-about:not(.grid--hidden)) .my-header::before {
     box-shadow 0.4s ease,
     border-color 0.3s ease;
   background: var(--bg1);
-  border: 1px solid var(--bg3);
+  border: 1px solid var(--bg5);
   box-shadow:
     0 4px 6px rgba(0, 0, 0, 0.1),
     0 2px 4px rgba(0, 0, 0, 0.06);
