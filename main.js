@@ -44,6 +44,14 @@ const portfolioItems = [
     image: "images/5_poster.webp",
     link: "https://snes19xx.github.io/canadian-wildfires-atlas/",
   },
+  {
+    title:
+      "Locating Shared Thought in Kafka and Lispector with Concept-Erased Embeddings",
+    desc: "Exploratory machine learning framework removing authorial style signals from text embeddings to pair conceptually similar passages across Kafka and Lispector.",
+    tags: ["Python"],
+    image: "images/tb_ml.webp",
+    link: "https://snes19xx.github.io/mapping-kafka-lispector-ml/",
+  },
 
   {
     title: "Improving the 510 Spadina Streetcar",
@@ -59,14 +67,6 @@ const portfolioItems = [
     tags: ["Python", "JavaScript"],
     image: "images/van.webp",
     link: "https://snes19xx.github.io/vancouver-night-sky/",
-  },
-  {
-    title:
-      "Crowdsourced Graduate Admissions Data: Patterns, Biases, and Predictive Limits",
-    desc: "A study showing GradCafe data is biased and weak at predicting admissions. I look at who self-reports and how far the data can be trusted.",
-    tags: ["Python", "SQL"],
-    image: "images/gradcafe.webp",
-    link: "https://snes19xx.github.io/grad-admissions-bias-and-predictive-limits/",
   },
   {
     title: "MAPS",
