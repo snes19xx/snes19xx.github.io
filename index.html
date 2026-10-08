@@ -700,7 +700,41 @@
             </div>
 
             <div class="cv-section">
-              <h2>Experience</h2>
+              <h2>Research &amp; Professional Experience</h2>
+
+              <div class="cv-item">
+                <div class="cv-item__head">
+                  <h3>
+                    University of Toronto, Spatial Analysis of Urban Systems Lab
+                  </h3>
+                  <span class="date">May 2026 – Present</span>
+                </div>
+                <p class="position">
+                  Research Assistant, street-level heat exposure study
+                  (supervisor: Ignacio Tiznado-Aitken)
+                </p>
+                <ul>
+                  <li>
+                    Lead a study that maps street-level heat risk along
+                    Toronto's walking, cycling and transit network from
+                    satellite surface temperature and street-view imagery; first
+                    author of the manuscript in preparation.
+                  </li>
+                  <li>
+                    Built the network as 347,298 points at 30 m spacing,
+                    including 9,054 transit stops, labelled heat risk from a
+                    multi-year Landsat 8/9 summer composite in Google Earth
+                    Engine, and thinned the sample to 92,755 points to remove
+                    spatial pseudo-replication.
+                  </li>
+                  <li>
+                    Extracted sky view, tree canopy and built-surface features
+                    by semantic segmentation of street-level imagery, and
+                    compared logistic and random-forest models under spatially
+                    blocked cross-validation, interpreted with SHAP.
+                  </li>
+                </ul>
+              </div>
 
               <div class="cv-item">
                 <div class="cv-item__head">
@@ -710,23 +744,47 @@
                   </h3>
                   <span class="date">January 2026 – Present</span>
                 </div>
+                <p class="position">
+                  Research Assistant, Major Streets study (supervisors: Paul
+                  Hess and Michael Piper)
+                </p>
+                <ul>
+                  <li>
+                    Conduct spatial and parcel-level geometry analysis of the
+                    residential lots along Toronto's major streets, to assess
+                    where the City's policy allowing small apartment buildings
+                    on these streets can add housing.
+                  </li>
+                  <li>
+                    Built a reproducible Python (GeoPandas) workflow that
+                    identifies each lot's street frontage, measures its width,
+                    depth and area from the parcel geometry, and joins zoning,
+                    land use and building age from open City data.
+                  </li>
+                  <li>
+                    Validated the measurements against an independent dataset,
+                    reproduced the City's count of lots with development
+                    potential, and ran a sensitivity analysis on the lot-size
+                    thresholds behind it.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item__head">
+                  <h3>City of Toronto, Planning Research and Analytics</h3>
+                  <span class="date">May 2026 – August 2026</span>
+                </div>
                 <p class="position">Research Assistant</p>
                 <ul>
                   <li>
-                    Supporting the primary research mandate through exploratory
-                    spatial analysis and rapid data visualization to iteratively
-                    test hypotheses and validate assumptions.
+                    Surveyed Toronto businesses in person to gather employment
+                    and land-use data that inform municipal planning and future
+                    city services.
                   </li>
                   <li>
-                    Conducting spatial analysis of residential zoning typologies
-                    (R, RD, RS, RT, RM) along major arterial corridors to
-                    evaluate densification potential under updated Toronto
-                    zoning policies.
-                  </li>
-                  <li>
-                    Developing GIS workflows to classify parcel frontage (Front,
-                    Flank, Reverse) and model transit catchment zones relative
-                    to Major Transit Station Areas (MTSAs).
+                    Verified site records and maintained the statistical
+                    databases that support project reporting.
                   </li>
                 </ul>
               </div>
@@ -734,72 +792,101 @@
               <div class="cv-item">
                 <div class="cv-item__head">
                   <h3>Web Developer</h3>
-                  <span class="date">2019 – Present</span>
+                  <span class="date">2019 – 2023</span>
                 </div>
                 <p class="position">Independent Contractor</p>
                 <ul>
                   <li>
-                    Architected and deployed 15+ full-stack web applications
-                    using MERN/MEAN stacks (MongoDB, Express, React/Angular,
-                    Node.js) for small-to-medium enterprises.
+                    Built and deployed responsive, custom web applications
+                    (React, Node.js, MongoDB) for 15+ local small businesses.
                   </li>
                   <li>
-                    Optimized front-end performance by migrating legacy CSS to
-                    scss and implementing Alpine.js for lightweight state
-                    management, reducing bundle sizes significantly and
-                    improving Lighthouse scores.
-                  </li>
-                  <li>
-                    Integrated secure payment gateways (Stripe, PayPal) and
-                    third-party REST APIs.
-                  </li>
-                  <li>
-                    Managed end-to-end project lifecycles, negotiating contract
-                    scopes, setting technical roadmaps, and delivering 100% of
-                    client projects on or ahead of schedule.
+                    Managed end-to-end project lifecycles from scoping and UI/UX
+                    design to production deployment, hosting, and client
+                    handoff.
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="cv-item">
-              <div class="cv-item__head">
-                <h3>City of Toronto, Planning Research and Analytics</h3>
-                <span class="date">May 2026 – August 2026</span>
+
+            <div class="cv-section">
+              <h2>Publications &amp; Presentations</h2>
+              <div class="cv-item">
+                <p>
+                  <strong>Bhandari, S.</strong>, &amp; Tiznado-Aitken, I. (in
+                  preparation). Micro-scale thermal exposure along
+                  active-transport networks: A machine-learning approach using
+                  street view imagery.
+                </p>
               </div>
-              <p class="position">Research Assistant</p>
-              <ul>
-                <li>
-                  Conducting field data collection and verifing the accuracy of
-                  site records.
-                </li>
-                <li>
-                  Structuring and presenting collected data to support project
-                  reporting.
-                </li>
-                <li>
-                  Maintaining statistical databases to ensure data integrity.
-                </li>
-                <li>
-                  Gathering employment and land-use data from Toronto businesses
-                  to inform municipal planning and future city services.
-                </li>
-              </ul>
+              <div class="cv-item">
+                <p>
+                  <strong>Bhandari, S.</strong> (2025).
+                  <em>Re-Zoning the Yard.</em> ArcGIS StoryMap, featured in the
+                  <a href="https://arcg.is/0qaPa10">Virtual Map Gallery</a> of
+                  Esri Canada's GIS in Education and Research Conference.
+                </p>
+              </div>
+              <div class="cv-item">
+                <p>
+                  <strong>Bhandari, S.</strong> (2026). <em>Kensington Market
+                  Heritage Conservation District Plan: A Critical
+                  Analysis.</em> Research presentation.
+                  <a href="images/slides/slides.html">Slides</a>
+                </p>
+              </div>
             </div>
+
+            <div class="cv-section">
+              <h2>Teaching Experience</h2>
+              <div class="cv-item">
+                <div class="cv-item__head">
+                  <h3>University of Toronto, Geography &amp; Planning</h3>
+                  <span class="date">October 2026 – Present</span>
+                </div>
+                <p class="position">
+                  Teaching Assistant and Research Assistant, GGR375
+                  Introduction to Programming in GIS
+                </p>
+                <ul>
+                  <li>
+                    Teaching Assistant (Winter 2027): support third-year
+                    students as they learn to process and analyse geospatial
+                    data in Python (GeoPandas, Rasterio, PySAL) on the
+                    university JupyterHub.
+                  </li>
+                  <li>
+                    Research Assistant, Computation &amp; Data Science
+                    Education Faculty Fellowship: help redesign GGR375 to add
+                    AI-assisted coding and critical evaluation of AI output,
+                    keeping its core GIS programming foundations: reproducible
+                    Jupyter notebooks, new exercises and assignments.
+                  </li>
+                  <li>
+                    Co-run the student feedback phase: survey, interviews and
+                    focus groups with former GGR375 students on how they
+                    used AI and on the course's "Responsible Use of AI"
+                    statements.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
             <div class="cv-section">
               <h2>Skills</h2>
               <div class="cv-item">
                 <div class="skill-category">
                   <strong>GIS &amp; Spatial Analysis</strong>
                   <p>
-                    ArcGIS, QGIS, GeoPandas, Rasterio, Shapely, GDAL/OGR, OSMnx,
-                    PySAL, NetworkX, EE
+                    ArcGIS Pro, QGIS, GeoPandas, Rasterio, Shapely, GDAL/OGR,
+                    OSMnx, PySAL, NetworkX, Google Earth Engine
                   </p>
                 </div>
                 <div class="skill-category">
                   <strong>Programming &amp; Data</strong>
                   <p>
                     Python, JavaScript, TypeScript, SQL, Bash, NumPy, SciPy,
-                    Pandas, Polars, Node, Tauri
+                    Pandas, Polars
                   </p>
                 </div>
                 <div class="skill-category">
@@ -811,12 +898,31 @@
                   </p>
                 </div>
                 <div class="skill-category">
-                  <strong>Design &amp; Visualization</strong>
+                  <strong>Visualization, Web &amp; Graphics</strong>
                   <p>
-                    D3.js, THREE.js, React Three Fiber, GLSL/WebGL, Canvas 2D,
-                    Leaflet, Folium, Matplotlib, Seaborn, Figma, Adobe
+                    D3.js, THREE.js, GLSL/WebGL, Canvas 2D,
+                    Node.js, Tauri, Leaflet, Folium, Matplotlib, Seaborn,
+                    Figma, Illustrator, Photoshop, InDesign
                   </p>
                 </div>
+              </div>
+            </div>
+
+            <div class="cv-section">
+              <h2>Professional &amp; Community Affiliations</h2>
+              <div class="cv-item">
+                <p>
+                  <strong>Kensington Market Community Land Trust (KMCLT)</strong>,
+                  Community Member
+                </p>
+                <p>
+                  <strong>Canadian Institute of Planners (CIP)</strong>, Student
+                  Member since 2023
+                </p>
+                <p>
+                  <strong>American Planning Association (APA)</strong>, Student
+                  Member since 2023
+                </p>
               </div>
             </div>
           </div>

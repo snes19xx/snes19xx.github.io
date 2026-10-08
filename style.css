@@ -741,6 +741,19 @@ body:has(.page-cv:not(.grid--hidden)) .my-header__title {
   color: var(--cv-green);
 }
 
+.cv-item p a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.cv-item p a:hover,
+.cv-item p a:focus {
+  color: var(--green);
+}
+
 .cv-item .skill-category {
   margin-bottom: 0.5em;
 }
