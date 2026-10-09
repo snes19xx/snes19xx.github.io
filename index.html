@@ -724,14 +724,14 @@
                     Built the network as 347,298 points at 30 m spacing,
                     including 9,054 transit stops, labelled heat risk from a
                     multi-year Landsat 8/9 summer composite in Google Earth
-                    Engine, and thinned the sample to 92,755 points to remove
-                    spatial pseudo-replication.
+                    Engine, and thinned the sample to 70,161 points to limit
+                    spatial leakage.
                   </li>
                   <li>
                     Extracted sky view, tree canopy and built-surface features
                     by semantic segmentation of street-level imagery, and
-                    compared logistic and random-forest models under spatially
-                    blocked cross-validation, interpreted with SHAP.
+                    trained a LightGBM classifier under spatially blocked
+                    cross-validation, interpreted with SHAP and GeoShapley.
                   </li>
                 </ul>
               </div>
